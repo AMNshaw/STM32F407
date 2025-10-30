@@ -1,0 +1,6 @@
+../Core/Src/freertos.c:78:6:pin_on	16	static
+../Core/Src/freertos.c:81:6:pin_off	16	static
+../Core/Src/freertos.c:84:6:button_pressed	16	static
+../Core/Src/freertos.c:101:6:MX_FREERTOS_Init	8	static
+../Core/Src/freertos.c:145:6:StartDefaultTask	24	static
+../Core/Src/freertos.c:164:6:StartButtonTask	16	static

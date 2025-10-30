@@ -1,0 +1,12 @@
+BasedOnStyle: Google
+IndentWidth: 4
+UseTab: Never
+NamespaceIndentation: None
+BreakBeforeBraces: Attach
+BraceWrapping:
+  AfterStruct: false
+  AfterClass: false
+BinPackArguments: true
+AllowAllArgumentsOnNextLine: false
+AccessModifierOffset: -4
+

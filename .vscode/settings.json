@@ -1,0 +1,13 @@
+{
+    "editor.formatOnSave": true,
+    "[cpp]": {
+        "editor.defaultFormatter": "ms-vscode.cpptools"
+    },
+    "[c]": {
+        "editor.defaultFormatter": "ms-vscode.cpptools"
+    },
+    "terminal.integrated.inheritEnv": true,
+    "terminal.integrated.env.windows": {
+        "Path": "${env:Path};C:\\Program Files\\Git\\cmd;C:\\Program Files\\Git\\bin;C:\\Users\\liushaw\\AppData\\Local\\Programs\\Git\\cmd;C:\\Users\\liushaw\\AppData\\Local\\Programs\\Git\\bin"
+    }
+}

@@ -1,0 +1,155 @@
+!SESSION 2025-10-29 09:54:50.216 -----------------------------------------------
+eclipse.buildId=Version 1.19.0
+java.version=21.0.3
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=zh_TW
+Framework arguments:  C:\Users\liushaw\Desktop\STM32F407\LED_control\.project
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 C:\Users\liushaw\Desktop\STM32F407\LED_control\.project
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2025-10-29 09:55:16.393
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2025-10-29 09:55:16.397
+!MESSAGE Log4j2 initialized with config file C:\Users\liushaw\Desktop\STM32F407\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2025-10-29 09:55:20.563
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.cdt.core 1 0 2025-10-29 09:55:26.819
+!MESSAGE Indexed 'LED_control' (38 sources, 139 headers) in 4.18 sec: 14,231 declarations; 67,811 references; 5 unresolved inclusions; 1,122 syntax errors; 1,724 unresolved names (2.1%)
+!SESSION 2025-10-29 10:00:08.920 -----------------------------------------------
+eclipse.buildId=Version 1.19.0
+java.version=21.0.3
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=zh_TW
+Framework arguments:  C:\Users\liushaw\Desktop\STM32F407\LED_control\.project
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 C:\Users\liushaw\Desktop\STM32F407\LED_control\.project
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2025-10-29 10:00:19.024
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2025-10-29 10:00:19.025
+!MESSAGE Log4j2 initialized with config file C:\Users\liushaw\Desktop\STM32F407\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2025-10-29 10:00:25.328
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.cdt.core 1 0 2025-10-29 10:00:30.493
+!MESSAGE Indexed 'LED_control' (38 sources, 140 headers) in 4.32 sec: 14,237 declarations; 70,448 references; 1 unresolved inclusions; 92 syntax errors; 240 unresolved names (0.28%)
+
+!ENTRY org.eclipse.cdt.dsf.gdb 4 5012 2025-10-29 10:38:15.492
+!MESSAGE Error in final launch sequence:
+
+Failed to execute MI command:
+load C:\\Users\\liushaw\\Desktop\\STM32F407\\LED_control\\Debug\\LED_control.elf 
+
+Error message from debugger back end:
+Error finishing flash operation
+!STACK 1
+org.eclipse.core.runtime.CoreException: Failed to execute MI command:
+load C:\\Users\\liushaw\\Desktop\\STM32F407\\LED_control\\Debug\\LED_control.elf 
+
+Error message from debugger back end:
+Error finishing flash operation
+	at org.eclipse.cdt.dsf.concurrent.Query.get(Query.java:112)
+	at org.eclipse.cdt.dsf.gdb.launching.GdbLaunchDelegate.launchDebugSession(GdbLaunchDelegate.java:252)
+	at org.eclipse.cdt.dsf.gdb.launching.GdbLaunchDelegate.launchDebugger(GdbLaunchDelegate.java:109)
+	at org.eclipse.cdt.dsf.gdb.launching.GdbLaunchDelegate.launch(GdbLaunchDelegate.java:97)
+	at com.st.stm32cube.ide.mcu.debug.launch.DSFDelegate.launch(DSFDelegate.java:334)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:805)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:716)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin.buildAndLaunch(DebugUIPlugin.java:1054)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin$1.run(DebugUIPlugin.java:1257)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Contains: Failed to execute MI command:
+load C:\\Users\\liushaw\\Desktop\\STM32F407\\LED_control\\Debug\\LED_control.elf 
+
+Error message from debugger back end:
+Error finishing flash operation
+java.lang.Exception: Error finishing flash operation
+	at org.eclipse.cdt.dsf.mi.service.command.AbstractMIControl$RxThread.processMIOutput(AbstractMIControl.java:1024)
+	at org.eclipse.cdt.dsf.mi.service.command.AbstractMIControl$RxThread.run(AbstractMIControl.java:853)
+!SUBENTRY 1 org.eclipse.cdt.dsf 4 10004 2025-10-29 10:38:15.493
+!MESSAGE Failed to execute MI command:
+load C:\\Users\\liushaw\\Desktop\\STM32F407\\LED_control\\Debug\\LED_control.elf 
+
+Error message from debugger back end:
+Error finishing flash operation
+!SUBENTRY 2 org.eclipse.cdt.dsf.gdb 4 10004 2025-10-29 10:38:15.493
+!MESSAGE Failed to execute MI command:
+load C:\\Users\\liushaw\\Desktop\\STM32F407\\LED_control\\Debug\\LED_control.elf 
+
+Error message from debugger back end:
+Error finishing flash operation
+!STACK 0
+java.lang.Exception: Error finishing flash operation
+	at org.eclipse.cdt.dsf.mi.service.command.AbstractMIControl$RxThread.processMIOutput(AbstractMIControl.java:1024)
+	at org.eclipse.cdt.dsf.mi.service.command.AbstractMIControl$RxThread.run(AbstractMIControl.java:853)
+!SESSION 2025-10-29 10:58:46.440 -----------------------------------------------
+eclipse.buildId=Version 1.19.0
+java.version=21.0.3
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=zh_TW
+Framework arguments:  C:\Users\liushaw\Desktop\STM32F407\Blue button interrupt\.project
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 C:\Users\liushaw\Desktop\STM32F407\Blue button interrupt\.project
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2025-10-29 10:58:52.385
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2025-10-29 10:58:52.387
+!MESSAGE Log4j2 initialized with config file C:\Users\liushaw\Desktop\STM32F407\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2025-10-29 10:58:59.029
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.cdt.core 1 0 2025-10-29 10:59:04.446
+!MESSAGE Indexed 'Blue button interrupt' (34 sources, 135 headers) in 4.09 sec: 14,226 declarations; 67,793 references; 5 unresolved inclusions; 1,122 syntax errors; 1,723 unresolved names (2.1%)
+
+!ENTRY com.st.stm32cube.ide.mcu.debug.launch 2 0 2025-10-29 11:08:00.823
+!MESSAGE Won't launch debug session since we failed to locate the binary.
+!SESSION 2025-10-29 16:34:45.272 -----------------------------------------------
+eclipse.buildId=Version 1.19.0
+java.version=21.0.3
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=zh_TW
+Framework arguments:  C:\Users\liushaw\Desktop\STM32F407\External button LED multithread\.project
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 C:\Users\liushaw\Desktop\STM32F407\External button LED multithread\.project
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2025-10-29 16:34:51.577
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2025-10-29 16:34:51.578
+!MESSAGE Log4j2 initialized with config file C:\Users\liushaw\Desktop\STM32F407\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2025-10-29 16:34:58.724
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.cdt.core 1 0 2025-10-29 16:35:04.799
+!MESSAGE Indexed 'External button LED multithread' (35 sources, 138 headers) in 3.58 sec: 14,319 declarations; 70,717 references; 3 unresolved inclusions; 131 syntax errors; 248 unresolved names (0.29%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2025-10-29 17:54:20.344
+!MESSAGE Indexed 'External button LED multithread' (54 sources, 185 headers) in 4.22 sec: 20,259 declarations; 103,000 references; 1 unresolved inclusions; 240 syntax errors; 249 unresolved names (0.2%)
+!SESSION 2025-10-30 08:06:18.159 -----------------------------------------------
+eclipse.buildId=Version 1.19.0
+java.version=21.0.3
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=zh_TW
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2025-10-30 08:06:29.053
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2025-10-30 08:06:29.055
+!MESSAGE Log4j2 initialized with config file C:\Users\liushaw\Desktop\STM32F407\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2025-10-30 08:06:42.574
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.cdt.core 1 0 2025-10-30 10:42:06.227
+!MESSAGE Indexed 'External button LED multithread' (53 sources, 171 headers) in 3.17 sec: 18,923 declarations; 101,554 references; 1 unresolved inclusions; 240 syntax errors; 252 unresolved names (0.21%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2025-10-30 11:37:38.152
+!MESSAGE Indexed 'USART' (50 sources, 169 headers) in 2.51 sec: 19,704 declarations; 107,886 references; 1 unresolved inclusions; 240 syntax errors; 249 unresolved names (0.19%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2025-10-30 11:53:35.915
+!MESSAGE Indexed 'USART' (55 sources, 174 headers) in 2.32 sec: 19,716 declarations; 107,906 references; 1 unresolved inclusions; 240 syntax errors; 249 unresolved names (0.19%)

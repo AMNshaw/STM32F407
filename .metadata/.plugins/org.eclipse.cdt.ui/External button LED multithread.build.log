@@ -1,0 +1,10 @@
+10:46:12 **** Incremental Build of configuration Debug for project External button LED multithread ****
+make -j18 all 
+arm-none-eabi-size  External\ button\ LED\ multithread.elf 
+   text	   data	    bss	    dec	    hex	filename
+  51272	    128	  24712	  76112	  12950	External button LED multithread.elf
+Finished building: default.size.stdout
+ 
+
+10:46:13 Build Finished. 0 errors, 0 warnings. (took 623ms)
+
