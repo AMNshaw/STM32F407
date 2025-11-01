@@ -153,3 +153,21 @@ Command-line arguments:  -os win32 -ws win32 -arch x86_64
 
 !ENTRY org.eclipse.cdt.core 1 0 2025-10-30 11:53:35.915
 !MESSAGE Indexed 'USART' (55 sources, 174 headers) in 2.32 sec: 19,716 declarations; 107,906 references; 1 unresolved inclusions; 240 syntax errors; 249 unresolved names (0.19%)
+!SESSION 2025-10-31 13:09:34.697 -----------------------------------------------
+eclipse.buildId=Version 1.19.0
+java.version=21.0.3
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=zh_TW
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2025-10-31 13:09:41.531
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2025-10-31 13:09:41.533
+!MESSAGE Log4j2 initialized with config file C:\Users\liushaw\Desktop\STM32F407\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2025-10-31 13:09:50.957
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.cdt.core 1 0 2025-10-31 13:53:49.980
+!MESSAGE Indexed 'Motor_bridge' (56 sources, 175 headers) in 4.56 sec: 19,726 declarations; 104,977 references; 5 unresolved inclusions; 1,447 syntax errors; 1,963 unresolved names (1.5%)
