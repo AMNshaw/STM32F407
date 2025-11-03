@@ -6,21 +6,19 @@
 typedef struct {
     float vx, vy, wz;
 } VelCmd;
-// 車體速度 (m/s, rad/s)
 
 typedef struct {
     float w[];
 } WheelVel;
-// 四輪角速度 (rad/s)
 
 typedef struct {
-    float x, y, yaw;  // 可先不積分，只用 twist 當回傳
+    float x, y, yaw;
     VelCmd twist;
 } Odom;
 
 typedef struct {
-    float R;     // 輪半徑
-    float L, B;  // 軸距/輪距（你也可改成 LplusB = L + B）
+    float R;
+    float L, B;
 } KineParams;
 
 // 小工具

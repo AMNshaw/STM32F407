@@ -11,6 +11,6 @@ typedef struct AgvKinematicsBase {
     void* impl;  // 幾何參數/內部狀態
 } AgvKinematicsBase;
 
-void MecanumKinematics_create(AgvKinematicsBase* out, const KineParams* p);
+int Kinematics_mecanum_create(AgvKinematicsBase* out, const KineParams* p);
 
 #endif  // AGV_CORE__KINEMATICS_BASE_H_

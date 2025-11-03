@@ -1,0 +1,6 @@
+#ifndef AGV_COMMUNICATION__LINK_UART_RS485_H_
+#define AGV_COMMUNICATION__LINK_UART_RS485_H_
+
+#include "communication_iface.h"
+
+#endif  // AGV_COMMUNICATION__LINK_UART_RS485_H_

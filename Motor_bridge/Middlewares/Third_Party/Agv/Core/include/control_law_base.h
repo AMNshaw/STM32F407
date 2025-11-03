@@ -9,8 +9,8 @@ typedef struct AgvControlLawBase {
     void* impl;
 } AgvControlLawBase;
 
-void Ctrl_Passthrough_create(AgvControlLawBase* out);
-void Ctrl_PID_create(AgvControlLawBase* out, float kp_lin, float ki_lin,
-                     float kd_lin, float kp_yaw, float ki_yaw, float kd_yaw);
+int Ctrl_Passthrough_create(AgvControlLawBase* out);
+int Ctrl_PID_create(AgvControlLawBase* out, float kp_lin, float ki_lin,
+                    float kd_lin, float kp_yaw, float ki_yaw, float kd_yaw);
 
 #endif  // AGV_CORE__CONTROL_LAW_BASE_H_

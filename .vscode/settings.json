@@ -9,5 +9,9 @@
     "terminal.integrated.inheritEnv": true,
     "terminal.integrated.env.windows": {
         "Path": "${env:Path};C:\\Program Files\\Git\\cmd;C:\\Program Files\\Git\\bin;C:\\Users\\liushaw\\AppData\\Local\\Programs\\Git\\cmd;C:\\Users\\liushaw\\AppData\\Local\\Programs\\Git\\bin"
+    },
+    "files.associations": {
+        "communication_iface.h": "c",
+        "communication_host.h": "c"
     }
 }

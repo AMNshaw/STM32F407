@@ -11,6 +11,6 @@ typedef struct AgvMotorBase {
 } AgvMotorBase;
 
 // 具體實作工廠（Oriental + RS485/Modbus）
-void OrientalMotor_create(AgvMotorBase* out /* 可再加 UART/ID 等參數 */);
+int Motor_oriental_create(AgvMotorBase* out /* 可再加 UART/ID 等參數 */);
 
 #endif  // AGV_CORE__MOTOR_BASE_H_

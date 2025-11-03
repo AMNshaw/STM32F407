@@ -1,11 +1,11 @@
 #ifndef AGV_CORE__CORE_H_
 #define AGV_CORE__CORE_H_
 
+#include "agv_types.h"
 #include "communication_base.h"
 #include "control_law_base.h"
 #include "kinematics_base.h"
 #include "motor_base.h"
-#include "types.h"
 
 // FreeRTOS
 #include "FreeRTOS.h"

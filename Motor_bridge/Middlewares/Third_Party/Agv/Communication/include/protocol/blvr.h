@@ -1,0 +1,6 @@
+#ifndef AGV_COMMUNICATION__PROTOCOL_BLVR_H_
+#define AGV_COMMUNICATION__PROTOCOL_BLVR_H_
+
+#include "communication_iface.h"
+
+#endif  // AGV_COMMUNICATION__PROTOCOL_BLVR_H_

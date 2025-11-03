@@ -1,0 +1,6 @@
+#ifndef AGV_COMMUNICATION__FORMAT_MODBUS_H_
+#define AGV_COMMUNICATION__FORMAT_MODBUS_H_
+
+#include "communication_iface.h"
+
+#endif  // AGV_COMMUNICATION__FORMAT_MODBUS_H_
