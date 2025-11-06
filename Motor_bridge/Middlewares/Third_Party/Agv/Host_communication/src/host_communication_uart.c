@@ -5,8 +5,8 @@
 #include "Agv_communication_pack/link/uart_ttl.h"
 #include "Agv_communication_pack/protocol/host_protocol.h"
 
-static int uart_receive_cmd(AgvHostCommunicationBase* self, VelCmd* out) {
-    CommHostImpl* impl = (CommHostImpl*)self->impl;
+static int uart_get_host_cmd(AgvHostCommunicationBase* self, HostMsg* out_msg) {
+    CommHostUartImpl* impl = (CommHostUartImpl*)self->impl;
     if (!impl) return -1;
 
     // Convenience pointers to the composed communication interfaces
@@ -22,7 +22,7 @@ static int uart_receive_cmd(AgvHostCommunicationBase* self, VelCmd* out) {
     if (!uart_impl || !rosFmt_impl || !host_prtcl_impl) return -1;
 
     // Receive raw bytes from the UART link
-    size_t buff_size = uart_impl->cfg->buffer_size;
+    size_t buff_size = uart_impl->cfg->max_buffer_size;
     uint8_t buf[buff_size];
     int len = link->recv_bytes(link, buf, buff_size);
     if (len <= 0) return len;
@@ -63,7 +63,7 @@ static int uart_receive_cmd(AgvHostCommunicationBase* self, VelCmd* out) {
 
 static int uart_send_odom(AgvHostCommunicationBase* self, const Odom* in) {
     if (!in) return -1;
-    CommHostImpl* impl = (CommHostImpl*)self->impl;
+    CommHostUartImpl* impl = (CommHostUartImpl*)self->impl;
     if (!impl) return -1;
     // Convenience pointers to the composed communication interfaces
     AgvCommLinkIface* link = &impl->link;

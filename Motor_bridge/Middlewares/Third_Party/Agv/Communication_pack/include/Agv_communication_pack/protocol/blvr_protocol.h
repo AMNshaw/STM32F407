@@ -5,8 +5,8 @@
 #include <string.h>
 
 #include "Agv_communication_pack/communication_iface.h"
-#include "Agv_communication_pack/communication_msg.h"
 #include "Agv_communication_pack/configs/comm_protocol_config.h"
+#include "Agv_core/agv_types.h"
 
 typedef struct {
     const AgvCommPrtclBlvrCfg* cfg;
@@ -14,7 +14,6 @@ typedef struct {
     AgvCommMsg pending_msg;
     int has_pending;
 
-    AgvCommMsgType last_req_type;
 } BlvrPrtclImpl;
 
 static int BlvrProto_feed_frame(AgvCommProtocolIface* iface,

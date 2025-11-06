@@ -4,10 +4,10 @@
 #include "Agv_core/agv_types.h"
 
 typedef struct AgvMotorCommunicationBase {
-    int (*init)(struct AgvMAgvMotorCommunicationBaseotorBase* self);
+    int (*get_feedback_msg)(struct AgvMotorCommunicationBase* self,
+                            MotorMsg* out_msg);
     int (*write_targets)(struct AgvMotorCommunicationBase* self,
                          const WheelVel* in);
-    int (*read_feedback)(struct AgvMotorCommunicationBase* self, WheelVel* out);
     void* impl;  // 私有實作
 } AgvMotorCommunicationBase;
 

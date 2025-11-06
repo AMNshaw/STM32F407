@@ -23,6 +23,11 @@
         "comm_format_config.h": "c",
         "comm_link_config.h": "c",
         "comm_protocol_config.h": "c",
-        "modbus_rtu_format.h": "c"
+        "modbus_rtu_format.h": "c",
+        "motor_communication_base.h": "c",
+        "usart.h": "c",
+        "communication_msg.h": "c",
+        "blvr_protocol_defs.h": "c",
+        "uart_rs485.h": "c"
     }
 }

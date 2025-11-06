@@ -9,9 +9,10 @@ typedef struct {
     AgvCommFormatIface fmt;
     AgvCommProtocolIface prtcl;
 
-} BlvrMotorImpl;
+} CommBlvrMotorImpl;
 
-int blvr_read(AgvMotorCommunicationBase* self, WheelVel* out);
-int blvr_write(AgvMotorCommunicationBase* self, const WheelVel* in);
+static int blvr_read(AgvMotorCommunicationBase* self, MotorMsg* out_msg);
+static int blvr_write_targets(AgvMotorCommunicationBase* self,
+                              const WheelVel* in);
 
 #endif  // AGV_MOTOR_COMMUNICATION__BLVR_H_

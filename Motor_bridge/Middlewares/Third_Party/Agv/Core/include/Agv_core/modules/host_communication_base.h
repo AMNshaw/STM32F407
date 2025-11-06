@@ -4,7 +4,8 @@
 #include "Agv_core/agv_types.h"
 
 typedef struct AgvHostCommunicationBase {
-    int (*receive_cmd)(struct AgvHostCommunicationBase* self, VelCmd* out);
+    int (*get_host_cmd)(struct AgvHostCommunicationBase* self,
+                        HostMsg* out_msg);
     int (*send_odom)(struct AgvHostCommunicationBase* self, const Odom* in);
     void* impl;
 } AgvHostCommunicationBase;

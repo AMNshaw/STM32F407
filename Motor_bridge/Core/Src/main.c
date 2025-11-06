@@ -99,6 +99,7 @@ int main(void)
   MX_I2S3_Init();
   MX_SPI1_Init();
   MX_USART2_UART_Init();
+  MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */

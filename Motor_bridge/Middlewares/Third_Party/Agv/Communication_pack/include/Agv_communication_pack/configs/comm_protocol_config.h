@@ -11,6 +11,8 @@ typedef struct {
 } AgvCommPrtclHostCfg;
 
 typedef struct {
+    size_t max_frame_size;
+
     uint8_t slave_id;
     uint8_t axis_count;
 

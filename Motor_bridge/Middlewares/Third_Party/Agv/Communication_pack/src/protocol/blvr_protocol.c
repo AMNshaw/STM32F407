@@ -1,23 +1,20 @@
-#include "protocol/blvr_protocol.h"
+#include "Agv_communication_pack/protocol/blvr_protocol.h"
 
-#include "msg/modbus_rtu.h"
+#include <stdbool.h>
+
+#include "Agv_communication_pack/exception_codes.h"
+#include "Agv_communication_pack/protocol_defs/blvr_protocol_defs.h"
 
 int Protocol_blvr_create(AgvCommProtocolIface* out,
                          const AgvCommPrtclBlvrCfg* cfg) {
-    if (!out || !cfg) {
-        return -1;
-    }
+    if (!out || !cfg) return AGV_COMM_ERR_INVALID_ARG;
 
     BlvrPrtclImpl* impl = (BlvrPrtclImpl*)malloc(sizeof(BlvrPrtclImpl));
-    if (!impl) {
-        return -2;
-    }
+    if (!impl) return AGV_COMM_ERR_NO_MEMORY;
 
-    memset(impl, 0, sizeof(*impl));
     impl->cfg = cfg;
-    impl->last_req_type = AGV_COMM_MSG_NONE;
+    impl->has_pending = 0;
 
-    memset(out, 0, sizeof(*out));
     out->impl = impl;
     out->feed_frame = BlvrProto_feed_frame;
     out->pop_msg = BlvrProto_pop_msg;
@@ -28,42 +25,46 @@ int Protocol_blvr_create(AgvCommProtocolIface* out,
 }
 
 static int BlvrProto_destroy(AgvCommProtocolIface* iface) {
-    if (!iface || !iface->impl) {
-        return -1;
-    }
+    if (!iface || !iface->impl) return AGV_COMM_ERR_INVALID_ARG;
     free(iface->impl);
     iface->impl = NULL;
-    memset(iface, 0, sizeof(*iface));
-    return 0;
+
+    return AGV_COMM_OK;
 }
 
 static int BlvrProto_feed_frame(AgvCommProtocolIface* iface,
-                                const uint8_t* frame, size_t len) {
-    if (!iface || !iface->impl || !frame) {
-        return -1;
+                                const uint8_t* frame_in, size_t frame_len) {
+    if (!iface || !frame_in || frame_len == 0) {
+        return AGV_COMM_ERR_INVALID_ARG;
     }
 
-    if (len < 5) {
+    if (frame_len < 5) {
         // Addr + Func + 至少一點資料 + CRC(2)，太短就直接丟
-        return -2;
+        return AGV_COMM_ERR_FMT_FRAME_TOO_SHORT;
     }
 
     BlvrPrtclImpl* impl = (BlvrPrtclImpl*)iface->impl;
+    if (!impl) return AGV_COMM_ERR_NO_MEMORY;
     const AgvCommPrtclBlvrCfg* cfg = impl->cfg;
-    if (!cfg) return -1;
+    if (!cfg) return AGV_COMM_ERR_NO_MEMORY;
 
-    uint8_t addr = frame[0];
-    uint8_t func = frame[1];
+    uint8_t addr = frame_in[0];
+    uint8_t func = frame_in[1];
 
     // 不是我在管的 slave，就忽略
-    if (addr != cfg->slave_id) {
-        return 0;
+    int has_slave_id = false;
+    for (size_t i = 0; i < sizeof(cfg->slave_ids); ++i) {
+        if (addr == cfg->slave_ids[i]) {
+            has_slave_id == true;
+            break;
+        }
     }
+    if (!has_slave_id) return AGV_COMM_ERR_PRTCL_UNSUPPORTED_SLAVE_ID;
 
     // 去掉最後 2 bytes 的 CRC
-    size_t pdu_len = len - 2;
-    const uint8_t* p = &frame[2];   // 指向 PDU data 部分
-    size_t data_len = pdu_len - 2;  // 去掉 addr+func 之後，只剩 data
+    size_t pdu_len = frame_len - 2;
+    const uint8_t* p = &frame_in[2];  // 指向 PDU data 部分
+    size_t data_len = pdu_len - 2;    // 去掉 addr+func 之後，只剩 data
 
     // 例外回應：func | 0x80
     if (func & MODBUS_FC_EXCEPTION_BIT) {
@@ -73,40 +74,38 @@ static int BlvrProto_feed_frame(AgvCommProtocolIface* iface,
         return -3;
     }
 
-    // 根據 func 及 last_req_type 來 decode
+    // 根據 func 來 decode
     switch (func) {
         case MODBUS_FC_READ_HOLDING_REGISTERS: {
             // Read Holding Registers response:
             // [Addr][0x03][ByteCount][Data...][CRC_L][CRC_H]
             if (data_len < 1) {
-                return -4;
+                return AGV_COMM_ERR_FMT_FRAME_TOO_SHORT;
             }
             uint8_t byte_count = p[0];
             if (data_len < 1 + byte_count) {
-                return -4;
+                return AGV_COMM_ERR_FMT_FRAME_TOO_SHORT;
             }
             const uint8_t* d = &p[1];
 
             // 檢查是否跟我們預期的一樣大小
-            if (impl->last_req_type == AGV_COMM_MSG_BLVR_RPM) {
-                uint16_t expected_regs = cfg->axis_count;  // 一軸一個 16 bit
-                if (byte_count != expected_regs * 2) {
-                    return -5;
-                }
-
-                AgvCommMsg msg;
-                memset(&msg, 0, sizeof(msg));
-                msg.type = AGV_COMM_MSG_BLVR_RPM;
-
-                for (uint8_t i = 0; i < cfg->axis_count; ++i) {
-                    int16_t raw = (int16_t)((d[0] << 8) | d[1]);  // big-endian
-                    msg.data.blvr_op[i].rpm = (int32_t)raw;  // 存進 int32_t
-                    d += 2;
-                }
-
-                impl->pending_msg = msg;
-                impl->has_pending = 1;
+            uint16_t expected_regs = cfg->axis_count;  // 一軸一個 16 bit
+            if (byte_count != expected_regs * 2) {
+                return AGV_COMM_ERR_PRTCL_BAD_PAYLOAD;
             }
+
+            AgvCommMsg msg;
+            msg.msg_type = MOTOR_MSG;
+            msg.u.motors_msg.msg_type = AGV_COMM_MSG_RPM;
+
+            for (uint8_t i = 0; i < cfg->axis_count; ++i) {
+                int16_t raw = (int16_t)((d[0] << 8) | d[1]);  // big-endian
+                msg.u.motors_msg.msgs[i].rpm = raw;
+                d += 2;
+            }
+
+            impl->pending_msg = msg;
+            impl->has_pending = 1;
 
             return 0;
         }
@@ -115,7 +114,6 @@ static int BlvrProto_feed_frame(AgvCommProtocolIface* iface,
             // Write Multiple Registers response:
             // [Addr][0x10][StartAddrHi][StartAddrLo][RegCountHi][RegCountLo]
             // 一般只要當 ack 就好，不需要轉成 AgvCommMsg
-            // 你要的話可以在這裡依 last_req_type 做簡單狀態回報
             return 0;
 
         case MODBUS_FC_READWRITE_MULTIPLE_REGISTERS:
@@ -129,18 +127,16 @@ static int BlvrProto_feed_frame(AgvCommProtocolIface* iface,
     }
 }
 
-static int BlvrProto_pop_msg(AgvCommProtocolIface* iface, AgvCommMsg* out) {
-    if (!iface || !iface->impl || !out) {
-        return -1;
-    }
+static int BlvrProto_pop_msg(AgvCommProtocolIface* iface, AgvCommMsg* out_msg) {
+    if (!iface || !out_msg) return AGV_COMM_ERR_INVALID_ARG;
 
     BlvrPrtclImpl* impl = (BlvrPrtclImpl*)iface->impl;
+    if (!impl) return AGV_COMM_ERR_NO_MEMORY;
 
-    if (!impl->has_pending) {
-        return -2;  // 沒有可用訊息
-    }
+    if (!impl->has_pending)
+        return AGV_COMM_ERR_PRTCL_NO_PENDING_MSG;  // 沒有可用訊息
 
-    *out = impl->pending_msg;
+    *out_msg = impl->pending_msg;
     impl->has_pending = 0;
 
     return 0;
@@ -148,19 +144,24 @@ static int BlvrProto_pop_msg(AgvCommProtocolIface* iface, AgvCommMsg* out) {
 
 static int BlvrProto_build_frame(AgvCommProtocolIface* iface,
                                  const AgvCommMsg* msg, uint8_t* out_frame,
-                                 size_t* inout_len) {
-    if (!iface || !iface->impl || !msg || !out_frame || !inout_len) {
-        return -1;
+                                 size_t max_out_len) {
+    if (!iface || !msg || !out_frame || max_out_len == 0) {
+        return AGV_COMM_ERR_INVALID_ARG;
     }
 
     BlvrPrtclImpl* impl = (BlvrPrtclImpl*)iface->impl;
+    if (!impl) return AGV_COMM_ERR_NO_MEMORY;
     const AgvCommPrtclBlvrCfg* cfg = impl->cfg;
-    if (!cfg) return -1;
-    size_t max_len = *inout_len;
+    if (!cfg) return AGV_COMM_ERR_NO_MEMORY;
+
     size_t idx = 0;
 
-    switch (msg->type) {
-        case AGV_COMM_MSG_BLVR_SPEED_CTRL: {
+    if (msg->msg_type != MOTOR_MSG) return AGV_COMM_ERR_PRTCL_INVALID_MSG_TYPE;
+
+    MotorsMsg motors_msg = msg->u.motors_msg;
+
+    switch (motors_msg.msg_type) {
+        case AGV_COMM_MSG_SPEED_CTRL: {
             uint16_t reg_start = cfg->reg_speed_cmd_base;
             uint16_t reg_count = cfg->axis_count;  // 一軸一個暫存器
             uint8_t byte_count = (uint8_t)(reg_count * 2);
@@ -172,14 +173,15 @@ static int BlvrProto_build_frame(AgvCommProtocolIface* iface,
                             + 1            // byte_count
                             + byte_count;  // data
 
-            if (max_len < needed) {
-                return -5;  // 呼叫方給的 buffer 不夠大
+            if (max_out_len < needed) {
+                return AGV_COMM_ERR_FMT_FRAME_TOO_SHORT;  // 呼叫方給的 buffer
+                                                          // 不夠大
             }
 
             // Addr
             out_frame[idx++] = cfg->slave_id;
             // Function code
-            out_frame[idx++] = 0x10;
+            out_frame[idx++] = MODBUS_FC_WRITE_MULTIPLE_REGISTERS;
 
             // Start address
             out_frame[idx++] = (uint8_t)(reg_start >> 8);
@@ -194,49 +196,22 @@ static int BlvrProto_build_frame(AgvCommProtocolIface* iface,
 
             // Data：每軸一個 int16 speed_ctrl
             for (uint8_t i = 0; i < cfg->axis_count; ++i) {
-                int16_t sp = (int16_t)(msg->data.blvr_op[i].speed_ctrl);
+                int16_t sp = (int16_t)(motors_msg.msgs[i].speed_ctrl);
                 out_frame[idx++] = (uint8_t)((sp >> 8) & 0xFF);  // hi
                 out_frame[idx++] = (uint8_t)(sp & 0xFF);         // lo
             }
 
-            *inout_len = idx;
-            impl->last_req_type = msg->type;
             return 0;
         }
 
-        case AGV_COMM_MSG_BLVR_RPM: {
-            uint16_t reg_start = cfg->reg_rpm_base;
-            uint16_t reg_count =
-                cfg->axis_count;  // 先假設一軸一個 16bit RPM（你可以改成 2
-                                  // regs/axis）
-
-            size_t needed = 1 + 1 + 2 + 2;  // addr + func + start + count
-
-            if (max_len < needed) {
-                return -5;
-            }
-
-            out_frame[idx++] = cfg->slave_id;  // Addr
-            out_frame[idx++] = 0x03;  // Function = Read Holding Registers
-
-            out_frame[idx++] = (uint8_t)(reg_start >> 8);
-            out_frame[idx++] = (uint8_t)(reg_start & 0xFF);
-
-            out_frame[idx++] = (uint8_t)(reg_count >> 8);
-            out_frame[idx++] = (uint8_t)(reg_count & 0xFF);
-
-            *inout_len = idx;
-            impl->last_req_type = msg->type;
-            return 0;
-        }
-
-        case AGV_COMM_MSG_BLVR_ACCEL:
+        case AGV_COMM_MSG_ACCEL:
             break;
-        case AGV_COMM_MSG_BLVR_DECEL:
+        case AGV_COMM_MSG_DECEL:
             break;
-        case AGV_COMM_MSG_BLVR_TRIGGER:
+        case AGV_COMM_MSG_TRIGGER:
             break;
         default:
-            return -4;
+            return AGV_COMM_ERR_PRTCL_INVALID_MSG_TYPE;
     }
+    return idx;
 }

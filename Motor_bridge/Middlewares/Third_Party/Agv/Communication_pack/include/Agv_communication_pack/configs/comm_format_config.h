@@ -22,7 +22,7 @@ typedef struct {
 } AgvCommFmtRosCfg;
 
 typedef struct {
-    size_t data_buf_size;
+    size_t max_buf_size;
     size_t max_frame_size;
     CrcCfg crc_cfg;
     uint16_t interframe_chars_x10;  // Modbus RTU: 3.5 chars = 35

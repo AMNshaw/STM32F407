@@ -5,9 +5,9 @@
 #include "Agv_communication_pack/link/uart_rs485.h"
 #include "Agv_communication_pack/protocol/blvr_protocol.h"
 
-static int blvr_read(AgvMotorCommunicationBase* self, WheelVel* out) {
+static int blvr_read(AgvMotorCommunicationBase* self, MotorMsg* out_msg) {
     // Convenience pointers to the composed communication interfaces
-    BlvrMotorImpl* impl = (BlvrMotorImpl*)self->impl;
+    CommBlvrMotorImpl* impl = (CommBlvrMotorImpl*)self->impl;
     if (!impl) return -1;
     AgvCommLinkIface* link = &impl->link;
     AgvCommFormatIface* fmt = &impl->fmt;
@@ -21,44 +21,28 @@ static int blvr_read(AgvMotorCommunicationBase* self, WheelVel* out) {
     if (!rs485_impl || !modbus_impl || !blvr_prtcl_impl) return -1;
 
     // Receive raw bytes from the UART link
-    size_t buff_size = rs485_impl->cfg->buffer_size;
-    uint8_t buf[buff_size];
-    int len = link->recv_bytes(link, buf, buff_size);
-    if (len <= 0) return len;
+    size_t max_fmt_buff_size = modbus_impl->cfg->max_buf_size;
+    uint8_t data_buf[max_fmt_buff_size];
+    int data_len = link->read_buf(link, data_buf, max_fmt_buff_size);
+    if (data_len <= 0) return data_len;
 
-    uint32_t gap_threshold_us =
-        rs485_impl->char_time_10x_us * modbus_impl->cfg->interframe_chars_x10;
+    uint32_t gap_threshold_us = rs485_impl->cfg->char_time_10x_us *
+                                modbus_impl->cfg->interframe_chars_x10;
 
-    if (rs485_impl->rtu_rx_len > 0) {
+    if (data_len > 0) {
         uint32_t dt = now_us - rs485_impl->last_rx_time_us;
         if (dt >= gap_threshold_us) {
             // gap 夠長 => 前面的當作一個 Modbus frame 丟進 formatter
-            fmt->feed(fmt, rs485_impl->rtu_rx_buf, rs485_impl->rtu_rx_len);
-            rs485_impl->rtu_rx_len = 0;
-        }
-        if (len > 0) {
-            size_t copy_n = (size_t)len;
-            // clang-format off
-            if (copy_n > sizeof(rs485_impl->rtu_rx_buf) - rs485_impl->rtu_rx_len) {
-                copy_n = sizeof(rs485_impl->rtu_rx_buf) - rs485_impl->rtu_rx_len;
-            }
-            // clang-format on
-            memcpy(&rs485_impl->rtu_rx_buf[rs485_impl->rtu_rx_len], buf,
-                   copy_n);
-            rs485_impl->rtu_rx_len += copy_n;
-            rs485_impl->last_rx_time_us = now_us;
+            fmt->feed(fmt, data_buf, (size_t)data_len);
         }
     }
 
     // Extract complete Modbus RTU frames from the formatter
-    size_t max_frame_size = modbus_impl->cfg->max_frame_size;
+    size_t max_frame_size = blvr_prtcl_impl->cfg->max_frame_size;
     uint8_t frame[max_frame_size];
     while (1) {
-        size_t frame_len = max_frame_size;
-        if (fmt->pop_frame(fmt, frame, &frame_len) != 0) {
-            // No more complete frames available in the buffer
-            break;
-        }
+        int frame_len = fmt->pop_frame(fmt, frame, &max_frame_size);
+        if (frame_len <= 0) break;
         // For each decoded frame, feed it into the protocol layer
         prtcl->feed_frame(prtcl, frame, frame_len);
     }
@@ -83,11 +67,12 @@ static int blvr_read(AgvMotorCommunicationBase* self, WheelVel* out) {
     return got_cmd ? 1 : 0;
 }
 
-static int blvr_write(AgvMotorCommunicationBase* self, const WheelVel* in) {
+static int blvr_write_targets(AgvMotorCommunicationBase* self,
+                              const WheelVel* in) {
     if (!in) return -1;
 
     // Convenience pointers to the composed communication interfaces
-    BlvrMotorImpl* impl = (BlvrMotorImpl*)self->impl;
+    CommBlvrMotorImpl* impl = (CommBlvrMotorImpl*)self->impl;
     if (!impl) return -1;
     AgvCommLinkIface* link = &impl->link;
     AgvCommFormatIface* fmt = &impl->fmt;

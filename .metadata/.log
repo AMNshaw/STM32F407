@@ -363,3 +363,28 @@ java.lang.IllegalStateException: Conflicting handlers: {[ActionHandler(org.eclip
 	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:668)
 	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:605)
 	at org.eclipse.equinox.launcher.Main.run(Main.java:1481)
+!SESSION 2025-11-06 08:35:27.832 -----------------------------------------------
+eclipse.buildId=Version 1.19.0
+java.version=21.0.3
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=zh_TW
+Framework arguments:  C:\Users\liushaw\Desktop\STM32F407\Motor_bridge\.project
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 C:\Users\liushaw\Desktop\STM32F407\Motor_bridge\.project
+
+!ENTRY org.eclipse.core.resources 2 10035 2025-11-06 08:35:29.590
+!MESSAGE The workspace exited with unsaved changes in the previous session; refreshing workspace to recover changes.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2025-11-06 08:35:34.056
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2025-11-06 08:35:34.057
+!MESSAGE Log4j2 initialized with config file C:\Users\liushaw\Desktop\STM32F407\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2025-11-06 08:35:41.838
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.cdt.core 1 0 2025-11-06 08:35:47.078
+!MESSAGE Indexed 'Motor_bridge' (69 sources, 201 headers) in 3.85 sec: 20,494 declarations; 110,279 references; 7 unresolved inclusions; 241 syntax errors; 347 unresolved names (0.26%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2025-11-06 09:08:06.334
+!MESSAGE Indexed 'Motor_bridge' (69 sources, 201 headers) in 4.14 sec: 20,501 declarations; 110,293 references; 7 unresolved inclusions; 241 syntax errors; 348 unresolved names (0.27%)

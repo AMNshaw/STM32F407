@@ -12,7 +12,7 @@
 #include "semphr.h"
 #include "task.h"
 
-typedef struct AgvCore {
+typedef struct {
     AgvKinematicsBase* kine;
     AgvMotorCommunicationBase* motors_comm;
     AgvControlLawBase* ctrl;  // 可為 NULL 表直通
@@ -31,10 +31,5 @@ typedef struct AgvCore {
     TaskHandle_t task_cmd_ctrl;
     TaskHandle_t task_read_odom;
 } AgvCore;
-
-void AgvCore(AgvCore* agv, AgvKinematicsBase* kine, AgvMotorBase* motors,
-             AgvControlLawBase* ctrl, AgvCommunicationBase* comm);
-
-void AgvCore(AgvCore* agv, UbaseType_t prio_cmd, UbaseType_t prio_odom);
 
 #endif  // AGV_CORE__CORE_H_

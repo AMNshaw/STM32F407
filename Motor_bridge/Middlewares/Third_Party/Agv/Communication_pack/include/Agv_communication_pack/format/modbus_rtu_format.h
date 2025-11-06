@@ -29,11 +29,15 @@ static enum { SUCCESS = 0, ERROR } ModbusStatus;
 
 static int modbusFmt_feed(AgvCommFormatIface* iface, const uint8_t* bytes,
                           size_t n);
-static int modbusFmt_pop_frame(AgvCommFormatIface* iface, uint8_t* out,
-                               size_t* inout_len);
+
+static int modbusFmt_pop_frame(AgvCommFormatIface* iface, uint8_t* out_frame,
+                               size_t max_frame_size);
+
 static int modbusFmt_make_frame(AgvCommFormatIface* iface,
                                 const uint8_t* payload, size_t len,
                                 uint8_t* out, size_t* inout_len);
+
+static int modbusFmt_destroy(AgvCommFormatIface* iface);
 
 static uint16_t modbus_crc16(const CrcCfg* cfg, const uint8_t* data,
                              size_t len);

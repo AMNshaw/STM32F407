@@ -9,9 +9,9 @@ typedef struct {
     AgvCommLinkIface link;
     AgvCommFormatIface fmt;
     AgvCommProtocolIface prtcl;
-} CommHostImpl;
+} CommHostUartImpl;
 
-int uart_receive_cmd(AgvHostCommunicationBase* self, VelCmd* out);
-int uart_send_odom(AgvHostCommunicationBase* self, const Odom* in);
+static int uart_get_host_cmd(AgvHostCommunicationBase* self, HostMsg* out_msg);
+static int uart_send_odom(AgvHostCommunicationBase* self, const Odom* in);
 
 #endif  // AGV_HOST_COMMUNICATION__HOST_COMMUNICATION_UART_H_

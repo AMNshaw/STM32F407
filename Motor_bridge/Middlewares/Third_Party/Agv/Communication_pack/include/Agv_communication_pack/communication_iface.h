@@ -4,7 +4,6 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#include "Agv_communication_pack/communication_msg.h"
 #include "Agv_core/agv_types.h"
 
 /**
@@ -15,6 +14,9 @@ typedef struct AgvCommLinkIface {
     int (*send_bytes)(struct AgvCommLinkIface* iface, const uint8_t* data,
                       size_t len);
     int (*recv_bytes)(struct AgvCommLinkIface* iface, uint8_t* buf, size_t len);
+    int (*on_buf_rcv)(struct AgvCommLinkIface* iface, uint8_t* buf, size_t len);
+    int (*read_buf)(struct AgvCommLinkIface* iface, uint8_t* out_buf,
+                    size_t max_out_size);
     int (*destroy)(struct AgvCommLinkIface* iface);
     void* impl;
 } AgvCommLinkIface;

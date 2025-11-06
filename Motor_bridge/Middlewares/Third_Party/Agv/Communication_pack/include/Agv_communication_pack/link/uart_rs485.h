@@ -3,20 +3,28 @@
 
 #include "Agv_communication_pack/communication_iface.h"
 #include "Agv_communication_pack/configs/comm_link_config.h"
+#include "FreeRTOS.h"
+#include "semphr.h"
 
 typedef struct uart_rs485 {
     const AgvCommUartCfg* cfg;
 
-    uint8_t rtu_rx_buf[256];
-    size_t rtu_rx_len;
+    uint8_t* rx_buf;
+    size_t rx_len;
     uint32_t last_rx_time_us;
-    uint32_t char_time_10x_us;
+
+    SemaphoreHandle_t rx_mutex;
 } UartRs485Impl;
 
 static int send_bytes_rs485(AgvCommLinkIface* iface, const uint8_t* data,
                             size_t len);
 
 static int recv_bytes_rs485(AgvCommLinkIface* iface, uint8_t* buf, size_t len);
+
+static int on_rx_rcv_rs485(AgvCommLinkIface* iface, uint8_t* buf, size_t len);
+
+static int read_rx_buff_rs485(AgvCommLinkIface* iface, uint8_t* out_buf,
+                              size_t max_out_size);
 
 static int destroy_rs485(AgvCommLinkIface* iface);
 
