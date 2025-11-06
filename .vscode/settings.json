@@ -12,6 +12,13 @@
     },
     "files.associations": {
         "communication_iface.h": "c",
-        "communication_host.h": "c"
+        "communication_host.h": "c",
+        "communication_config.h": "c",
+        "communication_base.h": "c",
+        "communication_builder.h": "c",
+        "blvr.h": "c",
+        "host_communication_base.h": "c",
+        "agv_types.h": "c",
+        "motor_base.h": "c"
     }
 }

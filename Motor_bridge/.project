@@ -31,11 +31,6 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>Agv</name>
-			<type>2</type>
-			<location>C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv</location>
-		</link>
-		<link>
 			<name>Middlewares/Third_Party/Agv</name>
 			<type>2</type>
 			<location>C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv</location>

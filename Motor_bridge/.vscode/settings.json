@@ -1,0 +1,28 @@
+{
+    "editor.formatOnSave": true,
+    "[cpp]": {
+        "editor.defaultFormatter": "ms-vscode.cpptools"
+    },
+    "[c]": {
+        "editor.defaultFormatter": "ms-vscode.cpptools"
+    },
+    "terminal.integrated.inheritEnv": true,
+    "terminal.integrated.env.windows": {
+        "Path": "${env:Path};C:\\Program Files\\Git\\cmd;C:\\Program Files\\Git\\bin;C:\\Users\\liushaw\\AppData\\Local\\Programs\\Git\\cmd;C:\\Users\\liushaw\\AppData\\Local\\Programs\\Git\\bin"
+    },
+    "files.associations": {
+        "communication_iface.h": "c",
+        "communication_host.h": "c",
+        "communication_config.h": "c",
+        "communication_base.h": "c",
+        "communication_builder.h": "c",
+        "blvr.h": "c",
+        "host_communication_base.h": "c",
+        "agv_types.h": "c",
+        "motor_base.h": "c",
+        "comm_format_config.h": "c",
+        "comm_link_config.h": "c",
+        "comm_protocol_config.h": "c",
+        "modbus_rtu_format.h": "c"
+    }
+}
