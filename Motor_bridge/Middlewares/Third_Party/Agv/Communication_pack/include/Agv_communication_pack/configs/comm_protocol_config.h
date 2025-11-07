@@ -5,21 +5,43 @@
 #include <stdlib.h>
 
 typedef enum { AGV_COMM_PRTCL_HOST, AGV_COMM_PRTCL_BLVR } AgvCommPrtclType;
-
+/**
+ * Host
+ */
 typedef struct {
     uint8_t placeholder;
 } AgvCommPrtclHostCfg;
 
+/**
+ * Motor
+ */
+
 typedef struct {
+    uint16_t shared_id;
     size_t max_frame_size;
 
-    uint8_t slave_id;
-    uint8_t axis_count;
+    size_t axis_count;
 
-    uint16_t reg_rpm_base;
-    uint16_t regs_per_axis_rpm;
+    size_t byte_per_rgstr;
+    size_t num_rgster_per_cmd;
+    size_t num_read_cmd;
+    size_t num_write_cmd;
 
-    uint16_t reg_speed_cmd_base;
+    struct {
+        uint16_t driver_status;
+        uint16_t real_vel;
+        uint16_t real_pos;
+        uint16_t present_alarm;
+    } reg_address_read;
+
+    struct {
+        uint16_t cmd_vel;
+        uint16_t cmd_acc;
+        uint16_t cmd_dec;
+        uint16_t cmd_op;
+        uint16_t cmd_trg;
+    } reg_address_write;
+
 } AgvCommPrtclBlvrCfg;
 
 typedef struct {

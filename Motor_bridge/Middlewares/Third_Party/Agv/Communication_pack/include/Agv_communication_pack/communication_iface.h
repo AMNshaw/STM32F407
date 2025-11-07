@@ -4,7 +4,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#include "Agv_core/agv_types.h"
+#include "Agv_communication_pack/communication_msgs.h"
 
 /**
  * Link

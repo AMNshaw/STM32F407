@@ -28,10 +28,11 @@
 /* ===== Protocol 層錯誤 (command 解譯/邏輯) ===== */
 #define AGV_COMM_ERR_PRTCL_UNSUPPORTED_CMD \
     -30  ///< 不支援的 command / function code
-#define AGV_COMM_ERR_PRTCL_UNSUPPORTED_SLAVE_ID -31  ///< slave_id 不符
+#define AGV_COMM_ERR_PRTCL_UNSUPPORTED_SHARED_ID -31  ///< shared_id 不符
 #define AGV_COMM_ERR_PRTCL_BAD_PAYLOAD -32  ///< payload 格式不符或長度不對
 #define AGV_COMM_ERR_PRTCL_STATE -33        ///< 狀態機不在合法狀態
 #define AGV_COMM_ERR_PRTCL_NO_PENDING_MSG -34
 #define AGV_COMM_ERR_PRTCL_INVALID_MSG_TYPE -35
+#define AGV_COMM_ERR_PRTCL_EXCEPTION -36
 
 #endif  // AGV_COMMUNICATION_PACK__EXCEPTION_CODES_H_

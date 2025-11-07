@@ -1,11 +1,11 @@
 #include "Agv_motor_communication/blvr.h"
 
-#include "Agv_communication_pack/communication_msg.h"
+#include "Agv_communication_pack/communication_msgs.h"
 #include "Agv_communication_pack/format/modbus_rtu_format.h"
 #include "Agv_communication_pack/link/uart_rs485.h"
 #include "Agv_communication_pack/protocol/blvr_protocol.h"
 
-static int blvr_read(AgvMotorCommunicationBase* self, MotorMsg* out_msg) {
+static int blvr_read(AgvMotorCommunicationBase* self, MotorInterMsg* out_msg) {
     // Convenience pointers to the composed communication interfaces
     CommBlvrMotorImpl* impl = (CommBlvrMotorImpl*)self->impl;
     if (!impl) return -1;
@@ -19,6 +19,10 @@ static int blvr_read(AgvMotorCommunicationBase* self, MotorMsg* out_msg) {
     ModbusRtuFmtImpl* modbus_impl = (ModbusRtuFmtImpl*)impl->fmt.impl;
     BlvrPrtclImpl* blvr_prtcl_impl = (BlvrPrtclImpl*)impl->prtcl.impl;
     if (!rs485_impl || !modbus_impl || !blvr_prtcl_impl) return -1;
+
+    // ToDO: Make protocol frame and send first, then wait for response
+
+    // ToDo
 
     // Receive raw bytes from the UART link
     size_t max_fmt_buff_size = modbus_impl->cfg->max_buf_size;
@@ -48,10 +52,10 @@ static int blvr_read(AgvMotorCommunicationBase* self, MotorMsg* out_msg) {
     }
 
     // Drain protocol messages and look for BLVR RPM command messages
-    AgvCommMsg msg;
+    MotorInterMsg msg = {0};
     int got_cmd = 0;
     while (prtcl->pop_msg(prtcl, &msg) == 0) {
-        switch (msg.type) {
+        switch (msg.rpm) {
             case AGV_COMM_MSG_BLVR_RPM:
                 for (int i = 0; i < 4; i++) {
                     out->w[i] = msg.data.blvr_op[i].rpm;

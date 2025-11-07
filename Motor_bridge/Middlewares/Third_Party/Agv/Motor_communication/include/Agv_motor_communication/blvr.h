@@ -11,7 +11,7 @@ typedef struct {
 
 } CommBlvrMotorImpl;
 
-static int blvr_read(AgvMotorCommunicationBase* self, MotorMsg* out_msg);
+static int blvr_read(AgvMotorCommunicationBase* self, MotorInterMsg* out_msg);
 static int blvr_write_targets(AgvMotorCommunicationBase* self,
                               const WheelVel* in);
 

@@ -406,3 +406,6 @@ Command-line arguments:  -os win32 -ws win32 -arch x86_64
 
 !ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2025-11-07 07:23:27.628
 !MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.cdt.core 1 0 2025-11-07 07:32:42.922
+!MESSAGE Indexed 'Motor_bridge' (70 sources, 202 headers) in 5.59 sec: 20,554 declarations; 110,611 references; 9 unresolved inclusions; 242 syntax errors; 409 unresolved names (0.31%)

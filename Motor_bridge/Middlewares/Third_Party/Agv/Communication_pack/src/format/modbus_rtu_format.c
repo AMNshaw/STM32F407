@@ -13,7 +13,7 @@ int Format_modbus_create(AgvCommFormatIface* out,
     impl->cfg = cfg;
     impl->state = ST_IDLE;
 
-    impl->data_buf = (uint8_t*)malloc(cfg->data_buf_size);
+    impl->data_buf = (uint8_t*)malloc(cfg->max_buf_size);
     if (!impl->data_buf) {
         free(impl);
         return AGV_COMM_ERR_NO_MEMORY;
@@ -161,8 +161,8 @@ static int modbusFmt_make_frame(AgvCommFormatIface* iface,
     uint16_t crc = modbus_crc16(&cfg->crc_cfg, frame_out, frame_len);
 
     // Modbus RTU 是低位在前
-    out[payload_size] = (uint8_t)(crc & 0x00FF);             // CRC_L
-    out[payload_size + 1] = (uint8_t)((crc >> 8) & 0x00FF);  // CRC_H
+    frame_out[payload_size] = (uint8_t)(crc & 0x00FF);             // CRC_L
+    frame_out[payload_size + 1] = (uint8_t)((crc >> 8) & 0x00FF);  // CRC_H
 
     return frame_len;
 }

@@ -21,7 +21,7 @@ int Protocol_blvr_create(AgvCommProtocolIface* out,
     out->build_frame = BlvrProto_build_frame;
     out->destroy = BlvrProto_destroy;
 
-    return 0;
+    return AGV_COMM_OK;
 }
 
 static int BlvrProto_destroy(AgvCommProtocolIface* iface) {
@@ -38,11 +38,6 @@ static int BlvrProto_feed_frame(AgvCommProtocolIface* iface,
         return AGV_COMM_ERR_INVALID_ARG;
     }
 
-    if (frame_len < 5) {
-        // Addr + Func + 至少一點資料 + CRC(2)，太短就直接丟
-        return AGV_COMM_ERR_FMT_FRAME_TOO_SHORT;
-    }
-
     BlvrPrtclImpl* impl = (BlvrPrtclImpl*)iface->impl;
     if (!impl) return AGV_COMM_ERR_NO_MEMORY;
     const AgvCommPrtclBlvrCfg* cfg = impl->cfg;
@@ -51,57 +46,61 @@ static int BlvrProto_feed_frame(AgvCommProtocolIface* iface,
     uint8_t addr = frame_in[0];
     uint8_t func = frame_in[1];
 
-    // 不是我在管的 slave，就忽略
-    int has_slave_id = false;
-    for (size_t i = 0; i < sizeof(cfg->slave_ids); ++i) {
-        if (addr == cfg->slave_ids[i]) {
-            has_slave_id == true;
-            break;
-        }
+    if (func & BLVR_FC_EXCEPTION_BIT) {
+        uint8_t exc_code = frame_in[3];  // Modbus exception code
+        (void)exc_code;
+        // 這裡你可以選擇印 log 或設一個 error flag
+        return AGV_COMM_ERR_PRTCL_EXCEPTION;
     }
-    if (!has_slave_id) return AGV_COMM_ERR_PRTCL_UNSUPPORTED_SLAVE_ID;
+
+    if (addr != cfg->shared_id) return AGV_COMM_ERR_PRTCL_UNSUPPORTED_SHARED_ID;
+
+    if (frame_len < 5) {
+        return AGV_COMM_ERR_FMT_FRAME_TOO_SHORT;
+    }
 
     // 去掉最後 2 bytes 的 CRC
     size_t pdu_len = frame_len - 2;
-    const uint8_t* p = &frame_in[2];  // 指向 PDU data 部分
-    size_t data_len = pdu_len - 2;    // 去掉 addr+func 之後，只剩 data
+    const uint8_t* pdu_data = &frame_in[2];  // 指向 PDU data 部分
+    size_t data_len = pdu_len - 2;           // 去掉 addr+func 之後，只剩 data
+    size_t reg_len = data_len - 1;
 
     // 例外回應：func | 0x80
-    if (func & MODBUS_FC_EXCEPTION_BIT) {
-        uint8_t exc_code = p[0];  // Modbus exception code
-        (void)exc_code;
-        // 這裡你可以選擇印 log 或設一個 error flag
-        return -3;
-    }
 
     // 根據 func 來 decode
     switch (func) {
-        case MODBUS_FC_READ_HOLDING_REGISTERS: {
+        case BLVR_FC_READ_HOLDING_REGISTERS: {
             // Read Holding Registers response:
             // [Addr][0x03][ByteCount][Data...][CRC_L][CRC_H]
-            if (data_len < 1) {
+            if (reg_len <= 0) {
                 return AGV_COMM_ERR_FMT_FRAME_TOO_SHORT;
             }
-            uint8_t byte_count = p[0];
-            if (data_len < 1 + byte_count) {
+            uint8_t byte_count = pdu_data[0];
+            if (reg_len != byte_count) {
                 return AGV_COMM_ERR_FMT_FRAME_TOO_SHORT;
             }
-            const uint8_t* d = &p[1];
+            const uint8_t* registers_data = &pdu_data[1];
 
             // 檢查是否跟我們預期的一樣大小
-            uint16_t expected_regs = cfg->axis_count;  // 一軸一個 16 bit
-            if (byte_count != expected_regs * 2) {
+
+            uint16_t expected_bytes =
+                cfg->axis_count * (cfg->num_read_cmd * cfg->num_rgster_per_cmd *
+                                   cfg->byte_per_rgstr);
+            if (byte_count != expected_bytes) {
                 return AGV_COMM_ERR_PRTCL_BAD_PAYLOAD;
             }
-
-            AgvCommMsg msg;
+            AgvCommMsg msg = {0};
             msg.msg_type = MOTOR_MSG;
-            msg.u.motors_msg.msg_type = AGV_COMM_MSG_RPM;
+            for (size_t i = 0; i < cfg->axis_count; ++i) {
+                size_t axis_byte_idx =
+                    i * (cfg->num_rgster_per_cmd * cfg->byte_per_rgstr *
+                         cfg->num_read_cmd);
+                const uint8_t* p = &registers_data[axis_byte_idx];
 
-            for (uint8_t i = 0; i < cfg->axis_count; ++i) {
-                int16_t raw = (int16_t)((d[0] << 8) | d[1]);  // big-endian
-                msg.u.motors_msg.msgs[i].rpm = raw;
-                d += 2;
+                p = get_be32(p, &msg.u.motors_msg.msgs[i].driver_st);
+                p = get_be32(p, &msg.u.motors_msg.msgs[i].rl_pos);
+                p = get_be32(p, &msg.u.motors_msg.msgs[i].rl_rpm);
+                p = get_be32(p, &msg.u.motors_msg.msgs[i].alrm);
             }
 
             impl->pending_msg = msg;
@@ -109,17 +108,9 @@ static int BlvrProto_feed_frame(AgvCommProtocolIface* iface,
 
             return 0;
         }
-
-        case MODBUS_FC_WRITE_MULTIPLE_REGISTERS:
-            // Write Multiple Registers response:
-            // [Addr][0x10][StartAddrHi][StartAddrLo][RegCountHi][RegCountLo]
-            // 一般只要當 ack 就好，不需要轉成 AgvCommMsg
+        case BLVR_FC_WRITE_MULTIPLE_REGISTERS: {
             return 0;
-
-        case MODBUS_FC_READWRITE_MULTIPLE_REGISTERS:
-            // 之後如果你要用 Read/Write Multiple Registers，就可以在這裡參考
-            // 0x03 的邏輯 Response: [Addr][0x17][ByteCount][Data...][CRC]
-            return 0;
+        }
 
         default:
             // 其他 function code 暫時不處理
@@ -154,24 +145,25 @@ static int BlvrProto_build_frame(AgvCommProtocolIface* iface,
     const AgvCommPrtclBlvrCfg* cfg = impl->cfg;
     if (!cfg) return AGV_COMM_ERR_NO_MEMORY;
 
-    size_t idx = 0;
-
     if (msg->msg_type != MOTOR_MSG) return AGV_COMM_ERR_PRTCL_INVALID_MSG_TYPE;
 
-    MotorsMsg motors_msg = msg->u.motors_msg;
+    MotorsCommMsg motors_msg = msg->u.motors_msg;
 
-    switch (motors_msg.msg_type) {
-        case AGV_COMM_MSG_SPEED_CTRL: {
-            uint16_t reg_start = cfg->reg_speed_cmd_base;
-            uint16_t reg_count = cfg->axis_count;  // 一軸一個暫存器
-            uint8_t byte_count = (uint8_t)(reg_count * 2);
+    size_t idx = 0;
+    switch (motors_msg.type) {
+        case WRITE: {
+            const uint16_t reg_start = cfg->reg_address_write.cmd_vel;
+            const uint16_t totol_rgstr_count =
+                cfg->axis_count *
+                (cfg->num_write_cmd * cfg->num_rgster_per_cmd);
+            uint16_t totol_byte_count = totol_rgstr_count * cfg->byte_per_rgstr;
 
-            size_t needed = 1              // addr
-                            + 1            // func
-                            + 2            // start addr
-                            + 2            // reg_count
-                            + 1            // byte_count
-                            + byte_count;  // data
+            size_t needed = 1                    // addr
+                            + 1                  // func
+                            + 2                  // start addr
+                            + 2                  // reg_count
+                            + 1                  // byte_count
+                            + totol_byte_count;  // data
 
             if (max_out_len < needed) {
                 return AGV_COMM_ERR_FMT_FRAME_TOO_SHORT;  // 呼叫方給的 buffer
@@ -179,39 +171,83 @@ static int BlvrProto_build_frame(AgvCommProtocolIface* iface,
             }
 
             // Addr
-            out_frame[idx++] = cfg->slave_id;
+            out_frame[idx++] = cfg->shared_id;
             // Function code
-            out_frame[idx++] = MODBUS_FC_WRITE_MULTIPLE_REGISTERS;
+
+            out_frame[idx++] = BLVR_FC_WRITE_MULTIPLE_REGISTERS;
+
+            // modbus is a 8bit format, but BLVR is using 16bit, so we should
+            // split the var to 2 8bit (upper & lower)
 
             // Start address
             out_frame[idx++] = (uint8_t)(reg_start >> 8);
             out_frame[idx++] = (uint8_t)(reg_start & 0xFF);
 
             // Register count
-            out_frame[idx++] = (uint8_t)(reg_count >> 8);
-            out_frame[idx++] = (uint8_t)(reg_count & 0xFF);
+            out_frame[idx++] = (uint8_t)(totol_rgstr_count >> 8);
+            out_frame[idx++] = (uint8_t)(totol_rgstr_count & 0xFF);
 
             // Byte count
-            out_frame[idx++] = byte_count;
+            out_frame[idx++] = totol_byte_count;
 
-            // Data：每軸一個 int16 speed_ctrl
+            uint8_t* p = &out_frame[idx];
             for (uint8_t i = 0; i < cfg->axis_count; ++i) {
-                int16_t sp = (int16_t)(motors_msg.msgs[i].speed_ctrl);
-                out_frame[idx++] = (uint8_t)((sp >> 8) & 0xFF);  // hi
-                out_frame[idx++] = (uint8_t)(sp & 0xFF);         // lo
+                p = put_be32(p, motors_msg.msgs[i].des_rpm);
+                p = put_be32(p, motors_msg.msgs[i].des_acc);
+                p = put_be32(p, motors_msg.msgs[i].des_dec);
+                p = put_be32(p, motors_msg.msgs[i].spd_ctrl);
+                p = put_be32(p, motors_msg.msgs[i].trigger);
             }
-
-            return 0;
+            return idx;
         }
 
-        case AGV_COMM_MSG_ACCEL:
-            break;
-        case AGV_COMM_MSG_DECEL:
-            break;
-        case AGV_COMM_MSG_TRIGGER:
-            break;
+        case READ: {
+            const uint16_t addr = cfg->reg_address_read.driver_status;
+            const uint16_t totol_rgstr_count =
+                cfg->axis_count * (cfg->num_read_cmd * cfg->num_rgster_per_cmd);
+
+            size_t needed = 1     // addr
+                            + 1   // func
+                            + 2   // start addr
+                            + 2;  // reg count
+
+            if (max_out_len < needed) {
+                return AGV_COMM_ERR_FMT_FRAME_TOO_SHORT;
+            }
+
+            out_frame[idx++] = cfg->shared_id;
+            out_frame[idx++] = BLVR_FC_READ_HOLDING_REGISTERS;
+            out_frame[idx++] = (uint8_t)(addr >> 8);
+            out_frame[idx++] = (uint8_t)(addr & 0xFF);
+            out_frame[idx++] = (uint8_t)(totol_rgstr_count >> 8);
+            out_frame[idx++] = (uint8_t)(totol_rgstr_count & 0xFF);
+
+            return idx;
+        }
+
         default:
             return AGV_COMM_ERR_PRTCL_INVALID_MSG_TYPE;
     }
-    return idx;
+
+    return AGV_COMM_ERR_PRTCL_INVALID_MSG_TYPE;
+}
+
+static uint8_t* put_be32(uint8_t* p, int32_t v) {
+    *p++ = (uint8_t)(v >> 24);
+    *p++ = (uint8_t)(v >> 16);
+    *p++ = (uint8_t)(v >> 8);
+    *p++ = (uint8_t)(v);
+    return p;
+}
+
+static const uint8_t* get_be32(const uint8_t* p, int32_t* out) {
+    uint32_t v = 0;
+
+    v |= (uint32_t)(*p++) << 24;
+    v |= (uint32_t)(*p++) << 16;
+    v |= (uint32_t)(*p++) << 8;
+    v |= (uint32_t)(*p++);
+
+    *out = (int32_t)v;
+    return p;
 }

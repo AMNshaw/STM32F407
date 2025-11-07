@@ -28,6 +28,11 @@
         "usart.h": "c",
         "communication_msg.h": "c",
         "blvr_protocol_defs.h": "c",
-        "uart_rs485.h": "c"
+        "uart_rs485.h": "c",
+        "stdint.h": "c",
+        "blvr_protocol.h": "c",
+        "atomic": "c",
+        "type_traits": "c",
+        "communication_msgs.h": "c"
     }
 }
