@@ -2,17 +2,44 @@
 #define AGV_MOTOR_COMMUNICATION__BLVR_H_
 
 #include "Agv_communication_pack/communication_iface.h"
+#include "Agv_core/agv_types.h"
 #include "Agv_core/modules/motor_communication_base.h"
+#include "Agv_module_factory/motor_communication_builder.h"
+#include "Agv_motor_communication/blvr_config.h"
+#include "FreeRTOS.h"
+#include "semphr.h"
 
 typedef struct {
     AgvCommLinkIface link;
     AgvCommFormatIface fmt;
     AgvCommProtocolIface prtcl;
 
-} CommBlvrMotorImpl;
+    const Agv_Blvr_config* cfg;
 
-static int blvr_read(AgvMotorCommunicationBase* self, MotorInterMsg* out_msg);
-static int blvr_write_targets(AgvMotorCommunicationBase* self,
-                              const WheelVel* in);
+    struct {
+        int32_t des_rpm;
+        int32_t des_acc;
+        int32_t des_dec;
+        int32_t spd_ctrl;
+        int32_t trigger;
+
+        int32_t driver_st;
+        int32_t rl_pos;
+        int32_t rl_rpm;
+        int32_t alrm;
+    } buffer[4];
+
+    SemaphoreHandle_t sem;
+
+} MotorCommBlvrImpl;
+
+static int blvr_set_des_vel(AgvMotorCommunicationBase* base,
+                            const WheelsVel* in);
+
+static int blvr_get_curr_vel(AgvMotorCommunicationBase* base, WheelsVel* out);
+
+static int blvr_get_state(AgvMotorCommunicationBase* base);
+
+static int blvr_read_and_write(AgvMotorCommunicationBase* base);
 
 #endif  // AGV_MOTOR_COMMUNICATION__BLVR_H_

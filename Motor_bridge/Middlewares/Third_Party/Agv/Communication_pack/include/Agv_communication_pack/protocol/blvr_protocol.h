@@ -23,7 +23,7 @@ static int BlvrProto_pop_msg(AgvCommProtocolIface* iface, AgvCommMsg* out);
 
 static int BlvrProto_build_frame(AgvCommProtocolIface* iface,
                                  const AgvCommMsg* msg, uint8_t* out_frame,
-                                 size_t max_out_len);
+                                 size_t frame_size, size_t out_len);
 
 static int BlvrProto_destroy(AgvCommProtocolIface* iface);
 

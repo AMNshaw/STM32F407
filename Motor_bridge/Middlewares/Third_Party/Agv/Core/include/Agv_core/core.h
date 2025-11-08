@@ -20,8 +20,8 @@ typedef struct {
 
     // 共享狀態（以 mutex 保護）
     VelCmd cmd_latest;
-    WheelVel wheel_meas;
-    WheelVel wheel_target;
+    WheelsVel wheel_meas;
+    WheelsVel wheel_target;
     Odom odom;
 
     // 同步

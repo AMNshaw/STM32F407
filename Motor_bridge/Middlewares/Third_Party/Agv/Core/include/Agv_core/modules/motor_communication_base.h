@@ -4,11 +4,14 @@
 #include "Agv_core/agv_types.h"
 
 typedef struct AgvMotorCommunicationBase {
-    int (*read_motors_state)(struct AgvMotorCommunicationBase* self,
-                             MotorInterMsg* out_msg);
-    int (*write_motors_cmd)(struct AgvMotorCommunicationBase* self,
-                            const WheelVel* in);
-    void* impl;  // 私有實作
+    int (*get_state_from_buffer)(struct AgvMotorCommunicationBase* self);
+    int (*get_vel_from_buffer)(struct AgvMotorCommunicationBase* self,
+                               WheelsVel* out);
+    int (*set_desired_vel_to_buffer)(struct AgvMotorCommunicationBase* self,
+                                     const WheelsVel* in);
+    int (*readTo_and_writeFrom_buffer)(struct AgvMotorCommunicationBase* self);
+    int (*destroy)(struct AgvMotorCommunicationBase* self);
+    void* impl;
 } AgvMotorCommunicationBase;
 
 #endif  // AGV_CORE__MOTOR_COMMUNICATION_BASE_H_

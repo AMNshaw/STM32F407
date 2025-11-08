@@ -7,18 +7,18 @@ typedef enum { VEL_CMD } HostMsgType;
 typedef struct {
 } HostCommMsg;
 
-typedef enum { READ, WRITE } MotorMsgType;
+typedef enum { READ, WRITE, READ_WRITE } MotorMsgType;
 typedef struct {
-    uint32_t des_rpm;
-    uint32_t des_acc;
-    uint32_t des_dec;
-    uint32_t spd_ctrl;
-    uint32_t trigger;
+    int32_t des_rpm;
+    int32_t des_acc;
+    int32_t des_dec;
+    int32_t spd_ctrl;
+    int32_t trigger;
 
-    uint32_t driver_st;
-    uint32_t rl_pos;
-    uint32_t rl_rpm;
-    uint32_t alrm;
+    int32_t driver_st;
+    int32_t rl_pos;
+    int32_t rl_rpm;
+    int32_t alrm;
 } MotorMsgPack;
 typedef struct {
     MotorMsgType type;

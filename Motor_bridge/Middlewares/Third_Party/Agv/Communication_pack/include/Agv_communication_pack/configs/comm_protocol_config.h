@@ -27,6 +27,9 @@ typedef struct {
     size_t num_read_cmd;
     size_t num_write_cmd;
 
+    int32_t operation_type;
+    int32_t operation_trigger;
+
     struct {
         uint16_t driver_status;
         uint16_t real_vel;

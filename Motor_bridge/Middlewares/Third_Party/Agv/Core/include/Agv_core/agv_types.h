@@ -9,17 +9,12 @@ typedef struct {
 
 typedef struct {
     float w[4];
-} WheelVel;
+} WheelsVel;
 
 typedef struct {
     float x, y, yaw;
     VelCmd twist;
 } Odom;
-
-typedef struct {
-    float R;
-    float L, B;
-} KineParams;
 
 typedef enum { VEL_CMD } HostMsgType;
 typedef struct {

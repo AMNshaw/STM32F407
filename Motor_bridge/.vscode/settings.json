@@ -33,6 +33,9 @@
         "blvr_protocol.h": "c",
         "atomic": "c",
         "type_traits": "c",
-        "communication_msgs.h": "c"
+        "communication_msgs.h": "c",
+        "motor_communication_builder.h": "c",
+        "error_communication.h": "c",
+        "blvr_config.h": "c"
     }
 }

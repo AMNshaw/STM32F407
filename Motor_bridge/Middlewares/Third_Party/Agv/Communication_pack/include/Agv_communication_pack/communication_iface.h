@@ -26,12 +26,13 @@ typedef struct AgvCommLinkIface {
  */
 
 typedef struct AgvCommFormatIface {
-    int (*feed)(struct AgvCommFormatIface*, const uint8_t* bytes, size_t n);
-    int (*pop_frame)(struct AgvCommFormatIface*, uint8_t* out,
+    int (*feed_frame)(struct AgvCommFormatIface* iface, const uint8_t* bytes,
+                      size_t n);
+    int (*pop_frame)(struct AgvCommFormatIface* iface, uint8_t* out,
                      size_t* inout_len);
-    int (*make_frame)(struct AgvCommFormatIface*, const uint8_t* payload,
+    int (*make_frame)(struct AgvCommFormatIface* iface, const uint8_t* payload,
                       size_t len, uint8_t* out, size_t* inout_len);
-    int (*destroy)(struct AgvCommFormatIface*);
+    int (*destroy)(struct AgvCommFormatIface* iface);
     void* impl;
 } AgvCommFormatIface;
 
@@ -40,12 +41,13 @@ typedef struct AgvCommFormatIface {
  */
 
 typedef struct AgvCommProtocolIface {
-    int (*feed_frame)(struct AgvCommProtocolIface*, const uint8_t* frame,
+    int (*feed_frame)(struct AgvCommProtocolIface* iface, const uint8_t* frame,
                       size_t len);
-    int (*pop_msg)(struct AgvCommProtocolIface*, AgvCommMsg* out);
-    int (*build_frame)(struct AgvCommProtocolIface*, const AgvCommMsg* msg,
-                       uint8_t* out_frame, size_t* inout_len);
-    int (*destroy)(struct AgvCommProtocolIface*);
+    int (*pop_msg)(struct AgvCommProtocolIface* iface, AgvCommMsg* out);
+    int (*build_frame)(struct AgvCommProtocolIface* iface,
+                       const AgvCommMsg* msg, uint8_t* out_frame,
+                       size_t* frame_size);
+    int (*destroy)(struct AgvCommProtocolIface* iface);
     void* impl;
 } AgvCommProtocolIface;
 
