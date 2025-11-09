@@ -5,9 +5,9 @@
 
 typedef struct AgvKinematicsBase {
     void (*control_motors)(struct AgvKinematicsBase* self, const VelCmd* cmd_in,
-                           const WheelVel* meas, WheelVel* target_out);
-    void (*calculate_odom)(struct AgvKinematicsBase* self, const WheelVel* meas,
-                           Odom* odom_out);
+                           const WheelsVel* meas, WheelsVel* target_out);
+    void (*calculate_odom)(struct AgvKinematicsBase* self,
+                           const WheelsVel* meas, Odom* odom_out);
     void* impl;  // 幾何參數/內部狀態
 } AgvKinematicsBase;
 

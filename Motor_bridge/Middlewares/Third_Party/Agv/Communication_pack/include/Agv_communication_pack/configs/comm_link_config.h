@@ -17,12 +17,12 @@ typedef struct {
     size_t max_data_size;
 
     uint32_t char_time_10x_us;
-} AgvCommUartCfg;
+} AgvCommLnkUartCfg;
 
 typedef struct {
     AgvCommLinkType type;
     union {
-        AgvCommUartCfg uart;
+        AgvCommLnkUartCfg uart;
         /* data */
     } u;
 

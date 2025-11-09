@@ -10,27 +10,27 @@
 #include "semphr.h"
 
 typedef struct {
+    int32_t des_rpm;
+    int32_t des_acc;
+    int32_t des_dec;
+    int32_t spd_ctrl;
+    int32_t trigger;
+
+    int32_t driver_st;
+    int32_t rl_pos;
+    int32_t rl_rpm;
+    int32_t alrm;
+} BlvrBuff;
+
+typedef struct {
     AgvCommLinkIface link;
     AgvCommFormatIface fmt;
     AgvCommProtocolIface prtcl;
 
     const Agv_Blvr_config* cfg;
-
-    struct {
-        int32_t des_rpm;
-        int32_t des_acc;
-        int32_t des_dec;
-        int32_t spd_ctrl;
-        int32_t trigger;
-
-        int32_t driver_st;
-        int32_t rl_pos;
-        int32_t rl_rpm;
-        int32_t alrm;
-    } buffer[4];
+    BlvrBuff* buffer;
 
     SemaphoreHandle_t sem;
-
 } MotorCommBlvrImpl;
 
 static int blvr_set_des_vel(AgvMotorCommunicationBase* base,
@@ -41,5 +41,7 @@ static int blvr_get_curr_vel(AgvMotorCommunicationBase* base, WheelsVel* out);
 static int blvr_get_state(AgvMotorCommunicationBase* base);
 
 static int blvr_read_and_write(AgvMotorCommunicationBase* base);
+
+int32_t rad_s_to_rpm(float* rad_s);
 
 #endif  // AGV_MOTOR_COMMUNICATION__BLVR_H_

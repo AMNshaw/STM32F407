@@ -26,8 +26,8 @@ typedef struct AgvCommLinkIface {
  */
 
 typedef struct AgvCommFormatIface {
-    int (*feed_frame)(struct AgvCommFormatIface* iface, const uint8_t* bytes,
-                      size_t n);
+    int (*feed_data)(struct AgvCommFormatIface* iface, const uint8_t* bytes,
+                     size_t n);
     int (*pop_frame)(struct AgvCommFormatIface* iface, uint8_t* out,
                      size_t* inout_len);
     int (*make_frame)(struct AgvCommFormatIface* iface, const uint8_t* payload,

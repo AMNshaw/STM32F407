@@ -13,10 +13,10 @@
 #include "task.h"
 
 typedef struct {
-    AgvKinematicsBase* kine;
-    AgvMotorCommunicationBase* motors_comm;
-    AgvControlLawBase* ctrl;  // 可為 NULL 表直通
-    AgvHostCommunicationBase* host_comm;
+    AgvKinematicsBase kine;
+    AgvMotorCommunicationBase motors_comm;
+    AgvControlLawBase ctrl;
+    AgvHostCommunicationBase host_comm;
 
     // 共享狀態（以 mutex 保護）
     VelCmd cmd_latest;

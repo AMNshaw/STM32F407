@@ -56,17 +56,14 @@ static int BlvrProto_feed_frame(AgvCommProtocolIface* iface,
 
     if (addr != cfg->shared_id) return AGV_ERR_COMM_PRTCL_UNSUPPORTED_SHARED_ID;
 
-    if (frame_len < 5) {
+    if (frame_len < 5) {  // [address 1][func 1][data *][crc up1][crc lo1]
         return AGV_ERR_COMM_FMT_FRAME_TOO_SHORT;
     }
 
-    // 去掉最後 2 bytes 的 CRC
     size_t pdu_len = frame_len - 2;
     const uint8_t* pdu_data = &frame_in[2];  // 指向 PDU data 部分
-    size_t data_len = pdu_len - 2;           // 去掉 addr+func 之後，只剩 data
-    size_t reg_len = data_len - 1;
-
-    // 例外回應：func | 0x80
+    size_t data_len = pdu_len - 2;           // 去掉 crc 之後，只剩 data
+    size_t reg_len = data_len - 1;           // 第一個 byte 是 byte_count
 
     // 根據 func 來 decode
     switch (func) {
@@ -83,7 +80,6 @@ static int BlvrProto_feed_frame(AgvCommProtocolIface* iface,
             const uint8_t* registers_data = &pdu_data[1];
 
             // 檢查是否跟我們預期的一樣大小
-
             uint16_t expected_bytes =
                 cfg->axis_count * (cfg->num_read_cmd * cfg->num_rgster_per_cmd *
                                    cfg->byte_per_rgstr);
@@ -97,11 +93,14 @@ static int BlvrProto_feed_frame(AgvCommProtocolIface* iface,
                     i * (cfg->num_rgster_per_cmd * cfg->byte_per_rgstr *
                          cfg->num_read_cmd);
                 const uint8_t* p = &registers_data[axis_byte_idx];
+                uint16_t error_check = 0;
 
                 p = get_be32(p, &msg.u.motors_msg.msgs[i].driver_st);
                 p = get_be32(p, &msg.u.motors_msg.msgs[i].rl_pos);
                 p = get_be32(p, &msg.u.motors_msg.msgs[i].rl_rpm);
                 p = get_be32(p, &msg.u.motors_msg.msgs[i].alrm);
+                error_check |= (int32_t)(*p++) << 8;
+                error_check |= (int32_t)(*p++);
             }
 
             impl->pending_msg = msg;
@@ -112,7 +111,9 @@ static int BlvrProto_feed_frame(AgvCommProtocolIface* iface,
         case BLVR_FC_WRITE_MULTIPLE_REGISTERS: {
             return 0;
         }
-
+        case BLVR_FC_READWRITE_MULTIPLE_REGISTERS: {
+            return 0;
+        }
         default:
             // 其他 function code 暫時不處理
             return 0;
@@ -256,7 +257,7 @@ static int BlvrProto_build_frame(AgvCommProtocolIface* iface,
             out_frame[idx++] = cfg->shared_id;
             // Function code
 
-            out_frame[idx++] = BLVR_FC_WRITE_MULTIPLE_REGISTERS;
+            out_frame[idx++] = BLVR_FC_READWRITE_MULTIPLE_REGISTERS;
 
             // modbus is a 8bit format, but BLVR is using 16bit, so we should
             // split the var to 2 8bit (upper & lower)

@@ -36,6 +36,7 @@
         "communication_msgs.h": "c",
         "motor_communication_builder.h": "c",
         "error_communication.h": "c",
-        "blvr_config.h": "c"
+        "blvr_config.h": "c",
+        "stm32f4xx_hal.h": "c"
     }
 }

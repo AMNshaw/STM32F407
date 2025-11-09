@@ -5,9 +5,10 @@
 #include "Agv_communication_pack/configs/comm_link_config.h"
 #include "FreeRTOS.h"
 #include "semphr.h"
+#include "stm32f4xx_hal.h"
 
 typedef struct uart_rs485 {
-    const AgvCommUartCfg* cfg;
+    const AgvCommLnkUartCfg* cfg;
 
     uint8_t* rx_buf;
     size_t rx_len;
@@ -20,11 +21,6 @@ static int send_bytes_rs485(AgvCommLinkIface* iface, const uint8_t* data,
                             size_t len);
 
 static int recv_bytes_rs485(AgvCommLinkIface* iface, uint8_t* buf, size_t len);
-
-static int on_rx_rcv_rs485(AgvCommLinkIface* iface, uint8_t* buf, size_t len);
-
-static int read_rx_buff_rs485(AgvCommLinkIface* iface, uint8_t* out_buf,
-                              size_t max_out_size);
 
 static int destroy_rs485(AgvCommLinkIface* iface);
 

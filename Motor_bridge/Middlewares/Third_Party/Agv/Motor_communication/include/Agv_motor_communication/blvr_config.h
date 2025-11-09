@@ -1,16 +1,20 @@
 #ifndef AGV_MOTOR_COMMUNICATION__BLVR_CONFIG_H_
 #define AGV_MOTOR_COMMUNICATION__BLVR_CONFIG_H_
 
+#include "Agv_communication_pack/configs/comm_format_config.h"
+#include "Agv_communication_pack/configs/comm_link_config.h"
+#include "Agv_communication_pack/configs/comm_protocol_config.h"
 #include "stdlib.h"
+#include "stm32f4xx_hal.h"
 
 typedef struct {
-    size_t link_max_data_size;
-    size_t format_max_buffer_size;
-    size_t format_max_frame_size;
-    size_t protocol_max_frame_size;
-
-    int32_t operation_type;
-    int32_t operation_trigger;
+    size_t axis_count;
+    // link
+    AgvCommLnkUartCfg uart_cfg;
+    // format
+    AgvCommFmtModbusRtuCfg modbus_cfg;
+    // protocol
+    AgvCommPrtclBlvrCfg prtcl_blvr_cfg;
 } Agv_Blvr_config;
 
 #endif  // AGV_MOTOR_COMMUNICATION__BLVR_CONFIG_H_

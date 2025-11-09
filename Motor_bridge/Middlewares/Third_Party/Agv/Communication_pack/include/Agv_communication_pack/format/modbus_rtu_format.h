@@ -27,15 +27,15 @@ typedef struct {
 // Modbus状态
 static enum { SUCCESS = 0, ERROR } ModbusStatus;
 
-static int modbusFmt_feed(AgvCommFormatIface* iface, const uint8_t* bytes,
-                          size_t n);
+static int modbusFmt_feed_data(AgvCommFormatIface* iface, const uint8_t* bytes,
+                               size_t n);
 
 static int modbusFmt_pop_frame(AgvCommFormatIface* iface, uint8_t* out_frame,
                                size_t max_frame_size);
 
 static int modbusFmt_make_frame(AgvCommFormatIface* iface,
-                                const uint8_t* payload, size_t len,
-                                uint8_t* out, size_t* inout_len);
+                                const uint8_t* payload, size_t payload_size,
+                                uint8_t* frame_out, size_t frame_size);
 
 static int modbusFmt_destroy(AgvCommFormatIface* iface);
 
