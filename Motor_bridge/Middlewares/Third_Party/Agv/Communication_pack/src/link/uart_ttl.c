@@ -22,7 +22,12 @@ int Link_uart_ttl_create(AgvCommLinkIface* out,
 
     impl->frame_item_size = sizeof(TtlFrame) + cfg->max_data_len;
     impl->rx_data_queue = xQueueCreate(cfg->queue_len, impl->frame_item_size);
-    if (!impl->rx_data_queue) return AGV_ERR_NO_MEMORY;
+    if (!impl->rx_data_queue) {
+        free(impl->rx_buf);
+        free(impl);
+        return AGV_ERR_NO_MEMORY;
+    }
+    impl->num_dropped_data = 0;
 
     out->impl = impl;
     out->send_bytes = send_bytes_ttl;
@@ -31,7 +36,13 @@ int Link_uart_ttl_create(AgvCommLinkIface* out,
     out->read_buf = pop_rx_queue_ttl;
     out->destroy = destroy_ttl;
 
-    HAL_UARTEx_ReceiveToIdle_DMA(cfg->huart, impl->rx_buf, cfg->max_data_len);
+    if (HAL_UARTEx_ReceiveToIdle_DMA(cfg->huart, impl->rx_buf,
+                                     cfg->max_data_len) != HAL_OK) {
+        vQueueDelete(impl->rx_data_queue);
+        free(impl->rx_buf);
+        free(impl);
+        return AGV_ERR_COMM_LINK_HAL;
+    }
 
     return 0;
 }
@@ -44,16 +55,18 @@ static int destroy_ttl(AgvCommLinkIface* iface) {
 
     if (impl->rx_buf) {
         free(impl->rx_buf);
+        impl->rx_buf = NULL;
     }
     if (impl->rx_data_queue != NULL) {
         vQueueDelete(impl->rx_data_queue);
-        impl->rx_data_queue = NULL;  // 建議順便清掉
+        impl->rx_data_queue = NULL;
     }
     impl->cfg = NULL;
     if (impl) {
         free(impl);
     }
 
+    iface->impl = NULL;
     iface->send_bytes = NULL;
     iface->recv_bytes = NULL;
     iface->on_data_rcv = NULL;
@@ -84,7 +97,7 @@ static int send_bytes_ttl(AgvCommLinkIface* iface, const uint8_t* data_in,
 
 static int recv_bytes_ttl(AgvCommLinkIface* iface, uint8_t* data_out,
                           size_t* data_len) {
-    if (!iface || !iface->impl || !data_out || data_len == 0)
+    if (!iface || !iface->impl || !data_out || !data_len || *data_len == 0)
         return AGV_ERR_INVALID_ARG;
 
     UartTtlImpl* impl = (UartTtlImpl*)iface->impl;
@@ -112,7 +125,8 @@ static int on_rx_rcv_ttl(AgvCommLinkIface* iface, size_t data_len) {
         return AGV_ERR_COMM_LINK_BUFFER_OVERFLOW;
 
     impl->rx_len = data_len;
-    uint8_t raw[sizeof(TtlFrame) + impl->cfg->max_data_len];
+
+    uint8_t raw[impl->frame_item_size];
     TtlFrame* frame = (TtlFrame*)raw;
 
     frame->timestamp = xTaskGetTickCountFromISR();
@@ -120,12 +134,12 @@ static int on_rx_rcv_ttl(AgvCommLinkIface* iface, size_t data_len) {
     memcpy(frame->data, impl->rx_buf, data_len);
 
     BaseType_t hpw = pdFALSE;
-    BaseType_t ok = xQueueSendFromISR(impl->rx_data_queue, frame, &hpw);
-    if (ok != pdPASS) {
+    if (xQueueSendFromISR(impl->rx_data_queue, frame, &hpw) != pdPASS) {
+        ++impl->num_dropped_data;
         return AGV_ERR_COMM_LINK_BUFFER_OVERFLOW;
     }
-    portYIELD_FROM_ISR(hpw);
 
+    portYIELD_FROM_ISR(hpw);
     return AGV_OK;
 }
 
@@ -138,9 +152,10 @@ static int pop_rx_queue_ttl(AgvCommLinkIface* iface, uint8_t* buf_out,
     if (!impl) return AGV_ERR_NO_MEMORY;
     if (!impl->rx_data_queue) return AGV_ERR_NO_MEMORY;
 
-    uint8_t raw[sizeof(TtlFrame) + impl->cfg->max_data_len];
+    uint8_t raw[impl->frame_item_size];
     TtlFrame* frame = (TtlFrame*)raw;
-    if (xQueueReceive(impl->rx_data_queue, &frame, portMAX_DELAY) != pdPASS)
+
+    if (xQueueReceive(impl->rx_data_queue, frame, portMAX_DELAY) != pdPASS)
         return AGV_ERR_COMM_LINK_RX_EMPTY;
 
     if (*buf_len < frame->len) return AGV_ERR_OUTPUT_OVERFLOW;

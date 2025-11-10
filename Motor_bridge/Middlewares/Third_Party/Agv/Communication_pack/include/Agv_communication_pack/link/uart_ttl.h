@@ -24,6 +24,7 @@ typedef struct {
     QueueHandle_t rx_data_queue;
 
     size_t frame_item_size;
+    size_t num_dropped_data;
 
     // SemaphoreHandle_t rx_mutex; FreeRTOS will handle the semaphore of queue
 } UartTtlImpl;
