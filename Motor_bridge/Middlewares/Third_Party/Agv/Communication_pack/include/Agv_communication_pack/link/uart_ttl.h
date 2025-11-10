@@ -8,8 +8,8 @@
 #include "FreeRTOS.h"
 #include "semphr.h"
 
-typedef struct uart_ttl {
-    const AgvCommUartCfg* cfg;
+typedef struct {
+    const AgvCommLnkUartCfg* cfg;
 
     uint8_t* rx_buf;
     size_t rx_len;

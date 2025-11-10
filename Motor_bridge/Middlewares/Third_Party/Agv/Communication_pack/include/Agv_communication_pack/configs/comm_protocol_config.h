@@ -18,9 +18,10 @@ typedef struct {
 
 typedef struct {
     uint16_t shared_id;
-    size_t max_frame_size;
+    size_t max_payload_len;
 
     size_t axis_count;
+    float unit_rpm;
 
     size_t byte_per_rgstr;
     size_t num_rgster_per_cmd;

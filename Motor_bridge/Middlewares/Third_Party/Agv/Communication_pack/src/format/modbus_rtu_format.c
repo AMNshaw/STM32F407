@@ -14,15 +14,8 @@ int Format_modbus_create(AgvCommFormatIface* out,
     impl->cfg = cfg;
     impl->state = ST_IDLE;
 
-    impl->data_buf = (uint8_t*)malloc(cfg->max_buf_size);
-    if (!impl->data_buf) {
-        free(impl);
-        return AGV_ERR_NO_MEMORY;
-    }
-
-    impl->frame_buf = (uint8_t*)malloc(sizeof(impl->data_buf));
+    impl->frame_buf = (uint8_t*)malloc(cfg->max_frame_len * sizeof(uint8_t));
     if (!impl->frame_buf) {
-        free(impl->data_buf);
         free(impl);
         return AGV_ERR_NO_MEMORY;
     }
@@ -31,7 +24,7 @@ int Format_modbus_create(AgvCommFormatIface* out,
     impl->has_frame = 0;
 
     out->impl = impl;
-    out->feed_frame = modbusFmt_feed_frame;
+    out->feed_data = modbusFmt_feed_data;
     out->pop_frame = modbusFmt_pop_frame;
     out->make_frame = modbusFmt_make_frame;
 
@@ -45,17 +38,13 @@ static int modbusFmt_destroy(AgvCommFormatIface* iface) {
 
     if (!impl) return AGV_ERR_NO_MEMORY;
 
-    if (impl->data_buf) {
-        free(impl->data_buf);
-    }
-
     if (impl->frame_buf) {
         free(impl->frame_buf);
     }
 
     free(impl);
 
-    iface->feed_frame = NULL;
+    iface->feed_data = NULL;
     iface->pop_frame = NULL;
     iface->make_frame = NULL;
     iface->destroy = NULL;
@@ -63,41 +52,36 @@ static int modbusFmt_destroy(AgvCommFormatIface* iface) {
     return AGV_OK;
 }
 
-static int modbusFmt_feed_data(AgvCommFormatIface* iface, const uint8_t* buf,
-                               size_t buf_size) {
-    if (!iface || !buf) return AGV_ERR_INVALID_ARG;
+static int modbusFmt_feed_data(AgvCommFormatIface* iface,
+                               const uint8_t* data_in, size_t data_len) {
+    if (!iface || !data_in) return AGV_ERR_INVALID_ARG;
 
     ModbusRtuFmtImpl* impl = (ModbusRtuFmtImpl*)iface->impl;
     if (!impl || !impl->cfg) return AGV_ERR_NO_MEMORY;
 
     const AgvCommFmtModbusRtuCfg* cfg = impl->cfg;
 
-    if (buf_size == 0) {
+    if (data_len == 0) {
         return AGV_OK;  // 沒東西就當沒事
     }
 
-    if (buf_size < 4) {
+    if (data_len < 4) {
         // Addr(1) + Func(1) + CRC(2) 都不夠
         return AGV_ERR_COMM_FMT_FRAME_TOO_SHORT;
     }
 
-    if (buf_size > cfg->max_frame_size || buf_size > cfg->max_buf_size) {
-        // 超過允許 frame 長度或 buffer 容量
+    if (data_len > cfg->max_frame_len) {
         return AGV_ERR_COMM_FMT_FRAME_TOO_LONG;
     }
 
-    // 把這次收到的 bytes 先存到工作緩衝區
-    memcpy(impl->data_buf, buf, buf_size);
-    impl->data_len = buf_size;
-
     // 收到的 CRC：最後兩個 byte，Modbus 是低位在前
-    uint16_t rx_crc =
-        (uint16_t)buf[buf_size - 2] | ((uint16_t)buf[buf_size - 1] << 8);
+    uint16_t rcv_crc = (uint16_t)data_in[data_len - 2] |
+                       ((uint16_t)data_in[data_len - 1] << 8);
 
     // 計算 CRC（不含最後兩個 CRC byte）
-    uint16_t calc_crc = modbus_crc16(&cfg->crc_cfg, buf, buf_size - 2);
+    uint16_t calc_crc = modbus_crc16(&cfg->crc_cfg, data_in, data_len - 2);
 
-    if (rx_crc != calc_crc) {
+    if (rcv_crc != calc_crc) {
         // CRC 錯誤，這一坨丟掉
         impl->has_frame = 0;
         impl->frame_len = 0;
@@ -105,18 +89,19 @@ static int modbusFmt_feed_data(AgvCommFormatIface* iface, const uint8_t* buf,
         return AGV_ERR_COMM_FMT_BAD_CRC;
     }
 
-    // CRC OK，存成一個完整 frame 讓上層 pop
-    memcpy(impl->frame_buf, buf, buf_size);
-    impl->frame_len = buf_size;
+    impl->address = data_in[0];
+    impl->function = data_in[1];
+    memcpy(impl->frame_buf, data_in, data_len);
+    impl->frame_len = data_len;
     impl->has_frame = 1;
     impl->state = ST_IDLE;
 
     return AGV_OK;
 }
 
-static int modbusFmt_pop_frame(AgvCommFormatIface* iface, uint8_t* out_frame,
-                               size_t max_out_size) {
-    if (!iface || out_frame || max_out_size == 0) return AGV_ERR_INVALID_ARG;
+static int modbusFmt_pop_frame(AgvCommFormatIface* iface, uint8_t* frame_out,
+                               size_t* frame_len) {
+    if (!iface || frame_out || !frame_len) return AGV_ERR_INVALID_ARG;
 
     ModbusRtuFmtImpl* impl = (ModbusRtuFmtImpl*)iface->impl;
     if (!impl) return AGV_ERR_NO_MEMORY;
@@ -125,50 +110,49 @@ static int modbusFmt_pop_frame(AgvCommFormatIface* iface, uint8_t* out_frame,
         return AGV_ERR_COMM_FMT_NO_COMPLETE_FRAME;
     }
 
-    if (max_out_size < impl->frame_len) {
+    if (*frame_len < impl->frame_len) {
         return AGV_ERR_COMM_FMT_FRAME_TOO_LONG;
     }
 
-    memcpy(out_frame, impl->frame_buf, impl->frame_len);
+    memcpy(frame_out, impl->frame_buf, impl->frame_len);
     impl->has_frame = 0;
-
-    return impl->frame_len;
-}
-
-static int modbusFmt_make_frame(AgvCommFormatIface* iface,
-                                const uint8_t* payload, size_t payload_size,
-                                uint8_t* frame_out, size_t frame_size) {
-    if (!iface || !payload || payload_size == 0 || !frame_out)
-        return AGV_ERR_INVALID_ARG;
-
-    ModbusRtuFmtImpl* impl = (ModbusRtuFmtImpl*)iface->impl;
-    if (!impl) return AGV_ERR_NO_MEMORY;
-
-    const AgvCommFmtModbusRtuCfg* cfg = impl->cfg;
-    if (!cfg) return AGV_ERR_NO_MEMORY;
-
-    // 總長度 = payload + CRC(2)
-    size_t frame_len = payload_size + 2;
-
-    if (frame_len > cfg->max_frame_size || frame_len > frame_size) {
-        return AGV_ERR_COMM_FMT_FRAME_TOO_LONG;
-    }
-
-    // 先拷貝 payload
-    memcpy(frame_out, payload, frame_len);
-
-    // 計算 CRC
-    uint16_t crc = modbus_crc16(&cfg->crc_cfg, frame_out, frame_len);
-
-    // Modbus RTU 是低位在前
-    frame_out[payload_size] = (uint8_t)(crc & 0x00FF);             // CRC_L
-    frame_out[payload_size + 1] = (uint8_t)((crc >> 8) & 0x00FF);  // CRC_H
+    impl->frame_len = *frame_len;
 
     return AGV_OK;
 }
 
-static uint16_t modbus_crc16(const CrcCfg* cfg, const uint8_t* data,
-                             size_t len) {
+static int modbusFmt_make_frame(AgvCommFormatIface* iface,
+                                const uint8_t* payload_in, size_t payload_len,
+                                uint8_t* frame_out, size_t* frame_len) {
+    if (!iface || !payload_in || payload_len == 0 || !frame_out || !frame_len)
+        return AGV_ERR_INVALID_ARG;
+
+    ModbusRtuFmtImpl* impl = (ModbusRtuFmtImpl*)iface->impl;
+    if (!impl || !impl->cfg) return AGV_ERR_NO_MEMORY;
+
+    // 總長度 = payload + CRC(2)
+    size_t frame_len_temp = payload_len + 2;
+
+    if (frame_len_temp > *frame_len) {
+        return AGV_ERR_COMM_FMT_FRAME_TOO_LONG;
+    }
+    // 先拷貝 payload
+    memcpy(frame_out, payload_in, *frame_len);
+
+    // 計算 CRC
+
+    uint16_t crc = modbus_crc16(&impl->cfg->crc_cfg, frame_out, frame_len_temp);
+
+    // Modbus RTU 是低位在前
+    frame_out[payload_len] = (uint8_t)(crc & 0x00FF);             // CRC_L
+    frame_out[payload_len + 1] = (uint8_t)((crc >> 8) & 0x00FF);  // CRC_H
+
+    *frame_len = frame_len_temp;
+
+    return AGV_OK;
+}
+
+uint16_t modbus_crc16(const CrcCfg* cfg, const uint8_t* data, size_t len) {
     uint16_t crc = cfg->crc_init;  // 一般是 0xFFFF
 
     for (size_t i = 0; i < len; ++i) {

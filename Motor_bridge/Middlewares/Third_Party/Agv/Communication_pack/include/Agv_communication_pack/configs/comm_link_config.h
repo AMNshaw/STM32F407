@@ -14,7 +14,9 @@ typedef enum {
 typedef struct {
     UART_HandleTypeDef* huart;
     uint32_t baudrate;
-    size_t max_data_size;
+    size_t max_data_len;
+
+    uint16_t operation_timeout_ms;
 
     uint32_t char_time_10x_us;
 } AgvCommLnkUartCfg;

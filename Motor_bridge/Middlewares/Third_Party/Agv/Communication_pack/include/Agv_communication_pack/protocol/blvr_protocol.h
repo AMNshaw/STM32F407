@@ -17,13 +17,13 @@ typedef struct {
 } BlvrPrtclImpl;
 
 static int BlvrProto_feed_frame(AgvCommProtocolIface* iface,
-                                const uint8_t* frame, size_t len);
+                                const uint8_t* frame_in, size_t frame_len);
 
-static int BlvrProto_pop_msg(AgvCommProtocolIface* iface, AgvCommMsg* out);
+static int BlvrProto_pop_msg(AgvCommProtocolIface* iface, AgvCommMsg* msg_out);
 
-static int BlvrProto_build_frame(AgvCommProtocolIface* iface,
-                                 const AgvCommMsg* msg, uint8_t* out_frame,
-                                 size_t frame_size, size_t out_len);
+static int BlvrProto_make_payload(AgvCommProtocolIface* iface,
+                                  const AgvCommMsg* msg_in, uint8_t* frame_out,
+                                  size_t* frame_len);
 
 static int BlvrProto_destroy(AgvCommProtocolIface* iface);
 

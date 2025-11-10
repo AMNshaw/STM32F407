@@ -1,13 +1,13 @@
 #include "link/uart_ttl.h"
 
-int Link_uart_ttl_create(AgvCommLinkIface* out, const AgvCommUartCfg* cfg) {
+int Link_uart_ttl_create(AgvCommLinkIface* out, const AgvCommLnkUartCfg* cfg) {
     if (!out || !cfg || !cfg->huart) return -1;
 
     UartTtlImpl* impl = (UartTtlImpl*)malloc(sizeof(UartTtlImpl));
     if (!impl) return -2;
 
     impl->cfg = cfg;
-    impl->rx_buf = (uint8_t*)malloc(impl->cfg->max_buffer_size);
+    impl->rx_buf = (uint8_t*)malloc(impl->cfg->max_data_len);
     impl->rx_len = 0;
 
     out->impl = impl;
@@ -17,8 +17,7 @@ int Link_uart_ttl_create(AgvCommLinkIface* out, const AgvCommUartCfg* cfg) {
     out->read_buf = read_rx_buff_ttl;
     out->destroy = destroy_ttl;
 
-    HAL_UARTEx_ReceiveToIdle_DMA(cfg->huart, impl->rx_buf,
-                                 cfg->max_buffer_size);
+    HAL_UARTEx_ReceiveToIdle_DMA(cfg->huart, impl->rx_buf, cfg->max_data_len);
 
     return 0;
 }

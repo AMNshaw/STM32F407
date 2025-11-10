@@ -22,7 +22,7 @@ typedef struct {
     const AgvCommFmtRosCfg* cfg;
     RosFmtState state;
     uint8_t cmd;
-    uint8_t size;
+    uint8_t len;
     uint8_t* data_buf;  // 依你協議的最大 payload 調整
     size_t data_idx;
 
@@ -34,11 +34,12 @@ typedef struct {
 
 static int rosFmt_destroy(AgvCommFormatIface* iface);
 
-static int rosFmt_feed(AgvCommFormatIface* iface, const uint8_t* bytes,
-                       size_t n);
-static int rosFmt_pop_frame(AgvCommFormatIface* iface, uint8_t* out,
-                            size_t* inout_len);
+static int rosFmt_feed_data(AgvCommFormatIface* iface, const uint8_t* data,
+                            size_t data_len);
+static int rosFmt_pop_frame(AgvCommFormatIface* iface, uint8_t* out_frame,
+                            size_t* frame_len);
 static int rosFmt_make_frame(AgvCommFormatIface* iface, const uint8_t* payload,
-                             size_t len, uint8_t* out, size_t* inout_len);
+                             size_t payload_len, uint8_t* out_frame,
+                             size_t* frame_len);
 static uint8_t crc8_compute(const CrcCfg* cfg, const uint8_t* data, size_t len);
 #endif  // AGV_COMMUNICATION_PACK__FORMAT_ROS_FORMAT_H_

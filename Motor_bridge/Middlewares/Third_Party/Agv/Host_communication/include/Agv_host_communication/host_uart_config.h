@@ -1,5 +1,5 @@
-#ifndef AGV_MOTOR_COMMUNICATION__BLVR_CONFIG_H_
-#define AGV_MOTOR_COMMUNICATION__BLVR_CONFIG_H_
+#ifndef AGV_HOST_COMMUNICATION__HOST_COMM_UART_H_
+#define AGV_HOST_COMMUNICATION__HOST_COMM_UART_H_
 
 #include "Agv_communication_pack/configs/comm_format_config.h"
 #include "Agv_communication_pack/configs/comm_link_config.h"
@@ -7,13 +7,12 @@
 #include "stdlib.h"
 
 typedef struct {
-    size_t axis_count;
     // link
     AgvCommLnkUartCfg uart_cfg;
     // format
-    AgvCommFmtModbusRtuCfg modbus_cfg;
+    AgvCommFmtRosCfg rosFmt_cfg;
     // protocol
-    AgvCommPrtclBlvrCfg prtcl_blvr_cfg;
-} AgvBlvrConfig;
+    AgvCommPrtclHostCfg prtcl_host_cfg;
+} AgvHostUartCfg;
 
-#endif  // AGV_MOTOR_COMMUNICATION__BLVR_CONFIG_H_
+#endif  // AGV_HOST_COMMUNICATION__HOST_COMM_UART_H_

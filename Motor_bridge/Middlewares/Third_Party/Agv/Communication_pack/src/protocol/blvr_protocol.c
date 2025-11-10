@@ -19,7 +19,7 @@ int Protocol_blvr_create(AgvCommProtocolIface* out,
     out->impl = impl;
     out->feed_frame = BlvrProto_feed_frame;
     out->pop_msg = BlvrProto_pop_msg;
-    out->build_frame = BlvrProto_build_frame;
+    out->make_payload = BlvrProto_make_payload;
     out->destroy = BlvrProto_destroy;
 
     return AGV_OK;
@@ -120,8 +120,8 @@ static int BlvrProto_feed_frame(AgvCommProtocolIface* iface,
     }
 }
 
-static int BlvrProto_pop_msg(AgvCommProtocolIface* iface, AgvCommMsg* out_msg) {
-    if (!iface || !out_msg) return AGV_ERR_INVALID_ARG;
+static int BlvrProto_pop_msg(AgvCommProtocolIface* iface, AgvCommMsg* msg_out) {
+    if (!iface || !msg_out) return AGV_ERR_INVALID_ARG;
 
     BlvrPrtclImpl* impl = (BlvrPrtclImpl*)iface->impl;
     if (!impl) return AGV_ERR_NO_MEMORY;
@@ -129,16 +129,16 @@ static int BlvrProto_pop_msg(AgvCommProtocolIface* iface, AgvCommMsg* out_msg) {
     if (!impl->has_pending)
         return AGV_ERR_COMM_PRTCL_NO_PENDING_MSG;  // 沒有可用訊息
 
-    *out_msg = impl->pending_msg;
+    *msg_out = impl->pending_msg;
     impl->has_pending = 0;
 
     return 0;
 }
 
-static int BlvrProto_build_frame(AgvCommProtocolIface* iface,
-                                 const AgvCommMsg* msg, uint8_t* out_frame,
-                                 size_t* frame_size) {
-    if (!iface || !msg || !out_frame || !frame_size) {
+static int BlvrProto_make_payload(AgvCommProtocolIface* iface,
+                                  const AgvCommMsg* msg_in, uint8_t* frame_out,
+                                  size_t* frame_len) {
+    if (!iface || !msg_in || !frame_out || !frame_len) {
         return AGV_ERR_INVALID_ARG;
     }
 
@@ -147,9 +147,10 @@ static int BlvrProto_build_frame(AgvCommProtocolIface* iface,
     const AgvCommPrtclBlvrCfg* cfg = impl->cfg;
     if (!cfg) return AGV_ERR_NO_MEMORY;
 
-    if (msg->msg_type != MOTOR_MSG) return AGV_ERR_COMM_PRTCL_INVALID_MSG_TYPE;
+    if (msg_in->msg_type != MOTOR_MSG)
+        return AGV_ERR_COMM_PRTCL_INVALID_MSG_TYPE;
 
-    MotorsCommMsg motors_msg = msg->u.motors_msg;
+    MotorsCommMsg motors_msg = msg_in->u.motors_msg;
 
     size_t idx = 0;
     switch (motors_msg.type) {
@@ -167,41 +168,41 @@ static int BlvrProto_build_frame(AgvCommProtocolIface* iface,
                             + 1                  // byte_count
                             + totol_byte_count;  // data
 
-            if (*frame_size < needed) {
+            if (*frame_len < needed) {
                 return AGV_ERR_COMM_FMT_FRAME_TOO_SHORT;  // 呼叫方給的 buffer
                                                           // 不夠大
             }
 
             // Addr
-            out_frame[idx++] = cfg->shared_id;
+            frame_out[idx++] = cfg->shared_id;
             // Function code
 
-            out_frame[idx++] = BLVR_FC_WRITE_MULTIPLE_REGISTERS;
+            frame_out[idx++] = BLVR_FC_WRITE_MULTIPLE_REGISTERS;
 
             // modbus is a 8bit format, but BLVR is using 16bit, so we should
             // split the var to 2 8bit (upper & lower)
 
             // Start address
-            out_frame[idx++] = (uint8_t)(reg_start >> 8);
-            out_frame[idx++] = (uint8_t)(reg_start & 0xFF);
+            frame_out[idx++] = (uint8_t)(reg_start >> 8);
+            frame_out[idx++] = (uint8_t)(reg_start & 0xFF);
 
             // Register count
-            out_frame[idx++] = (uint8_t)(totol_rgstr_count >> 8);
-            out_frame[idx++] = (uint8_t)(totol_rgstr_count & 0xFF);
+            frame_out[idx++] = (uint8_t)(totol_rgstr_count >> 8);
+            frame_out[idx++] = (uint8_t)(totol_rgstr_count & 0xFF);
 
             // Byte count
-            out_frame[idx++] = totol_byte_count;
+            frame_out[idx++] = totol_byte_count;
 
-            uint8_t* p = &out_frame[idx];
+            uint8_t* p = &frame_out[idx];
             for (uint8_t i = 0; i < cfg->axis_count; ++i) {
-                p = put_be32(p, motors_msg.msgs[i].des_rpm);
+                p = put_be32(p, motors_msg.msgs[i].des_vel);
                 p = put_be32(p, motors_msg.msgs[i].des_acc);
                 p = put_be32(p, motors_msg.msgs[i].des_dec);
                 p = put_be32(p, motors_msg.msgs[i].spd_ctrl);
                 p = put_be32(p, motors_msg.msgs[i].trigger);
             }
 
-            *frame_size = idx;
+            *frame_len = idx;
 
             return AGV_OK;
         }
@@ -216,18 +217,18 @@ static int BlvrProto_build_frame(AgvCommProtocolIface* iface,
                             + 2   // start addr
                             + 2;  // reg count
 
-            if (*frame_size < needed) {
+            if (*frame_len < needed) {
                 return AGV_ERR_COMM_FMT_FRAME_TOO_SHORT;
             }
 
-            out_frame[idx++] = cfg->shared_id;
-            out_frame[idx++] = BLVR_FC_READ_HOLDING_REGISTERS;
-            out_frame[idx++] = (uint8_t)(addr >> 8);
-            out_frame[idx++] = (uint8_t)(addr & 0xFF);
-            out_frame[idx++] = (uint8_t)(totol_rgstr_count >> 8);
-            out_frame[idx++] = (uint8_t)(totol_rgstr_count & 0xFF);
+            frame_out[idx++] = cfg->shared_id;
+            frame_out[idx++] = BLVR_FC_READ_HOLDING_REGISTERS;
+            frame_out[idx++] = (uint8_t)(addr >> 8);
+            frame_out[idx++] = (uint8_t)(addr & 0xFF);
+            frame_out[idx++] = (uint8_t)(totol_rgstr_count >> 8);
+            frame_out[idx++] = (uint8_t)(totol_rgstr_count & 0xFF);
 
-            *frame_size = idx;
+            *frame_len = idx;
             return AGV_OK;
         }
         case READ_WRITE: {
@@ -248,49 +249,49 @@ static int BlvrProto_build_frame(AgvCommProtocolIface* iface,
                             + 2                  // reg_count write
                             + 1                  // byte_count
                             + write_byte_count;  // data
-            if (*frame_size < needed) {
+            if (*frame_len < needed) {
                 return AGV_ERR_COMM_FMT_FRAME_TOO_SHORT;  // 呼叫方給的 buffer
                                                           // 不夠大
             }
 
             // Addr
-            out_frame[idx++] = cfg->shared_id;
+            frame_out[idx++] = cfg->shared_id;
             // Function code
 
-            out_frame[idx++] = BLVR_FC_READWRITE_MULTIPLE_REGISTERS;
+            frame_out[idx++] = BLVR_FC_READWRITE_MULTIPLE_REGISTERS;
 
             // modbus is a 8bit format, but BLVR is using 16bit, so we should
             // split the var to 2 8bit (upper & lower)
 
             // Start address read
-            out_frame[idx++] = (uint8_t)(reg_start_read >> 8);
-            out_frame[idx++] = (uint8_t)(reg_start_read & 0xFF);
+            frame_out[idx++] = (uint8_t)(reg_start_read >> 8);
+            frame_out[idx++] = (uint8_t)(reg_start_read & 0xFF);
 
             // Register count read
-            out_frame[idx++] = (uint8_t)(totol_read_rgstr_count >> 8);
-            out_frame[idx++] = (uint8_t)(totol_read_rgstr_count & 0xFF);
+            frame_out[idx++] = (uint8_t)(totol_read_rgstr_count >> 8);
+            frame_out[idx++] = (uint8_t)(totol_read_rgstr_count & 0xFF);
 
             // Start address write
-            out_frame[idx++] = (uint8_t)(reg_start_write >> 8);
-            out_frame[idx++] = (uint8_t)(reg_start_write & 0xFF);
+            frame_out[idx++] = (uint8_t)(reg_start_write >> 8);
+            frame_out[idx++] = (uint8_t)(reg_start_write & 0xFF);
 
             // Register count write
-            out_frame[idx++] = (uint8_t)(totol_write_rgstr_count >> 8);
-            out_frame[idx++] = (uint8_t)(totol_write_rgstr_count & 0xFF);
+            frame_out[idx++] = (uint8_t)(totol_write_rgstr_count >> 8);
+            frame_out[idx++] = (uint8_t)(totol_write_rgstr_count & 0xFF);
 
             // Byte count
-            out_frame[idx++] = write_byte_count;
+            frame_out[idx++] = write_byte_count;
 
-            uint8_t* p = &out_frame[idx];
+            uint8_t* p = &frame_out[idx];
             for (uint8_t i = 0; i < cfg->axis_count; ++i) {
-                p = put_be32(p, motors_msg.msgs[i].des_rpm);
+                p = put_be32(p, motors_msg.msgs[i].des_vel);
                 p = put_be32(p, motors_msg.msgs[i].des_acc);
                 p = put_be32(p, motors_msg.msgs[i].des_dec);
                 p = put_be32(p, motors_msg.msgs[i].spd_ctrl);
                 p = put_be32(p, motors_msg.msgs[i].trigger);
             }
 
-            *frame_size = idx;
+            *frame_len = idx;
             return AGV_OK;
         }
 

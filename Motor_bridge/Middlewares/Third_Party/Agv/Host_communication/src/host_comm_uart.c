@@ -1,6 +1,6 @@
-#include "Agv_host_communication/host_communication_uart.h"
+#include "Agv_host_communication/host_comm_uart.h"
 
-#include "Agv_communication_pack/communication_msg.h"
+#include "Agv_communication_pack/communication_msgs.h"
 #include "Agv_communication_pack/format/ros_format.h"
 #include "Agv_communication_pack/link/uart_ttl.h"
 #include "Agv_communication_pack/protocol/host_protocol.h"

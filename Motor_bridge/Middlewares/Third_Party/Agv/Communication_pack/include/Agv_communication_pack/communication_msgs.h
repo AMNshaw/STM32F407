@@ -9,7 +9,7 @@ typedef struct {
 
 typedef enum { READ, WRITE, READ_WRITE } MotorMsgType;
 typedef struct {
-    int32_t des_rpm;
+    int32_t des_vel;
     int32_t des_acc;
     int32_t des_dec;
     int32_t spd_ctrl;

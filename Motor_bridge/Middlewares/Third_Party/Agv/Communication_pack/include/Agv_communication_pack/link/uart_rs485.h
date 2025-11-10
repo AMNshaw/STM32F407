@@ -7,7 +7,7 @@
 #include "semphr.h"
 #include "stm32f4xx_hal.h"
 
-typedef struct uart_rs485 {
+typedef struct {
     const AgvCommLnkUartCfg* cfg;
 
     uint8_t* rx_buf;
@@ -17,10 +17,11 @@ typedef struct uart_rs485 {
     SemaphoreHandle_t rx_mutex;
 } UartRs485Impl;
 
-static int send_bytes_rs485(AgvCommLinkIface* iface, const uint8_t* data,
-                            size_t len);
+static int send_bytes_rs485(AgvCommLinkIface* iface, const uint8_t* data_in,
+                            size_t data_len);
 
-static int recv_bytes_rs485(AgvCommLinkIface* iface, uint8_t* buf, size_t len);
+static int recv_bytes_rs485(AgvCommLinkIface* iface, uint8_t* data_out,
+                            size_t data_len);
 
 static int destroy_rs485(AgvCommLinkIface* iface);
 

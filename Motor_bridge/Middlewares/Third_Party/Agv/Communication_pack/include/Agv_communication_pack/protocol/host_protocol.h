@@ -5,7 +5,7 @@
 #include <string.h>
 
 #include "Agv_communication_pack/communication_iface.h"
-#include "Agv_communication_pack/communication_msg.h"
+#include "Agv_communication_pack/communication_msgs.h"
 #include "Agv_communication_pack/configs/comm_protocol_config.h"
 
 typedef struct {
@@ -15,12 +15,12 @@ typedef struct {
 } HostProtoImpl;
 
 static int hostProto_feed_frame(AgvCommProtocolIface* iface,
-                                const uint8_t* frame, size_t len);
+                                const uint8_t* frame, size_t frame_len);
 
-static int hostProto_pop_msg(AgvCommProtocolIface* iface, AgvCommMsg* out);
+static int hostProto_pop_msg(AgvCommProtocolIface* iface, AgvCommMsg* out_msg);
 
 static int hostProto_build_frame(AgvCommProtocolIface* iface,
                                  const AgvCommMsg* msg, uint8_t* out_frame,
-                                 size_t* inout_len);
+                                 size_t* frame_len);
 
 #endif  // AGV_COMMUNICATION_PACK__PROTOCOL_ROS_PROTOCOL_H_
