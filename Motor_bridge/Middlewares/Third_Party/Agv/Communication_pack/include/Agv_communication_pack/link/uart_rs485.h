@@ -8,7 +8,7 @@
 #include "stm32f4xx_hal.h"
 
 typedef struct {
-    const AgvCommLnkUartCfg* cfg;
+    const AgvCommLnkUartRs485Cfg* cfg;
 
     uint8_t* rx_buf;
     size_t rx_len;
@@ -21,7 +21,7 @@ static int send_bytes_rs485(AgvCommLinkIface* iface, const uint8_t* data_in,
                             size_t data_len);
 
 static int recv_bytes_rs485(AgvCommLinkIface* iface, uint8_t* data_out,
-                            size_t data_len);
+                            size_t* data_len);
 
 static int destroy_rs485(AgvCommLinkIface* iface);
 

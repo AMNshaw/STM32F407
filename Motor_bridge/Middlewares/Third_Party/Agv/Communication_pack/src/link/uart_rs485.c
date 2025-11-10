@@ -5,7 +5,7 @@
 #include "stm32f4xx_hal.h"
 
 int Link_uart_rs485_create(AgvCommLinkIface* out,
-                           const AgvCommLnkUartCfg* cfg) {
+                           const AgvCommLnkUartRs485Cfg* cfg) {
     if (!out || !cfg) return AGV_ERR_INVALID_ARG;
 
     UartRs485Impl* impl = (UartRs485Impl*)malloc(sizeof(UartRs485Impl));
@@ -77,22 +77,23 @@ static int send_bytes_rs485(AgvCommLinkIface* iface, const uint8_t* data_in,
 
     if (st != HAL_OK) return AGV_ERR_COMM_LINK_HAL;
 
-    return (int)data_len;
+    return AGV_OK;
 }
 
 static int recv_bytes_rs485(AgvCommLinkIface* iface, uint8_t* data_out,
-                            size_t data_size) {
-    if (!iface || !data_out || data_size == 0) return AGV_ERR_INVALID_ARG;
+                            size_t* data_len) {
+    if (!iface || !data_out || data_len == 0) return AGV_ERR_INVALID_ARG;
 
     UartRs485Impl* impl = (UartRs485Impl*)iface->impl;
     if (!impl || !impl->cfg || !impl->cfg->huart) return AGV_ERR_NO_MEMORY;
 
     UART_HandleTypeDef* huart = impl->cfg->huart;
 
-    HAL_StatusTypeDef st = HAL_UART_Receive(
-        huart, data_out, (uint16_t)data_size, impl->cfg->operation_timeout_ms);
+    HAL_StatusTypeDef st =
+        HAL_UART_Receive(huart, data_out, (uint16_t)(*data_len),
+                         impl->cfg->operation_timeout_ms);
 
     if (st != HAL_OK) return AGV_ERR_COMM_LINK_HAL;
 
-    return (int)data_size;
+    return AGV_OK;
 }

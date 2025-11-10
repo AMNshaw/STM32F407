@@ -6,8 +6,10 @@
 #include "Agv_communication_pack/configs/comm_link_config.h"
 #include "Agv_communication_pack/configs/comm_protocol_config.h"
 
-int Link_uart_ttl_create(AgvCommLinkIface* out, const AgvCommLnkUartCfg* cfg);
-int Link_uart_rs485_create(AgvCommLinkIface* out, const AgvCommLnkUartCfg* cfg);
+int Link_uart_ttl_create(AgvCommLinkIface* out,
+                         const AgvCommLnkUartTtlCfg* cfg);
+int Link_uart_rs485_create(AgvCommLinkIface* out,
+                           const AgvCommLnkUartRs485Cfg* cfg);
 
 int Format_ros_create(AgvCommFormatIface* out, const AgvCommFmtRosCfg* cfg);
 int Format_modbus_create(AgvCommFormatIface* out,

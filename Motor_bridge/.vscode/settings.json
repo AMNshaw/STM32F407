@@ -39,6 +39,7 @@
         "blvr_config.h": "c",
         "stm32f4xx_hal.h": "c",
         "freertos.h": "c",
-        "semphr.h": "c"
+        "semphr.h": "c",
+        "agv_app.h": "c"
     }
 }

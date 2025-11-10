@@ -9,7 +9,7 @@
 typedef struct {
     size_t axis_count;
     // link
-    AgvCommLnkUartCfg uart_cfg;
+    AgvCommLnkUartRs485Cfg uart_cfg;
     // format
     AgvCommFmtModbusRtuCfg modbus_cfg;
     // protocol

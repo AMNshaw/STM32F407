@@ -16,15 +16,25 @@ typedef struct {
     uint32_t baudrate;
     size_t max_data_len;
 
-    uint16_t operation_timeout_ms;
+    uint32_t operation_timeout_ms;
 
     uint32_t char_time_10x_us;
-} AgvCommLnkUartCfg;
+} AgvCommLnkUartRs485Cfg;
+
+typedef struct {
+    UART_HandleTypeDef* huart;
+    uint32_t baudrate;
+    size_t max_data_len;
+
+    uint32_t operation_timeout_ms;
+
+    size_t queue_len;
+} AgvCommLnkUartTtlCfg;
 
 typedef struct {
     AgvCommLinkType type;
     union {
-        AgvCommLnkUartCfg uart;
+        AgvCommLnkUartRs485Cfg uart_rs485_cfg;
         /* data */
     } u;
 

@@ -6,24 +6,38 @@
 #include "Agv_communication_pack/communication_iface.h"
 #include "Agv_communication_pack/configs/comm_link_config.h"
 #include "FreeRTOS.h"
+#include "queue.h"
 #include "semphr.h"
+#include "task.h"
 
 typedef struct {
-    const AgvCommLnkUartCfg* cfg;
+    uint32_t timestamp;
+    size_t len;
+    uint8_t data[];
+} TtlFrame;
+
+typedef struct {
+    const AgvCommLnkUartTtlCfg* cfg;
 
     uint8_t* rx_buf;
     size_t rx_len;
+    QueueHandle_t rx_data_queue;
 
-    SemaphoreHandle_t rx_mutex;
+    size_t frame_item_size;
+
+    // SemaphoreHandle_t rx_mutex; FreeRTOS will handle the semaphore of queue
 } UartTtlImpl;
 
-static int send_bytes_ttl(AgvCommLinkIface*, const uint8_t*, size_t);
+static int send_bytes_ttl(AgvCommLinkIface* iface, const uint8_t* data_in,
+                          size_t data_len);
 
-static int receive_bytes_ttl(AgvCommLinkIface*, uint8_t*, size_t);
+static int recv_bytes_ttl(AgvCommLinkIface* iface, uint8_t* data_out,
+                          size_t* data_len);
 
-static int on_rx_rcv_ttl(AgvCommLinkIface* iface, uint8_t* buf, size_t len);
+static int on_rx_rcv_ttl(AgvCommLinkIface* iface, size_t data_len);
 
-static int read_rx_buff_ttl(AgvCommLinkIface* iface, uint8_t* out_buf);
+static int pop_rx_queue_ttl(AgvCommLinkIface* iface, uint8_t* buf_out,
+                            size_t* buf_len_out, uint32_t* timestamp_out);
 
 static int destroy_ttl(AgvCommLinkIface* iface);
 
