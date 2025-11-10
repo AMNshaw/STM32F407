@@ -23,10 +23,9 @@ typedef struct {
     RosFmtState state;
     uint8_t cmd;
     uint8_t len;
-    uint8_t* data_buf;  // 依你協議的最大 payload 調整
+    uint8_t* data_buf;
     size_t data_idx;
 
-    // 給 pop_frame 用的暫存：payload = [cmd][size][data...]
     uint8_t* frame_buf;
     size_t frame_len;
     int has_frame;
