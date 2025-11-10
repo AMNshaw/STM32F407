@@ -1,4 +1,6 @@
-#include "protocol/host_protocol.h"
+#include "Agv_communication_pack/protocol/host_protocol.h"
+
+#include "Agv_communication_pack/protocol_defs/host_protocol_defs.h"
 
 int Protocol_host_create(AgvCommProtocolIface* out,
                          const AgvCommPrtclHostCfg* cfg) {
@@ -36,29 +38,13 @@ static int hostProto_feed_frame(AgvCommProtocolIface* iface,
     }
 
     AgvCommMsg msg;
+    msg.msg_type = HOST_MSG;
     memset(&msg, 0, sizeof(msg));
 
     switch (cmd) {
-        case CMD_SET_VEL: {
+        case HOST_COMM_CMD_SET_VEL: {
             if (size != 2 * sizeof(float)) return -3;
-            float v, w;
-            memcpy(&v, &data[0], sizeof(float));
-            memcpy(&w, &data[sizeof(float)], sizeof(float));
-            msg.type = AGV_COMM_MSG_CMD_VEL;
-            msg.data.cmd_vel.linear = v;
-            msg.data.cmd_vel.angular = w;
-            break;
-        }
-        case CMD_FEEDBACK: {
-            if (size != 3 * sizeof(float)) return -3;
-            float x, y, theta;
-            memcpy(&x, &data[0], sizeof(float));
-            memcpy(&y, &data[sizeof(float)], sizeof(float));
-            memcpy(&theta, &data[2 * sizeof(float)], sizeof(float));
-            msg.type = AGV_COMM_MSG_ODOM;
-            msg.data.odom.x = x;
-            msg.data.odom.y = y;
-            msg.data.odom.theta = theta;
+
             break;
         }
         default:

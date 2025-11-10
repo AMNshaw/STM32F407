@@ -10,7 +10,7 @@ int Format_ros_create(AgvCommFormatIface* out, AgvCommFmtRosCfg* cfg) {
     impl->state = ST_WAIT_H0;
 
     // data
-    impl->data_buf = (uint8_t*)malloc(cfg->data_buf_size);
+    impl->data_buf = (uint8_t*)malloc(cfg->max_buf_len * sizeof(uint8_t));
     if (!impl->data_buf) {
         free(impl);
         return -3;
@@ -18,8 +18,8 @@ int Format_ros_create(AgvCommFormatIface* out, AgvCommFmtRosCfg* cfg) {
     impl->data_idx = 0;
 
     // frame
-    impl->frame_buf =
-        (uint8_t*)malloc(cfg->data_buf_size + 2);  // 1 for cmd, 1 for size
+    impl->frame_buf = (uint8_t*)malloc(
+        cfg->max_frame_len * sizeof(uint8_t));  // 1 for cmd, 1 for size
     if (!impl->frame_buf) {
         free(impl->data_buf);
         free(impl);
@@ -29,7 +29,7 @@ int Format_ros_create(AgvCommFormatIface* out, AgvCommFmtRosCfg* cfg) {
     impl->has_frame = 0;
 
     out->impl = impl;
-    out->feed = rosFmt_feed;
+    out->feed_data = rosFmt_feed_data;
     out->pop_frame = rosFmt_pop_frame;
     out->make_frame = rosFmt_make_frame;
     out->destroy = rosFmt_destroy;
@@ -54,18 +54,23 @@ static int rosFmt_destroy(AgvCommFormatIface* iface) {
 
     free(impl);
     iface->impl = NULL;
+    iface->feed_data = NULL;
+    iface->pop_frame = NULL;
+    iface->make_frame = NULL;
+    iface->destroy = NULL;
+
     return 0;
 }
 
-static int rosFmt_feed(AgvCommFormatIface* iface, const uint8_t* bytes,
-                       size_t n) {
+static int rosFmt_feed_data(AgvCommFormatIface* iface, const uint8_t* data,
+                            size_t data_len) {
     RosFmtImpl* impl = (RosFmtImpl*)iface->impl;
     if (!impl) return -1;
     const AgvCommFmtRosCfg* cfg = impl->cfg;
     if (!cfg) return -1;
 
-    for (size_t i = 0; i < n; ++i) {
-        uint8_t b = bytes[i];
+    for (size_t i = 0; i < data_len; ++i) {
+        uint8_t b = data[i];
 
         switch (impl->state) {
             case ST_WAIT_H0:
@@ -88,8 +93,8 @@ static int rosFmt_feed(AgvCommFormatIface* iface, const uint8_t* bytes,
                 break;
 
             case ST_WAIT_SIZE:
-                impl->size = b;
-                if (impl->size == 0 || impl->size > sizeof(impl->data_buf)) {
+                impl->len = b;
+                if (impl->len == 0 || impl->len > sizeof(impl->data_buf)) {
                     impl->state = ST_WAIT_H0;
                 } else {
                     impl->data_idx = 0;
@@ -99,7 +104,7 @@ static int rosFmt_feed(AgvCommFormatIface* iface, const uint8_t* bytes,
 
             case ST_WAIT_DATA:
                 impl->data_buf[impl->data_idx++] = b;
-                if (impl->data_idx >= impl->size) {
+                if (impl->data_idx >= impl->len) {
                     impl->state = ST_WAIT_CRC;
                 }
                 break;
@@ -111,9 +116,9 @@ static int rosFmt_feed(AgvCommFormatIface* iface, const uint8_t* bytes,
                 tmp[len++] = cfg->header0;
                 tmp[len++] = cfg->header1;
                 tmp[len++] = impl->cmd;
-                tmp[len++] = impl->size;
-                memcpy(&tmp[len], impl->data_buf, impl->size);
-                len += impl->size;
+                tmp[len++] = impl->len;
+                memcpy(&tmp[len], impl->data_buf, impl->len);
+                len += impl->len;
 
                 uint8_t crc = crc8_compute(&cfg->crc_cfg, tmp, len);
                 if (crc != b) {
@@ -137,9 +142,9 @@ static int rosFmt_feed(AgvCommFormatIface* iface, const uint8_t* bytes,
                 if (b == cfg->tail1) {
                     // 完整 frame 收到，把 payload 暫存給 pop_frame
                     impl->frame_buf[0] = impl->cmd;
-                    impl->frame_buf[1] = impl->size;
-                    memcpy(&impl->frame_buf[2], impl->data_buf, impl->size);
-                    impl->frame_len = 2 + impl->size;
+                    impl->frame_buf[1] = impl->len;
+                    memcpy(&impl->frame_buf[2], impl->data_buf, impl->len);
+                    impl->frame_len = 2 + impl->len;
                     impl->has_frame = 1;
                 }
                 // 無論成功失敗，都回到等 header
