@@ -14,6 +14,6 @@ typedef struct {
     AgvCommFmtModbusRtuCfg modbus_cfg;
     // protocol
     AgvCommPrtclBlvrCfg prtcl_blvr_cfg;
-} AgvBlvrConfig;
+} AgvMotorBlvrConfig;
 
 #endif  // AGV_MOTOR_COMMUNICATION__BLVR_CONFIG_H_

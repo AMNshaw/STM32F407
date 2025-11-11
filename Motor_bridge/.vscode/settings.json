@@ -40,6 +40,11 @@
         "stm32f4xx_hal.h": "c",
         "freertos.h": "c",
         "semphr.h": "c",
-        "agv_app.h": "c"
+        "agv_app.h": "c",
+        "host_protocol.h": "c",
+        "host_communication_builder.h": "c",
+        "queue.h": "c",
+        "error_common.h": "c",
+        "agv_factory.h": "c"
     }
 }

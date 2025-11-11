@@ -9,12 +9,6 @@ int Format_ros_create(AgvCommFormatIface* out, AgvCommFmtRosCfg* cfg) {
     impl->cfg = cfg;
     impl->state = ST_WAIT_H0;
 
-    // data
-    impl->data_buf = (uint8_t*)malloc(cfg->max_buf_len * sizeof(uint8_t));
-    if (!impl->data_buf) {
-        free(impl);
-        return -3;
-    }
     impl->data_idx = 0;
 
     // frame
@@ -42,11 +36,6 @@ static int rosFmt_destroy(AgvCommFormatIface* iface) {
 
     RosFmtImpl* impl = (RosFmtImpl*)iface->impl;
 
-    if (impl->data_buf) {
-        free(impl->data_buf);
-        impl->data_buf = NULL;
-    }
-
     if (impl->frame_buf) {
         free(impl->frame_buf);
         impl->frame_buf = NULL;
@@ -68,6 +57,9 @@ static int rosFmt_feed_data(AgvCommFormatIface* iface, const uint8_t* data,
     if (!impl) return -1;
     const AgvCommFmtRosCfg* cfg = impl->cfg;
     if (!cfg) return -1;
+
+    size_t max_data_len = impl->cfg->max_frame_len - 2;
+    uint8_t buf[max_data_len];
 
     for (size_t i = 0; i < data_len; ++i) {
         uint8_t b = data[i];
@@ -93,8 +85,8 @@ static int rosFmt_feed_data(AgvCommFormatIface* iface, const uint8_t* data,
                 break;
 
             case ST_WAIT_SIZE:
-                impl->len = b;
-                if (impl->len == 0 || impl->len > sizeof(impl->data_buf)) {
+                impl->data_len = b;
+                if ((impl->data_len + 2) > impl->cfg->max_frame_len) {
                     impl->state = ST_WAIT_H0;
                 } else {
                     impl->data_idx = 0;
@@ -103,24 +95,23 @@ static int rosFmt_feed_data(AgvCommFormatIface* iface, const uint8_t* data,
                 break;
 
             case ST_WAIT_DATA:
-                impl->data_buf[impl->data_idx++] = b;
-                if (impl->data_idx >= impl->len) {
+                buf[impl->data_idx++] = b;
+                if (impl->data_idx >= impl->data_len) {
                     impl->state = ST_WAIT_CRC;
                 }
                 break;
 
             case ST_WAIT_CRC: {
-                // 計算 CRC: 一般會是 [header0, header1, cmd, size, data...]
                 uint8_t tmp[2 + 1 + 1 + sizeof(impl->data_buf)];
-                size_t len = 0;
-                tmp[len++] = cfg->header0;
-                tmp[len++] = cfg->header1;
-                tmp[len++] = impl->cmd;
-                tmp[len++] = impl->len;
-                memcpy(&tmp[len], impl->data_buf, impl->len);
-                len += impl->len;
+                size_t data_len = 0;
+                tmp[data_len++] = cfg->header0;
+                tmp[data_len++] = cfg->header1;
+                tmp[data_len++] = impl->cmd;
+                tmp[data_len++] = impl->data_len;
+                memcpy(&tmp[data_len], impl->data_buf, impl->data_len);
+                data_len += impl->data_len;
 
-                uint8_t crc = crc8_compute(&cfg->crc_cfg, tmp, len);
+                uint8_t crc = crc8_compute(&cfg->crc_cfg, tmp, data_len);
                 if (crc != b) {
                     // CRC 錯誤，整包丟掉
                     impl->state = ST_WAIT_H0;
@@ -142,9 +133,9 @@ static int rosFmt_feed_data(AgvCommFormatIface* iface, const uint8_t* data,
                 if (b == cfg->tail1) {
                     // 完整 frame 收到，把 payload 暫存給 pop_frame
                     impl->frame_buf[0] = impl->cmd;
-                    impl->frame_buf[1] = impl->len;
-                    memcpy(&impl->frame_buf[2], impl->data_buf, impl->len);
-                    impl->frame_len = 2 + impl->len;
+                    impl->frame_buf[1] = impl->data_len;
+                    memcpy(&impl->frame_buf[2], impl->data_buf, impl->data_len);
+                    impl->frame_len = 2 + impl->data_len;
                     impl->has_frame = 1;
                 }
                 // 無論成功失敗，都回到等 header
@@ -174,9 +165,9 @@ static int rosFmt_pop_frame(AgvCommFormatIface* iface, uint8_t* out,
 }
 
 static int rosFmt_make_frame(AgvCommFormatIface* iface, const uint8_t* payload,
-                             size_t len, uint8_t* out, size_t* inout_len) {
+                             size_t data_len, uint8_t* out, size_t* inout_len) {
     if (!iface || !payload || !out || !inout_len) return -1;
-    if (len < 2) return -2;
+    if (data_len < 2) return -2;
 
     RosFmtImpl* impl = (RosFmtImpl*)iface->impl;
     if (!impl) return -1;
@@ -185,10 +176,11 @@ static int rosFmt_make_frame(AgvCommFormatIface* iface, const uint8_t* payload,
 
     uint8_t cmd = payload[0];
     uint8_t size = payload[1];
-    if ((size_t)(2 + size) != len) return -3;
+    if ((size_t)(2 + size) != data_len) return -3;
 
     // 檢查 buffer
-    size_t need = 2 + len + 1 + 2;  // header2 + payload(len) + crc + tail2
+    size_t need =
+        2 + data_len + 1 + 2;  // header2 + payload(data_len) + crc + tail2
     if (*inout_len < need) return -4;
 
     size_t idx = 0;
@@ -211,10 +203,10 @@ static int rosFmt_make_frame(AgvCommFormatIface* iface, const uint8_t* payload,
 }
 
 static uint8_t crc8_compute(const CrcCfg* cfg, const uint8_t* data,
-                            size_t len) {
+                            size_t data_len) {
     uint8_t crc = cfg->crc_init;
     const uint8_t poly = cfg->crc_poly;  // 你可以換成實際用的
-    for (size_t i = 0; i < len; ++i) {
+    for (size_t i = 0; i < data_len; ++i) {
         crc ^= data[i];
         for (int b = 0; b < 8; ++b) {
             if (crc & 0x80)

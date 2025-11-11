@@ -18,10 +18,7 @@ typedef struct {
     AgvControlLawBase control_law_base;
     AgvHostCommunicationBase host_communication_base;
 
-    // 共享狀態（以 mutex 保護）
     VelCmd cmd_latest;
-    WheelsVel wheel_meas;
-    WheelsVel wheel_target;
     Odom odom;
 
     // 同步

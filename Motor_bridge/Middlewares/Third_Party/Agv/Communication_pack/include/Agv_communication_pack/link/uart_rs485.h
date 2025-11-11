@@ -10,10 +10,6 @@
 typedef struct {
     const AgvCommLnkUartRs485Cfg* cfg;
 
-    uint8_t* rx_buf;
-    size_t rx_len;
-    uint32_t last_rx_time_us;
-
     SemaphoreHandle_t rx_mutex;
 } UartRs485Impl;
 

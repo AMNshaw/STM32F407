@@ -12,19 +12,6 @@ int Link_uart_rs485_create(AgvCommLinkIface* out,
     if (!impl) return AGV_ERR_NO_MEMORY;
 
     impl->cfg = cfg;
-    impl->rx_buf = (uint8_t*)malloc(impl->cfg->max_data_len * sizeof(uint8_t));
-    if (!impl->rx_buf) {
-        free(impl);
-        return AGV_ERR_NO_MEMORY;
-    }
-    impl->rx_len = 0;
-    impl->rx_mutex = xSemaphoreCreateMutex();
-    if (impl->rx_mutex == NULL) {
-        Free(impl->rx_buf);
-        Free(impl);
-        return AGV_ERR_MUTEX_FAIL;
-    }
-    impl->last_rx_time_us = 0;
 
     out->impl = impl;
     out->send_bytes = send_bytes_rs485;
@@ -44,12 +31,6 @@ static int destroy_rs485(AgvCommLinkIface* iface) {
     UartRs485Impl* impl = (UartRs485Impl*)iface->impl;
     if (!impl) return AGV_ERR_NO_MEMORY;
 
-    if (impl->rx_buf) {
-        free(impl->rx_buf);
-    }
-    if (impl->rx_mutex) {
-        vSemaphoreDelete(impl->rx_mutex);
-    }
     free(impl);
 
     iface->impl = NULL;

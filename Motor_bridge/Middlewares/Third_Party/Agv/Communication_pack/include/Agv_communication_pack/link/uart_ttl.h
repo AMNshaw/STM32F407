@@ -8,7 +8,6 @@
 #include "FreeRTOS.h"
 #include "queue.h"
 #include "semphr.h"
-#include "task.h"
 
 typedef struct {
     uint32_t timestamp;

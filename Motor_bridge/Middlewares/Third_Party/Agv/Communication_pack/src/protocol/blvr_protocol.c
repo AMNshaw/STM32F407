@@ -28,7 +28,12 @@ int Protocol_blvr_create(AgvCommProtocolIface* out,
 static int BlvrProto_destroy(AgvCommProtocolIface* iface) {
     if (!iface || !iface->impl) return AGV_ERR_INVALID_ARG;
     free(iface->impl);
+
     iface->impl = NULL;
+    iface->feed_frame = NULL;
+    iface->pop_msg = NULL;
+    iface->make_payload = NULL;
+    iface->destroy = NULL;
 
     return AGV_OK;
 }
@@ -290,6 +295,7 @@ static int BlvrProto_make_payload(AgvCommProtocolIface* iface,
                 p = put_be32(p, motors_msg.msgs[i].spd_ctrl);
                 p = put_be32(p, motors_msg.msgs[i].trigger);
             }
+            idx = (size_t)(p - frame_out);
 
             *frame_len = idx;
             return AGV_OK;
@@ -299,7 +305,7 @@ static int BlvrProto_make_payload(AgvCommProtocolIface* iface,
             return AGV_ERR_COMM_PRTCL_INVALID_MSG_TYPE;
     }
 
-    return AGV_ERR_COMM_PRTCL_INVALID_MSG_TYPE;
+    return AGV_OK;
 }
 
 static uint8_t* put_be32(uint8_t* p, int32_t v) {

@@ -5,7 +5,6 @@
 #include "Agv_motor_communication/blvr_config.h"
 
 int Motor_comm_blvr_create(AgvMotorCommunicationBase* out,
-                           const AgvBlvrConfig* cfg);
-int Motor_comm_blvr_destroy(AgvMotorCommunicationBase* base);
+                           const AgvMotorBlvrConfig* cfg);
 
 #endif  // AGV_FACTORY__MOTOR_BUILDER_H_

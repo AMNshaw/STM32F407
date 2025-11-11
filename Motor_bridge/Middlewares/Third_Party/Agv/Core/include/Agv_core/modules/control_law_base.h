@@ -4,8 +4,9 @@
 #include "Agv_core/agv_types.h"
 
 typedef struct AgvControlLawBase {
-    void (*calc_vel_cmd)(struct AgvControlLawBase* self, const VelCmd* cmd_in,
+    void (*calc_vel_cmd)(struct AgvControlLawBase* base, const VelCmd* cmd_in,
                          const VelCmd* est, VelCmd* cmd_out);
+    int (*destroy)(struct AgvControlLawBase* base);
     void* impl;
 } AgvControlLawBase;
 

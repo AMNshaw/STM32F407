@@ -22,8 +22,7 @@ typedef struct {
     const AgvCommFmtRosCfg* cfg;
     RosFmtState state;
     uint8_t cmd;
-    uint8_t len;
-    uint8_t* data_buf;
+    uint8_t data_len;
     size_t data_idx;
 
     uint8_t* frame_buf;

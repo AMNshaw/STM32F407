@@ -6,6 +6,5 @@
 
 int Kinematics_mecanum_create(AgvKinematicsBase* out,
                               const AgvMecanumConfig* cfg);
-int Kinematics_mecanum_destroy(AgvKinematicsBase* base);
 
 #endif  // AGV_FACTORY__KINEMATICS_BUILDER_H_

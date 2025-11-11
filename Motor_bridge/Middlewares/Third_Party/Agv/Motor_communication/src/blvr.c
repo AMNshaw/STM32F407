@@ -9,7 +9,7 @@
 #endif
 
 int Motor_comm_blvr_create(AgvMotorCommunicationBase* out,
-                           const AgvBlvrConfig* cfg) {
+                           const AgvMotorBlvrConfig* cfg) {
     if (!out || !cfg) return AGV_ERR_INVALID_ARG;
 
     MotorCommBlvrImpl* impl =
@@ -19,13 +19,6 @@ int Motor_comm_blvr_create(AgvMotorCommunicationBase* out,
 
     impl->buffer = (BlvrBuff*)malloc(cfg->axis_count * sizeof(BlvrBuff));
     if (!impl->buffer) return AGV_ERR_NO_MEMORY;
-
-    impl->sem = xSemaphoreCreateMutex();
-    if (impl->sem == NULL) {
-        Free(impl->buffer);
-        Free(impl);
-        return AGV_ERR_MUTEX_FAIL;
-    }
 
     int code;
     code = Link_uart_rs485_create(&impl->link, &cfg->uart_cfg);
@@ -53,6 +46,13 @@ int Motor_comm_blvr_create(AgvMotorCommunicationBase* out,
         return code;
     }
 
+    impl->mutex_buf = xSemaphoreCreateMutex();
+    if (impl->mutex_buf == NULL) {
+        Free(impl->buffer);
+        Free(impl);
+        return AGV_ERR_MUTEX_FAIL;
+    }
+
     out->impl = impl;
     out->set_desired_vel_to_buffer = blvr_set_des_vel;
     out->get_vel_from_buffer = blvr_get_curr_vel;
@@ -63,10 +63,15 @@ int Motor_comm_blvr_create(AgvMotorCommunicationBase* out,
     return AGV_OK;
 }
 
-int Motor_comm_blvr_destroy(AgvMotorCommunicationBase* base) {
+static int Motor_comm_blvr_destroy(AgvMotorCommunicationBase* base) {
     if (!base || !base->impl) return -1;
 
     MotorCommBlvrImpl* impl = (MotorCommBlvrImpl*)base->impl;
+
+    free(impl->buffer);
+    impl->buffer = NULL;
+    vSemaphoreDelete(impl->mutex_buf);
+    impl->mutex_buf = NULL;
 
     if (impl->prtcl.destroy) impl->prtcl.destroy(&impl->prtcl);
     if (impl->fmt.destroy) impl->fmt.destroy(&impl->fmt);
@@ -91,11 +96,11 @@ static int blvr_set_des_vel(AgvMotorCommunicationBase* base,
     if (!impl) return AGV_ERR_NO_MEMORY;
     float unit_rpm = impl->cfg->prtcl_blvr_cfg.unit_rpm;
 
-    xSemaphoreTake(impl->sem, portMAX_DELAY);
+    xSemaphoreTake(impl->mutex_buf, portMAX_DELAY);
     for (size_t i = 0; i < impl->cfg->axis_count; ++i) {
         impl->buffer[i].des_vel = rad_s_to_regVel(in->w[i], unit_rpm);
     }
-    xSemaphoreGive(impl->sem);
+    xSemaphoreGive(impl->mutex_buf);
 
     return AGV_OK;
 }
@@ -106,11 +111,11 @@ static int blvr_get_curr_vel(AgvMotorCommunicationBase* base, WheelsVel* out) {
     if (!impl) return AGV_ERR_NO_MEMORY;
     float unit_rpm = impl->cfg->prtcl_blvr_cfg.unit_rpm;
 
-    xSemaphoreTake(impl->sem, portMAX_DELAY);
+    xSemaphoreTake(impl->mutex_buf, portMAX_DELAY);
     for (size_t i = 0; i < impl->cfg->axis_count; ++i) {
         out->w[i] = regVel_to_rad_s(impl->buffer[i].des_vel, unit_rpm);
     }
-    xSemaphoreGive(impl->sem);
+    xSemaphoreGive(impl->mutex_buf);
 }
 
 static int blvr_get_state(AgvMotorCommunicationBase* base) {
@@ -118,9 +123,9 @@ static int blvr_get_state(AgvMotorCommunicationBase* base) {
     MotorCommBlvrImpl* impl = (MotorCommBlvrImpl*)base->impl;
     if (!impl) return AGV_ERR_NO_MEMORY;
 
-    xSemaphoreTake(impl->sem, portMAX_DELAY);
+    xSemaphoreTake(impl->mutex_buf, portMAX_DELAY);
     // TODO: get the state back depneds on the state code defined in the file
-    xSemaphoreGive(impl->sem);
+    xSemaphoreGive(impl->mutex_buf);
 }
 
 static int blvr_read_and_write(AgvMotorCommunicationBase* base) {
@@ -139,7 +144,7 @@ static int blvr_read_and_write(AgvMotorCommunicationBase* base) {
     msg_send.msg_type = MOTOR_MSG;
     msg_send.u.motors_msg.type = READ_WRITE;
 
-    xSemaphoreTake(impl->sem, portMAX_DELAY);
+    xSemaphoreTake(impl->mutex_buf, portMAX_DELAY);
     for (size_t i = 0; i < 4; i++) {
         msg_send.u.motors_msg.msgs[i].des_vel = impl->buffer[i].des_vel;
         msg_send.u.motors_msg.msgs[i].des_acc = impl->buffer[i].des_acc;
@@ -149,7 +154,7 @@ static int blvr_read_and_write(AgvMotorCommunicationBase* base) {
         msg_send.u.motors_msg.msgs[i].trigger =
             impl->cfg->prtcl_blvr_cfg.operation_trigger;
     }
-    xSemaphoreGive(impl->sem);
+    xSemaphoreGive(impl->mutex_buf);
 
     size_t blvr_payload_len = impl->cfg->prtcl_blvr_cfg.max_payload_len;
     uint8_t payload_built[blvr_payload_len];
@@ -160,8 +165,8 @@ static int blvr_read_and_write(AgvMotorCommunicationBase* base) {
                     &frame_len);
     link->send_bytes(link, frame_made, frame_len);
 
-    // Receive read write response
-    size_t data_rcv_len = impl->cfg->modbus_cfg.max_buf_len;
+    // Receive read_write response
+    size_t data_rcv_len = impl->cfg->uart_cfg.max_data_len;
     uint8_t data_rcv[data_rcv_len];
     link->recv_bytes(link, data_rcv, data_rcv_len);
 
@@ -175,14 +180,14 @@ static int blvr_read_and_write(AgvMotorCommunicationBase* base) {
     msg_rcv.msg_type = MOTOR_MSG;
     prtcl->pop_msg(prtcl, &msg_rcv);
 
-    xSemaphoreTake(impl->sem, portMAX_DELAY);
+    xSemaphoreTake(impl->mutex_buf, portMAX_DELAY);
     for (size_t i = 0; i < 4; i++) {
         impl->buffer[i].driver_st = msg_rcv.u.motors_msg.msgs[i].driver_st;
         impl->buffer[i].rl_pos = msg_rcv.u.motors_msg.msgs[i].rl_pos;
         impl->buffer[i].rl_rpm = msg_rcv.u.motors_msg.msgs[i].rl_rpm;
         impl->buffer[i].alrm = msg_rcv.u.motors_msg.msgs[i].alrm;
     }
-    xSemaphoreGive(impl->sem);
+    xSemaphoreGive(impl->mutex_buf);
 
     return AGV_OK;
 }

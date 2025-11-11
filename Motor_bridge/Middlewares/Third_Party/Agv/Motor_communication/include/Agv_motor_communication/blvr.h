@@ -4,7 +4,6 @@
 #include "Agv_communication_pack/communication_iface.h"
 #include "Agv_core/agv_types.h"
 #include "Agv_core/modules/motor_communication_base.h"
-#include "Agv_factory/motor_communication_builder.h"
 #include "Agv_motor_communication/blvr_config.h"
 #include "FreeRTOS.h"
 #include "semphr.h"
@@ -23,7 +22,7 @@ typedef struct {
 } BlvrBuff;
 
 typedef struct {
-    const AgvBlvrConfig* cfg;
+    const AgvMotorBlvrConfig* cfg;
 
     AgvCommLinkIface link;
     AgvCommFormatIface fmt;
@@ -31,8 +30,10 @@ typedef struct {
 
     BlvrBuff* buffer;
 
-    SemaphoreHandle_t sem;
+    SemaphoreHandle_t mutex_buf;
 } MotorCommBlvrImpl;
+
+static int Motor_comm_blvr_destroy(AgvMotorCommunicationBase* base);
 
 static int blvr_set_des_vel(AgvMotorCommunicationBase* base,
                             const WheelsVel* in);

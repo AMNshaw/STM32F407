@@ -9,7 +9,7 @@ typedef enum { AGV_COMM_PRTCL_HOST, AGV_COMM_PRTCL_BLVR } AgvCommPrtclType;
  * Host
  */
 typedef struct {
-    uint8_t placeholder;
+    size_t max_payload_len;
 } AgvCommPrtclHostCfg;
 
 /**

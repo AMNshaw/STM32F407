@@ -1,11 +1,11 @@
 #include "Agv_communication_pack/link/uart_ttl.h"
-#include "Agv_host_communication/host_comm_uart.h"
+#include "Agv_host_communication/ros_host.h"
 #include "agv_app.h"
 #include "usart.h"
 
 void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef* huart, uint16_t Size) {
-    CommHostUartImpl* host_impl =
-        (CommHostUartImpl*)agv_core.host_communication_base.impl;
+    CommHostRosImpl* host_impl =
+        (CommHostRosImpl*)agv_core.host_communication_base.impl;
     if (!host_impl) return;
 
     AgvCommLinkIface* link = &host_impl->link;

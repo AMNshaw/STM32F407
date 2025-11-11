@@ -16,27 +16,6 @@ typedef struct {
     VelCmd twist;
 } Odom;
 
-typedef enum { VEL_CMD } HostMsgType;
-typedef struct {
-    HostMsgType msg_type;
-    union {
-        VelCmd vel_cmd;
-    } msg;
-} HostInterMsg;
-
-typedef struct {
-    int32_t rpm;
-} MotorInterMsg;
-
-typedef enum { Host_MSG, MOTOR_MSG } AgvMsgType;
-typedef struct {
-    AgvMsgType msg_type;
-    union {
-        HostInterMsg host_msg;
-        MotorInterMsg motors_msg[4];
-    } u;
-} AgvInterMsg;
-
 // 小工具
 static inline float clampf(float v, float lo, float hi) {
     return (v < lo) ? lo : (v > hi) ? hi : v;
