@@ -1,10 +1,11 @@
 #ifndef AGV_MOTOR_COMMUNICATION__BLVR_CONFIG_H_
 #define AGV_MOTOR_COMMUNICATION__BLVR_CONFIG_H_
 
+#include <stdlib.h>
+
 #include "Agv_communication_pack/configs/comm_format_config.h"
 #include "Agv_communication_pack/configs/comm_link_config.h"
 #include "Agv_communication_pack/configs/comm_protocol_config.h"
-#include "stdlib.h"
 
 typedef struct {
     size_t axis_count;

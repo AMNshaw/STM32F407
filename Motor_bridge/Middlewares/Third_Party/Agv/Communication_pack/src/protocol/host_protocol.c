@@ -1,8 +1,44 @@
-#include "Agv_communication_pack/protocol/host_protocol.h"
 
+#include <stdlib.h>
+#include <string.h>
+
+#include "Agv_communication_pack/communication_iface.h"
+#include "Agv_communication_pack/communication_msgs.h"
+#include "Agv_communication_pack/configs/comm_protocol_config.h"
 #include "Agv_communication_pack/protocol_defs/host_protocol_defs.h"
 #include "Agv_core/error_codes/error_common.h"
 #include "Agv_core/error_codes/error_communication.h"
+
+/**
+ * private declarations
+ */
+
+typedef struct {
+    const AgvCommPrtclHostCfg* cfg;
+
+    AgvCommMsg pending_msg;
+    int has_pending;
+} HostProtoImpl;
+
+static int hostProto_feed_payload(AgvCommProtocolIface* iface,
+                                  const uint8_t* payload_in,
+                                  size_t payload_len);
+
+static int hostProto_pop_msg(AgvCommProtocolIface* iface, AgvCommMsg* msg_out);
+
+static int hostProto_make_payload(AgvCommProtocolIface* iface,
+                                  const AgvCommMsg* msg_in,
+                                  uint8_t* payload_out, size_t* payload_len);
+
+static int hostProto_destroy(AgvCommProtocolIface* iface);
+
+uint8_t* put_f32_le(uint8_t* p, float v);
+
+const uint8_t* get_f32_le(const uint8_t* p, float* out);
+
+/**
+ * Private definitions
+ */
 
 int Protocol_host_create(AgvCommProtocolIface* out,
                          const AgvCommPrtclHostCfg* cfg) {
@@ -13,7 +49,7 @@ int Protocol_host_create(AgvCommProtocolIface* out,
     impl->cfg = cfg;
 
     out->impl = impl;
-    out->feed_frame = hostProto_feed_frame;
+    out->feed_payload = hostProto_feed_payload;
     out->pop_msg = hostProto_pop_msg;
     out->make_payload = hostProto_make_payload;
     out->destroy = hostProto_destroy;
@@ -21,14 +57,15 @@ int Protocol_host_create(AgvCommProtocolIface* out,
 }
 
 static int hostProto_destroy(AgvCommProtocolIface* iface) {
-    if (!iface) return AGV_ERR_INVALID_ARG;
+    if (!iface) return AGV_OK;
     HostProtoImpl* impl = (HostProtoImpl*)iface->impl;
-    if (!impl) return AGV_ERR_NO_MEMORY;
-
-    free(impl);
+    if (impl) {
+        impl->cfg = NULL;
+        free(impl);
+    };
 
     iface->impl = NULL;
-    iface->feed_frame = NULL;
+    iface->feed_payload = NULL;
     iface->pop_msg = NULL;
     iface->make_payload = NULL;
     iface->destroy = NULL;
@@ -36,19 +73,20 @@ static int hostProto_destroy(AgvCommProtocolIface* iface) {
     return AGV_OK;
 }
 
-static int hostProto_feed_frame(AgvCommProtocolIface* iface,
-                                const uint8_t* frame_in, size_t frame_len) {
-    if (!iface || !frame_in || frame_len == 0) return AGV_ERR_INVALID_ARG;
+static int hostProto_feed_payload(AgvCommProtocolIface* iface,
+                                  const uint8_t* payload_in,
+                                  size_t payload_len) {
+    if (!iface || !payload_in || payload_len == 0) return AGV_ERR_INVALID_ARG;
     HostProtoImpl* impl = (HostProtoImpl*)iface->impl;
     if (!impl) return AGV_ERR_NO_MEMORY;
-    if (frame_len <= 2) return AGV_ERR_COMM_PRTCL_BAD_PAYLOAD;
+    if (payload_len <= 2) return AGV_ERR_COMM_PRTCL_BAD_PAYLOAD;
 
     size_t idx = 0;
-    uint8_t cmd = frame_in[idx++];
-    uint8_t len = frame_in[idx++];
-    const uint8_t* data = &frame_in[idx++];
+    uint8_t cmd = payload_in[idx++];
+    uint8_t len = payload_in[idx++];
+    const uint8_t* data = &payload_in[idx++];
 
-    if (2 + len != frame_len) {
+    if (2 + len != payload_len) {
         return AGV_ERR_COMM_PRTCL_BAD_PAYLOAD;
     }
 
@@ -59,7 +97,7 @@ static int hostProto_feed_frame(AgvCommProtocolIface* iface,
         case HOST_COMM_CMD_SET_VEL: {
             size_t expected_len = 3 * sizeof(float);  // float * (vx, vy, vyaw)
             if (len != expected_len) return AGV_ERR_COMM_PRTCL_BAD_PAYLOAD;
-            uint8_t* p = &frame_in[idx];
+            uint8_t* p = &payload_in[idx];
 
             p = get_f32_le(p, &msg.u.host_msg.msg.vel.v_x);
             p = get_f32_le(p, &msg.u.host_msg.msg.vel.v_y);
@@ -83,8 +121,7 @@ static int hostProto_pop_msg(AgvCommProtocolIface* iface, AgvCommMsg* msg_out) {
     HostProtoImpl* impl = (HostProtoImpl*)iface->impl;
     if (!impl) return AGV_ERR_NO_MEMORY;
 
-    if (!impl->has_pending)
-        return AGV_ERR_COMM_PRTCL_NO_PENDING_MSG;  // 沒有可用訊息
+    if (!impl->has_pending) return AGV_ERR_COMM_PRTCL_NO_PENDING_MSG;
 
     *msg_out = impl->pending_msg;
     impl->has_pending = 0;
@@ -93,9 +130,9 @@ static int hostProto_pop_msg(AgvCommProtocolIface* iface, AgvCommMsg* msg_out) {
 }
 
 static int hostProto_make_payload(AgvCommProtocolIface* iface,
-                                  const AgvCommMsg* msg_in, uint8_t* frame_out,
-                                  size_t* frame_len) {
-    if (!msg_in || !frame_out || !frame_len) return AGV_ERR_INVALID_ARG;
+                                  const AgvCommMsg* msg_in,
+                                  uint8_t* payload_out, size_t* payload_len) {
+    if (!msg_in || !payload_out || !payload_len) return AGV_ERR_INVALID_ARG;
 
     if (msg_in->msg_type != HOST_MSG)
         return AGV_ERR_COMM_PRTCL_INVALID_MSG_TYPE;
@@ -110,11 +147,11 @@ static int hostProto_make_payload(AgvCommProtocolIface* iface,
             cmd = HOST_COMM_CMD_ODOMETRY_FEEDBACK;
             len = 2 + 6 * sizeof(float);  // cmd + len + float * (x, y, yaw, vx,
                                           // vy, vyaw)
-            if (*frame_len < len) return AGV_ERR_OUTPUT_OVERFLOW;
+            if (*payload_len < len) return AGV_ERR_OUTPUT_OVERFLOW;
 
-            frame_out[idx++] = cmd;
-            frame_out[idx++] = len;
-            uint8_t* p = &frame_out[idx];
+            payload_out[idx++] = cmd;
+            payload_out[idx++] = len;
+            uint8_t* p = &payload_out[idx];
 
             p = put_f32_le(p, host_msg->msg.odom.pos.x);
             p = put_f32_le(p, host_msg->msg.odom.pos.y);
@@ -123,7 +160,8 @@ static int hostProto_make_payload(AgvCommProtocolIface* iface,
             p = put_f32_le(p, host_msg->msg.odom.vel.v_y);
             p = put_f32_le(p, host_msg->msg.odom.vel.v_yaw);
 
-            idx = (size_t)(p - frame_out);
+            idx = (size_t)(p - payload_out);
+            *payload_len = idx;
 
             return AGV_OK;
         }

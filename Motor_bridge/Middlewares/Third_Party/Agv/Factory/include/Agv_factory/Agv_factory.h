@@ -13,18 +13,10 @@ int Agv_garmin_create(AgvCore* core,
                       const AgvMotorBlvrConfig* blvr_cfg,
                       const AgvMecanumConfig* mecanum_cfg,
                       const AgvPidConfig* pid_cfg);
+// clang-format on
+
+int Agv_comm_create(AgvCore* core, const AgvHostRosCfg* host_ros_cfg);
 
 int Agv_destroy(AgvCore* core);
-
-// clang-format on
-
-// clang-format off
-int Agv_comm_create(AgvCore* core, 
-                      const AgvHostRosCfg* host_ros_cfg,
-                      const AgvMotorBlvrConfig* blvr_cfg);
-
-int Agv_comm_destroy(AgvCore* core);
-
-// clang-format on
 
 #endif  // AGV_FACTORY__AGV_FACTORY_H_

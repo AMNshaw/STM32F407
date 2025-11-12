@@ -1,8 +1,29 @@
-#include "Agv_communication_pack/link/uart_rs485.h"
-
+#include "Agv_communication_pack/communication_iface.h"
+#include "Agv_communication_pack/configs/comm_link_config.h"
 #include "Agv_core/error_codes/error_common.h"
 #include "Agv_core/error_codes/error_communication.h"
 #include "stm32f4xx_hal.h"
+
+/**
+ * private declarations
+ */
+
+typedef struct {
+    const AgvCommLnkUartRs485Cfg* cfg;
+
+} UartRs485Impl;
+
+static int send_bytes_rs485(AgvCommLinkIface* iface, const uint8_t* data_in,
+                            size_t data_len);
+
+static int recv_bytes_rs485(AgvCommLinkIface* iface, uint8_t* data_out,
+                            size_t* data_len);
+
+static int destroy_rs485(AgvCommLinkIface* iface);
+
+/**
+ * Private definitions
+ */
 
 int Link_uart_rs485_create(AgvCommLinkIface* out,
                            const AgvCommLnkUartRs485Cfg* cfg) {
@@ -26,12 +47,13 @@ int Link_uart_rs485_create(AgvCommLinkIface* out,
 }
 
 static int destroy_rs485(AgvCommLinkIface* iface) {
-    if (!iface) return AGV_ERR_INVALID_ARG;
+    if (!iface) return AGV_OK;
 
     UartRs485Impl* impl = (UartRs485Impl*)iface->impl;
-    if (!impl) return AGV_ERR_NO_MEMORY;
-
-    free(impl);
+    if (impl) {
+        impl->cfg = NULL;
+        free(impl);
+    }
 
     iface->impl = NULL;
     iface->send_bytes = NULL;

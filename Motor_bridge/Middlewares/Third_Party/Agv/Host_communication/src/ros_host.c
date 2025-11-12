@@ -1,8 +1,48 @@
-#include "Agv_host_communication/ros_host.h"
-
 #include "Agv_communication_pack/communication_builder.h"
+#include "Agv_communication_pack/communication_iface.h"
 #include "Agv_communication_pack/communication_msgs.h"
+#include "Agv_core/agv_types.h"
 #include "Agv_core/error_codes/error_common.h"
+#include "Agv_core/modules/host_communication_base.h"
+#include "Agv_host_communication/ros_host_config.h"
+#include "FreeRTOS.h"
+#include "semphr.h"
+#include "task.h"
+
+/**
+ * private declarations
+ */
+
+typedef struct {
+    const AgvHostRosCfg* cfg;
+
+    AgvCommLinkIface link;
+    AgvCommFormatIface fmt;
+    AgvCommProtocolIface prtcl;
+
+    struct {
+        TickType_t timestamp;
+        VelCmd cmd_vel;
+    } cmd_vel_buf;
+
+    SemaphoreHandle_t mutex_buf;
+
+} CommHostRosImpl;
+
+static int Host_communication_ros_destroy(AgvHostCommunicationBase* base);
+
+static int ros_get_des_vel_from_buf(AgvHostCommunicationBase* base,
+                                    VelCmd* out);
+
+static int ros_send_odom(AgvHostCommunicationBase* base, const Odom* in);
+
+static int ros_send_heartbeat(AgvHostCommunicationBase* base);  // TODO
+
+static int ros_process_pending_msg_to_buf(AgvHostCommunicationBase* base);
+
+/**
+ * Private definitions
+ */
 
 int Host_communication_ros_create(AgvHostCommunicationBase* out,
                                   const AgvHostRosCfg* cfg) {
@@ -53,19 +93,20 @@ int Host_communication_ros_create(AgvHostCommunicationBase* out,
 }
 
 static int Host_communication_ros_destroy(AgvHostCommunicationBase* base) {
-    if (!base) return AGV_ERR_INVALID_ARG;
+    if (!base) return AGV_OK;
 
     CommHostRosImpl* impl = (CommHostRosImpl*)base->impl;
-    if (!impl) return AGV_ERR_NO_MEMORY;
+    if (impl) {
+        if (impl->mutex_buf) {
+            vSemaphoreDelete(impl->mutex_buf);
+            impl->mutex_buf = NULL;
+        }
+        if (impl->prtcl.destroy) impl->prtcl.destroy(&impl->prtcl);
+        if (impl->fmt.destroy) impl->fmt.destroy(&impl->fmt);
+        if (impl->link.destroy) impl->link.destroy(&impl->link);
 
-    vSemaphoreDelete(impl->mutex_buf);
-    impl->mutex_buf = NULL;
-
-    if (impl->prtcl.destroy) impl->prtcl.destroy(&impl->prtcl);
-    if (impl->fmt.destroy) impl->fmt.destroy(&impl->fmt);
-    if (impl->link.destroy) impl->link.destroy(&impl->link);
-
-    free(impl);
+        free(impl);
+    }
 
     base->impl = NULL;
     base->get_des_vel_from_buffer = NULL;
@@ -146,11 +187,11 @@ static int ros_process_pending_msg_to_buf(AgvHostCommunicationBase* base) {
     if (now - (TickType_t)timestamp > cfg->data_expiration_threshold)
         return 0;  // TODO: def a error, data expired;
 
-    fmt->feed_data(fmt, data, data_len);
-    size_t ros_frame_len = cfg->rosFmt_cfg.max_frame_len;
-    uint8_t frame_popped[ros_frame_len];
-    fmt->pop_frame(fmt, frame_popped, ros_frame_len);
-    prtcl->feed_frame(prtcl, frame_popped, ros_frame_len);
+    fmt->feed_bytes(fmt, data, data_len);
+    size_t ros_payload_len = cfg->rosFmt_cfg.max_frame_len;
+    uint8_t payload[ros_payload_len];
+    fmt->pop_payload(fmt, payload, &ros_payload_len);
+    prtcl->feed_payload(prtcl, payload, ros_payload_len);
     AgvCommMsg msg_popped;
     msg_popped.msg_type = HOST_MSG;
     prtcl->pop_msg(prtcl, &msg_popped);

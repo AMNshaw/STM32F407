@@ -1,10 +1,44 @@
-#include "Agv_communication_pack/protocol/blvr_protocol.h"
+#include <stdlib.h>
+#include <string.h>
 
-#include <stdbool.h>
-
+#include "Agv_communication_pack/communication_iface.h"
+#include "Agv_communication_pack/communication_msgs.h"
+#include "Agv_communication_pack/configs/comm_protocol_config.h"
 #include "Agv_communication_pack/protocol_defs/blvr_protocol_defs.h"
 #include "Agv_core/error_codes/error_common.h"
 #include "Agv_core/error_codes/error_communication.h"
+
+/**
+ * private declarations
+ */
+
+typedef struct {
+    const AgvCommPrtclBlvrCfg* cfg;
+
+    AgvCommMsg pending_msg;
+    int has_pending;
+
+} BlvrPrtclImpl;
+
+static int BlvrProto_feed_payload(AgvCommProtocolIface* iface,
+                                  const uint8_t* payload_in,
+                                  size_t payload_len);
+
+static int BlvrProto_pop_msg(AgvCommProtocolIface* iface, AgvCommMsg* msg_out);
+
+static int BlvrProto_make_payload(AgvCommProtocolIface* iface,
+                                  const AgvCommMsg* msg_in, uint8_t* frame_out,
+                                  size_t* frame_len);
+
+static int BlvrProto_destroy(AgvCommProtocolIface* iface);
+
+static uint8_t* put_be32(uint8_t* p, int32_t v);
+
+static const uint8_t* get_be32(const uint8_t* p, int32_t* out);
+
+/**
+ * Private definitions
+ */
 
 int Protocol_blvr_create(AgvCommProtocolIface* out,
                          const AgvCommPrtclBlvrCfg* cfg) {
@@ -17,7 +51,7 @@ int Protocol_blvr_create(AgvCommProtocolIface* out,
     impl->has_pending = 0;
 
     out->impl = impl;
-    out->feed_frame = BlvrProto_feed_frame;
+    out->feed_payload = BlvrProto_feed_payload;
     out->pop_msg = BlvrProto_pop_msg;
     out->make_payload = BlvrProto_make_payload;
     out->destroy = BlvrProto_destroy;
@@ -30,7 +64,7 @@ static int BlvrProto_destroy(AgvCommProtocolIface* iface) {
     free(iface->impl);
 
     iface->impl = NULL;
-    iface->feed_frame = NULL;
+    iface->feed_payload = NULL;
     iface->pop_msg = NULL;
     iface->make_payload = NULL;
     iface->destroy = NULL;
@@ -38,9 +72,10 @@ static int BlvrProto_destroy(AgvCommProtocolIface* iface) {
     return AGV_OK;
 }
 
-static int BlvrProto_feed_frame(AgvCommProtocolIface* iface,
-                                const uint8_t* frame_in, size_t frame_len) {
-    if (!iface || !frame_in || frame_len == 0) {
+static int BlvrProto_feed_payload(AgvCommProtocolIface* iface,
+                                  const uint8_t* payload_in,
+                                  size_t payload_len) {
+    if (!iface || !payload_in || payload_len == 0) {
         return AGV_ERR_INVALID_ARG;
     }
 
@@ -49,11 +84,11 @@ static int BlvrProto_feed_frame(AgvCommProtocolIface* iface,
     const AgvCommPrtclBlvrCfg* cfg = impl->cfg;
     if (!cfg) return AGV_ERR_NO_MEMORY;
 
-    uint8_t addr = frame_in[0];
-    uint8_t func = frame_in[1];
+    uint8_t addr = payload_in[0];
+    uint8_t func = payload_in[1];
 
     if (func & BLVR_FC_EXCEPTION_BIT) {
-        uint8_t exc_code = frame_in[3];  // Modbus exception code
+        uint8_t exc_code = payload_in[3];  // Modbus exception code
         (void)exc_code;
         // 這裡你可以選擇印 log 或設一個 error flag
         return AGV_ERR_COMM_PRTCL_EXCEPTION;
@@ -61,34 +96,30 @@ static int BlvrProto_feed_frame(AgvCommProtocolIface* iface,
 
     if (addr != cfg->shared_id) return AGV_ERR_COMM_PRTCL_UNSUPPORTED_SHARED_ID;
 
-    if (frame_len < 5) {  // [address 1][func 1][data *][crc up1][crc lo1]
+    if (payload_len < 3) {  // [address 1][func 1][data *]
         return AGV_ERR_COMM_FMT_FRAME_TOO_SHORT;
     }
 
-    size_t pdu_len = frame_len - 2;
-    const uint8_t* pdu_data = &frame_in[2];  // 指向 PDU data 部分
-    size_t data_len = pdu_len - 2;           // 去掉 crc 之後，只剩 data
-    size_t reg_len = data_len - 1;           // 第一個 byte 是 byte_count
+    size_t data_len =
+        payload_len - 3;  // addr 1, func 1, data[0] is registers byte count
+    if (data_len <= 0) {
+        return AGV_ERR_COMM_FMT_FRAME_TOO_SHORT;
+    }
 
-    // 根據 func 來 decode
+    const uint8_t* data = &payload_in[2];  // 指向 PDU data 部分
     switch (func) {
         case BLVR_FC_READ_HOLDING_REGISTERS: {
             // Read Holding Registers response:
             // [Addr][0x03][ByteCount][Data...][CRC_L][CRC_H]
-            if (reg_len <= 0) {
-                return AGV_ERR_COMM_FMT_FRAME_TOO_SHORT;
-            }
-            uint8_t byte_count = pdu_data[0];
-            if (reg_len != byte_count) {
-                return AGV_ERR_COMM_FMT_FRAME_TOO_SHORT;
-            }
-            const uint8_t* registers_data = &pdu_data[1];
 
-            // 檢查是否跟我們預期的一樣大小
+            size_t reg_byte_count = data[0];
+
+            const uint8_t* registers_data = &data[1];
+
             uint16_t expected_bytes =
                 cfg->axis_count * (cfg->num_read_cmd * cfg->num_rgster_per_cmd *
                                    cfg->byte_per_rgstr);
-            if (byte_count != expected_bytes) {
+            if (reg_byte_count != expected_bytes) {
                 return AGV_ERR_COMM_PRTCL_BAD_PAYLOAD;
             }
             AgvCommMsg msg = {0};
@@ -111,7 +142,7 @@ static int BlvrProto_feed_frame(AgvCommProtocolIface* iface,
             impl->pending_msg = msg;
             impl->has_pending = 1;
 
-            return 0;
+            return AGV_OK;
         }
         case BLVR_FC_WRITE_MULTIPLE_REGISTERS: {
             return 0;
@@ -141,9 +172,9 @@ static int BlvrProto_pop_msg(AgvCommProtocolIface* iface, AgvCommMsg* msg_out) {
 }
 
 static int BlvrProto_make_payload(AgvCommProtocolIface* iface,
-                                  const AgvCommMsg* msg_in, uint8_t* frame_out,
-                                  size_t* frame_len) {
-    if (!iface || !msg_in || !frame_out || !frame_len) {
+                                  const AgvCommMsg* msg_in,
+                                  uint8_t* payload_out, size_t* payload_len) {
+    if (!iface || !msg_in || !payload_out || !payload_len) {
         return AGV_ERR_INVALID_ARG;
     }
 
@@ -173,32 +204,32 @@ static int BlvrProto_make_payload(AgvCommProtocolIface* iface,
                             + 1                  // byte_count
                             + totol_byte_count;  // data
 
-            if (*frame_len < needed) {
+            if (*payload_len < needed) {
                 return AGV_ERR_COMM_FMT_FRAME_TOO_SHORT;  // 呼叫方給的 buffer
                                                           // 不夠大
             }
 
             // Addr
-            frame_out[idx++] = cfg->shared_id;
+            payload_out[idx++] = cfg->shared_id;
             // Function code
 
-            frame_out[idx++] = BLVR_FC_WRITE_MULTIPLE_REGISTERS;
+            payload_out[idx++] = BLVR_FC_WRITE_MULTIPLE_REGISTERS;
 
             // modbus is a 8bit format, but BLVR is using 16bit, so we should
             // split the var to 2 8bit (upper & lower)
 
             // Start address
-            frame_out[idx++] = (uint8_t)(reg_start >> 8);
-            frame_out[idx++] = (uint8_t)(reg_start & 0xFF);
+            payload_out[idx++] = (uint8_t)(reg_start >> 8);
+            payload_out[idx++] = (uint8_t)(reg_start & 0xFF);
 
             // Register count
-            frame_out[idx++] = (uint8_t)(totol_rgstr_count >> 8);
-            frame_out[idx++] = (uint8_t)(totol_rgstr_count & 0xFF);
+            payload_out[idx++] = (uint8_t)(totol_rgstr_count >> 8);
+            payload_out[idx++] = (uint8_t)(totol_rgstr_count & 0xFF);
 
             // Byte count
-            frame_out[idx++] = totol_byte_count;
+            payload_out[idx++] = totol_byte_count;
 
-            uint8_t* p = &frame_out[idx];
+            uint8_t* p = &payload_out[idx];
             for (uint8_t i = 0; i < cfg->axis_count; ++i) {
                 p = put_be32(p, motors_msg.msgs[i].des_vel);
                 p = put_be32(p, motors_msg.msgs[i].des_acc);
@@ -207,7 +238,7 @@ static int BlvrProto_make_payload(AgvCommProtocolIface* iface,
                 p = put_be32(p, motors_msg.msgs[i].trigger);
             }
 
-            *frame_len = idx;
+            *payload_len = idx;
 
             return AGV_OK;
         }
@@ -222,18 +253,18 @@ static int BlvrProto_make_payload(AgvCommProtocolIface* iface,
                             + 2   // start addr
                             + 2;  // reg count
 
-            if (*frame_len < needed) {
+            if (*payload_len < needed) {
                 return AGV_ERR_COMM_FMT_FRAME_TOO_SHORT;
             }
 
-            frame_out[idx++] = cfg->shared_id;
-            frame_out[idx++] = BLVR_FC_READ_HOLDING_REGISTERS;
-            frame_out[idx++] = (uint8_t)(addr >> 8);
-            frame_out[idx++] = (uint8_t)(addr & 0xFF);
-            frame_out[idx++] = (uint8_t)(totol_rgstr_count >> 8);
-            frame_out[idx++] = (uint8_t)(totol_rgstr_count & 0xFF);
+            payload_out[idx++] = cfg->shared_id;
+            payload_out[idx++] = BLVR_FC_READ_HOLDING_REGISTERS;
+            payload_out[idx++] = (uint8_t)(addr >> 8);
+            payload_out[idx++] = (uint8_t)(addr & 0xFF);
+            payload_out[idx++] = (uint8_t)(totol_rgstr_count >> 8);
+            payload_out[idx++] = (uint8_t)(totol_rgstr_count & 0xFF);
 
-            *frame_len = idx;
+            *payload_len = idx;
             return AGV_OK;
         }
         case READ_WRITE: {
@@ -254,40 +285,40 @@ static int BlvrProto_make_payload(AgvCommProtocolIface* iface,
                             + 2                  // reg_count write
                             + 1                  // byte_count
                             + write_byte_count;  // data
-            if (*frame_len < needed) {
+            if (*payload_len < needed) {
                 return AGV_ERR_COMM_FMT_FRAME_TOO_SHORT;  // 呼叫方給的 buffer
                                                           // 不夠大
             }
 
             // Addr
-            frame_out[idx++] = cfg->shared_id;
+            payload_out[idx++] = cfg->shared_id;
             // Function code
 
-            frame_out[idx++] = BLVR_FC_READWRITE_MULTIPLE_REGISTERS;
+            payload_out[idx++] = BLVR_FC_READWRITE_MULTIPLE_REGISTERS;
 
             // modbus is a 8bit format, but BLVR is using 16bit, so we should
             // split the var to 2 8bit (upper & lower)
 
             // Start address read
-            frame_out[idx++] = (uint8_t)(reg_start_read >> 8);
-            frame_out[idx++] = (uint8_t)(reg_start_read & 0xFF);
+            payload_out[idx++] = (uint8_t)(reg_start_read >> 8);
+            payload_out[idx++] = (uint8_t)(reg_start_read & 0xFF);
 
             // Register count read
-            frame_out[idx++] = (uint8_t)(totol_read_rgstr_count >> 8);
-            frame_out[idx++] = (uint8_t)(totol_read_rgstr_count & 0xFF);
+            payload_out[idx++] = (uint8_t)(totol_read_rgstr_count >> 8);
+            payload_out[idx++] = (uint8_t)(totol_read_rgstr_count & 0xFF);
 
             // Start address write
-            frame_out[idx++] = (uint8_t)(reg_start_write >> 8);
-            frame_out[idx++] = (uint8_t)(reg_start_write & 0xFF);
+            payload_out[idx++] = (uint8_t)(reg_start_write >> 8);
+            payload_out[idx++] = (uint8_t)(reg_start_write & 0xFF);
 
             // Register count write
-            frame_out[idx++] = (uint8_t)(totol_write_rgstr_count >> 8);
-            frame_out[idx++] = (uint8_t)(totol_write_rgstr_count & 0xFF);
+            payload_out[idx++] = (uint8_t)(totol_write_rgstr_count >> 8);
+            payload_out[idx++] = (uint8_t)(totol_write_rgstr_count & 0xFF);
 
             // Byte count
-            frame_out[idx++] = write_byte_count;
+            payload_out[idx++] = write_byte_count;
 
-            uint8_t* p = &frame_out[idx];
+            uint8_t* p = &payload_out[idx];
             for (uint8_t i = 0; i < cfg->axis_count; ++i) {
                 p = put_be32(p, motors_msg.msgs[i].des_vel);
                 p = put_be32(p, motors_msg.msgs[i].des_acc);
@@ -295,9 +326,9 @@ static int BlvrProto_make_payload(AgvCommProtocolIface* iface,
                 p = put_be32(p, motors_msg.msgs[i].spd_ctrl);
                 p = put_be32(p, motors_msg.msgs[i].trigger);
             }
-            idx = (size_t)(p - frame_out);
+            idx = (size_t)(p - payload_out);
 
-            *frame_len = idx;
+            *payload_len = idx;
             return AGV_OK;
         }
 

@@ -45,6 +45,8 @@
         "host_communication_builder.h": "c",
         "queue.h": "c",
         "error_common.h": "c",
-        "agv_factory.h": "c"
+        "agv_factory.h": "c",
+        "uart_ttl.h": "c",
+        "ros_host.h": "c"
     }
 }

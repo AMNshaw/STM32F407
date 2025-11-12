@@ -1,9 +1,53 @@
-#include "link/uart_ttl.h"
+#include <stdlib.h>
 
+#include "Agv_communication_pack/communication_iface.h"
+#include "Agv_communication_pack/configs/comm_link_config.h"
 #include "Agv_core/error_codes/error_common.h"
 #include "Agv_core/error_codes/error_communication.h"
+#include "FreeRTOS.h"
+#include "queue.h"
+#include "semphr.h"
 #include "stm32f4xx_hal.h"
-#include "usart.h"
+
+/**
+ * private declarations
+ */
+
+typedef struct {
+    uint32_t timestamp;
+    size_t len;
+    uint8_t data[];
+} TtlFrame;
+
+typedef struct {
+    const AgvCommLnkUartTtlCfg* cfg;
+
+    uint8_t* rx_buf;
+    size_t rx_len;
+    QueueHandle_t rx_data_queue;
+
+    size_t frame_item_size;
+    size_t num_dropped_data;
+
+    // SemaphoreHandle_t rx_mutex; FreeRTOS will handle the semaphore of queue
+} UartTtlImpl;
+
+static int send_bytes_ttl(AgvCommLinkIface* iface, const uint8_t* data_in,
+                          size_t data_len);
+
+static int recv_bytes_ttl(AgvCommLinkIface* iface, uint8_t* data_out,
+                          size_t* data_len);
+
+static int on_rx_rcv_ttl(AgvCommLinkIface* iface, size_t data_len);
+
+static int pop_rx_queue_ttl(AgvCommLinkIface* iface, uint8_t* buf_out,
+                            size_t* buf_len_out, uint32_t* timestamp_out);
+
+static int destroy_ttl(AgvCommLinkIface* iface);
+
+/**
+ * Private definitions
+ */
 
 int Link_uart_ttl_create(AgvCommLinkIface* out,
                          const AgvCommLnkUartTtlCfg* cfg) {
@@ -44,25 +88,23 @@ int Link_uart_ttl_create(AgvCommLinkIface* out,
         return AGV_ERR_COMM_LINK_HAL;
     }
 
-    return 0;
+    return AGV_OK;
 }
 
 static int destroy_ttl(AgvCommLinkIface* iface) {
-    if (!iface) return -1;
+    if (!iface) return AGV_OK;
 
     UartTtlImpl* impl = (UartTtlImpl*)iface->impl;
-    if (!impl) return AGV_ERR_NO_MEMORY;
-
-    if (impl->rx_buf) {
-        free(impl->rx_buf);
-        impl->rx_buf = NULL;
-    }
-    if (impl->rx_data_queue != NULL) {
-        vQueueDelete(impl->rx_data_queue);
-        impl->rx_data_queue = NULL;
-    }
-    impl->cfg = NULL;
     if (impl) {
+        if (impl->rx_buf) {
+            free(impl->rx_buf);
+            impl->rx_buf = NULL;
+        }
+        if (impl->rx_data_queue != NULL) {
+            vQueueDelete(impl->rx_data_queue);
+            impl->rx_data_queue = NULL;
+        }
+        impl->cfg = NULL;
         free(impl);
     }
 
@@ -72,7 +114,7 @@ static int destroy_ttl(AgvCommLinkIface* iface) {
     iface->on_data_rcv = NULL;
     iface->read_buf = NULL;
     iface->destroy = NULL;
-    return 0;
+    return AGV_OK;
 }
 
 static int send_bytes_ttl(AgvCommLinkIface* iface, const uint8_t* data_in,

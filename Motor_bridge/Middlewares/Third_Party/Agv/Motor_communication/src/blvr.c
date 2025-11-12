@@ -1,12 +1,66 @@
 #include "Agv_motor_communication/blvr.h"
 
 #include "Agv_communication_pack/communication_builder.h"
+#include "Agv_communication_pack/communication_iface.h"
 #include "Agv_communication_pack/communication_msgs.h"
+#include "Agv_core/agv_types.h"
 #include "Agv_core/error_codes/error_common.h"
+#include "Agv_core/modules/motor_communication_base.h"
+#include "Agv_motor_communication/blvr_config.h"
+#include "FreeRTOS.h"
+#include "semphr.h"
 
 #ifndef M_PI
 #define M_PI (float)3.1415926535897932384626433832
 #endif
+
+/**
+ * private declarations
+ */
+
+typedef struct {
+    int32_t des_vel;
+    int32_t des_acc;
+    int32_t des_dec;
+    int32_t spd_ctrl;
+    int32_t trigger;
+
+    int32_t driver_st;
+    int32_t rl_pos;
+    int32_t rl_rpm;
+    int32_t alrm;
+} BlvrBuff;
+
+typedef struct {
+    const AgvMotorBlvrConfig* cfg;
+
+    AgvCommLinkIface link;
+    AgvCommFormatIface fmt;
+    AgvCommProtocolIface prtcl;
+
+    BlvrBuff* buffer;
+
+    SemaphoreHandle_t mutex_buf;
+} MotorCommBlvrImpl;
+
+static int Motor_comm_blvr_destroy(AgvMotorCommunicationBase* base);
+
+static int blvr_set_des_vel(AgvMotorCommunicationBase* base,
+                            const WheelsVel* in);
+
+static int blvr_get_curr_vel(AgvMotorCommunicationBase* base, WheelsVel* out);
+
+static int blvr_get_state(AgvMotorCommunicationBase* base);
+
+static int blvr_read_and_write(AgvMotorCommunicationBase* base);
+
+int32_t rad_s_to_regVel(float rad_s, float unit_rpm);
+
+float regVel_to_rad_s(int32_t reg_val, float unit_rpm);
+
+/**
+ * Private definitions
+ */
 
 int Motor_comm_blvr_create(AgvMotorCommunicationBase* out,
                            const AgvMotorBlvrConfig* cfg) {
@@ -64,20 +118,23 @@ int Motor_comm_blvr_create(AgvMotorCommunicationBase* out,
 }
 
 static int Motor_comm_blvr_destroy(AgvMotorCommunicationBase* base) {
-    if (!base || !base->impl) return -1;
+    if (!base) return AGV_OK;
 
     MotorCommBlvrImpl* impl = (MotorCommBlvrImpl*)base->impl;
-
-    free(impl->buffer);
-    impl->buffer = NULL;
-    vSemaphoreDelete(impl->mutex_buf);
-    impl->mutex_buf = NULL;
-
-    if (impl->prtcl.destroy) impl->prtcl.destroy(&impl->prtcl);
-    if (impl->fmt.destroy) impl->fmt.destroy(&impl->fmt);
-    if (impl->link.destroy) impl->link.destroy(&impl->link);
-
-    free(impl);
+    if (impl) {
+        if (impl->buffer) {
+            free(impl->buffer);
+            impl->buffer = NULL;
+        }
+        if (impl->mutex_buf) {
+            vSemaphoreDelete(impl->mutex_buf);
+            impl->mutex_buf = NULL;
+        }
+        if (impl->prtcl.destroy) impl->prtcl.destroy(&impl->prtcl);
+        if (impl->fmt.destroy) impl->fmt.destroy(&impl->fmt);
+        if (impl->link.destroy) impl->link.destroy(&impl->link);
+        free(impl);
+    }
 
     base->impl = NULL;
     base->set_desired_vel_to_buffer = NULL;
@@ -170,16 +227,15 @@ static int blvr_read_and_write(AgvMotorCommunicationBase* base) {
     uint8_t data_rcv[data_rcv_len];
     link->recv_bytes(link, data_rcv, data_rcv_len);
 
-    size_t modbus_frame_len = impl->cfg->modbus_cfg.max_frame_len;
-    uint8_t frame_popped[modbus_frame_len];
-    fmt->feed_data(fmt, data_rcv, data_rcv_len);
-    fmt->pop_frame(fmt, frame_popped, &modbus_frame_len);
-    prtcl->feed_frame(prtcl, frame_popped, modbus_frame_len);
+    fmt->feed_bytes(fmt, data_rcv, data_rcv_len);
+    size_t payload_len = impl->cfg->modbus_cfg.max_frame_len;
+    uint8_t payload[payload_len];
+    fmt->pop_payload(fmt, payload, &payload_len);
 
+    prtcl->feed_payload(prtcl, payload, payload_len);
     AgvCommMsg msg_rcv;
     msg_rcv.msg_type = MOTOR_MSG;
     prtcl->pop_msg(prtcl, &msg_rcv);
-
     xSemaphoreTake(impl->mutex_buf, portMAX_DELAY);
     for (size_t i = 0; i < 4; i++) {
         impl->buffer[i].driver_st = msg_rcv.u.motors_msg.msgs[i].driver_st;
