@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include "Agv_communication_pack/communication_builder.h"
 #include "Agv_communication_pack/communication_iface.h"
 #include "Agv_communication_pack/communication_msgs.h"
@@ -22,7 +24,7 @@ typedef struct {
 
     struct {
         TickType_t timestamp;
-        VelCmd cmd_vel;
+        Twist2D cmd_vel;
     } cmd_vel_buf;
 
     SemaphoreHandle_t mutex_buf;
@@ -32,9 +34,10 @@ typedef struct {
 static int Host_communication_ros_destroy(AgvHostCommunicationBase* base);
 
 static int ros_get_des_vel_from_buf(AgvHostCommunicationBase* base,
-                                    VelCmd* out);
+                                    Twist2D* twist_out);
 
-static int ros_send_odom(AgvHostCommunicationBase* base, const Odom* in);
+static int ros_send_odom(AgvHostCommunicationBase* base,
+                         const Odometry* odom_in);
 
 static int ros_send_heartbeat(AgvHostCommunicationBase* base);  // TODO
 
@@ -49,27 +52,31 @@ int Host_communication_ros_create(AgvHostCommunicationBase* out,
     if (!out || !cfg) return AGV_ERR_INVALID_ARG;
     CommHostRosImpl* impl = (CommHostRosImpl*)malloc(sizeof(CommHostRosImpl));
     if (!impl) return AGV_ERR_NO_MEMORY;
+    impl->cfg = cfg;
 
     int code;
+    printf("Creating uart_ttl link...\n");
     code = Link_uart_ttl_create(&impl->link, &cfg->uart_cfg);
     if (code < 0) {
         impl->link.destroy(&impl->link);
-        Free(impl);
+        free(impl);
         return code;
     }
+    printf("Creating ros format...\n");
     code = Format_ros_create(&impl->fmt, &cfg->rosFmt_cfg);
     if (code < 0) {
         impl->fmt.destroy(&impl->fmt);
         impl->link.destroy(&impl->link);
-        Free(impl);
+        free(impl);
         return code;
     }
+    printf("Creating host protocol...\n");
     code = Protocol_host_create(&impl->prtcl, &cfg->prtcl_host_cfg);
     if (code < 0) {
         impl->prtcl.destroy(&impl->prtcl);
         impl->fmt.destroy(&impl->fmt);
         impl->link.destroy(&impl->link);
-        Free(impl);
+        free(impl);
         return code;
     }
 
@@ -78,7 +85,7 @@ int Host_communication_ros_create(AgvHostCommunicationBase* out,
         impl->prtcl.destroy(&impl->prtcl);
         impl->fmt.destroy(&impl->fmt);
         impl->link.destroy(&impl->link);
-        Free(impl);
+        free(impl);
         return AGV_ERR_MUTEX_FAIL;
     }
 
@@ -89,6 +96,7 @@ int Host_communication_ros_create(AgvHostCommunicationBase* out,
     out->send_heartbeat = ros_send_heartbeat;
     out->destroy = Host_communication_ros_destroy;
 
+    printf("Host communication module created\n");
     return AGV_OK;
 }
 
@@ -104,7 +112,7 @@ static int Host_communication_ros_destroy(AgvHostCommunicationBase* base) {
         if (impl->prtcl.destroy) impl->prtcl.destroy(&impl->prtcl);
         if (impl->fmt.destroy) impl->fmt.destroy(&impl->fmt);
         if (impl->link.destroy) impl->link.destroy(&impl->link);
-
+        impl->cfg = NULL;
         free(impl);
     }
 
@@ -119,54 +127,59 @@ static int Host_communication_ros_destroy(AgvHostCommunicationBase* base) {
 }
 
 static int ros_get_des_vel_from_buf(AgvHostCommunicationBase* base,
-                                    VelCmd* out) {
-    if (!base || !out) return AGV_ERR_INVALID_ARG;
+                                    Twist2D* twist_out) {
+    if (!base || !twist_out) return AGV_ERR_INVALID_ARG;
     CommHostRosImpl* impl = (CommHostRosImpl*)base->impl;
     if (!impl) return AGV_ERR_NO_MEMORY;
 
     xSemaphoreTake(impl->mutex_buf, portMAX_DELAY);
-    out->vx = impl->cmd_vel_buf.cmd_vel.vx;
-    out->vy = impl->cmd_vel_buf.cmd_vel.vy;
-    out->wz = impl->cmd_vel_buf.cmd_vel.wz;
+    twist_out->x = impl->cmd_vel_buf.cmd_vel.x;
+    twist_out->y = impl->cmd_vel_buf.cmd_vel.y;
+    twist_out->yaw = impl->cmd_vel_buf.cmd_vel.yaw;
     xSemaphoreGive(impl->mutex_buf);
     return AGV_OK;
 }
 
-static int ros_send_odom(AgvHostCommunicationBase* base, const Odom* in) {
-    if (!base || !in) return AGV_ERR_INVALID_ARG;
+static int ros_send_odom(AgvHostCommunicationBase* base,
+                         const Odometry* odom_in) {
+    if (!base || !odom_in) return AGV_ERR_INVALID_ARG;
     CommHostRosImpl* impl = (CommHostRosImpl*)base->impl;
     if (!impl) return AGV_ERR_NO_MEMORY;
-    // Convenience pointers to the composed communication interfaces
+
     AgvCommLinkIface* link = &impl->link;
     AgvCommFormatIface* fmt = &impl->fmt;
     AgvCommProtocolIface* prtcl = &impl->prtcl;
     const AgvHostRosCfg* cfg = impl->cfg;
-    if (!link || !fmt || !prtcl || cfg) return AGV_ERR_NO_MEMORY;
+    if (!link || !fmt || !prtcl || !cfg) return AGV_ERR_NO_MEMORY;
+
+    int code = AGV_OK;
 
     AgvCommMsg msg;
     msg.msg_type = HOST_MSG;
     msg.u.host_msg.type = ODOMETRY;
-    msg.u.host_msg.msg.odom.pos.x = in->x;
-    msg.u.host_msg.msg.odom.pos.y = in->y;
-    msg.u.host_msg.msg.odom.pos.yaw = in->yaw;
-    msg.u.host_msg.msg.odom.vel.v_x = in->twist.vx;
-    msg.u.host_msg.msg.odom.vel.v_y = in->twist.vy;
-    msg.u.host_msg.msg.odom.vel.v_yaw = in->twist.wz;
+    msg.u.host_msg.msg.odom.pose.x = odom_in->pose.x;
+    msg.u.host_msg.msg.odom.pose.y = odom_in->pose.y;
+    msg.u.host_msg.msg.odom.pose.yaw = odom_in->pose.yaw;
+    msg.u.host_msg.msg.odom.twist.x = odom_in->twist.x;
+    msg.u.host_msg.msg.odom.twist.y = odom_in->twist.y;
+    msg.u.host_msg.msg.odom.twist.yaw = odom_in->twist.yaw;
 
     size_t payload_len = cfg->prtcl_host_cfg.max_payload_len;
     uint8_t payload[payload_len];
-    prtcl->make_payload(prtcl, &msg, payload, &payload_len);
+    code = prtcl->make_payload(prtcl, &msg, payload, &payload_len);
+    if (code != AGV_OK) return code;
 
     size_t frame_len = cfg->rosFmt_cfg.max_frame_len;
     uint8_t frame[frame_len];
-    fmt->make_frame(fmt, payload, payload_len, frame, &frame_len);
+    code = fmt->make_frame(fmt, payload, payload_len, frame, &frame_len);
+    if (code != AGV_OK) return code;
 
-    link->send_bytes(link, frame, frame_len);
+    code = link->send_bytes(link, frame, frame_len);
 
-    return AGV_OK;
+    return code;
 }
 
-static int ros_send_heartbeat(AgvHostCommunicationBase* base) {}
+static int ros_send_heartbeat(AgvHostCommunicationBase* base) { return 0; }
 
 static int ros_process_pending_msg_to_buf(AgvHostCommunicationBase* base) {
     if (!base) return AGV_ERR_INVALID_ARG;
@@ -179,31 +192,44 @@ static int ros_process_pending_msg_to_buf(AgvHostCommunicationBase* base) {
     const AgvHostRosCfg* cfg = impl->cfg;
     if (!link || !fmt || !prtcl || !cfg) return AGV_ERR_NO_MEMORY;
 
+    int code = AGV_OK;
+
+    printf("Trying to read buf...\n");
     size_t data_len = cfg->uart_cfg.max_data_len;
     uint8_t data[data_len];
     uint32_t timestamp;
-    link->read_buf(link, data, data_len, &timestamp);
+    code = link->read_buf(link, data, &data_len, &timestamp);
+    if (code != AGV_OK) return code;
     TickType_t now = xTaskGetTickCount();
     if (now - (TickType_t)timestamp > cfg->data_expiration_threshold)
         return 0;  // TODO: def a error, data expired;
+    printf("New data bytes_len: %d \n", data_len);
 
-    fmt->feed_bytes(fmt, data, data_len);
+    code = fmt->feed_bytes(fmt, data, data_len);
+    if (code != AGV_OK) return code;
     size_t ros_payload_len = cfg->rosFmt_cfg.max_frame_len;
     uint8_t payload[ros_payload_len];
-    fmt->pop_payload(fmt, payload, &ros_payload_len);
-    prtcl->feed_payload(prtcl, payload, ros_payload_len);
+    code = fmt->pop_payload(fmt, payload, &ros_payload_len);
+    printf("Payload len: %d \n", ros_payload_len);
+    if (code != AGV_OK) return code;
+
+    code = prtcl->feed_payload(prtcl, payload, ros_payload_len);
+    if (code != AGV_OK) return code;
     AgvCommMsg msg_popped;
     msg_popped.msg_type = HOST_MSG;
-    prtcl->pop_msg(prtcl, &msg_popped);
+    code = prtcl->pop_msg(prtcl, &msg_popped);
+    if (code != AGV_OK) return code;
 
     switch (msg_popped.u.host_msg.type) {
         case VEL_CMD: {
             xSemaphoreTake(impl->mutex_buf, portMAX_DELAY);
-            impl->cmd_vel_buf.cmd_vel.vx = msg_popped.u.host_msg.msg.vel.v_x;
-            impl->cmd_vel_buf.cmd_vel.vy = msg_popped.u.host_msg.msg.vel.v_y;
-            impl->cmd_vel_buf.cmd_vel.wz = msg_popped.u.host_msg.msg.vel.v_yaw;
+            impl->cmd_vel_buf.cmd_vel.x = msg_popped.u.host_msg.msg.vel.x;
+            impl->cmd_vel_buf.cmd_vel.y = msg_popped.u.host_msg.msg.vel.y;
+            impl->cmd_vel_buf.cmd_vel.yaw = msg_popped.u.host_msg.msg.vel.yaw;
             impl->cmd_vel_buf.timestamp = (TickType_t)timestamp;
             xSemaphoreGive(impl->mutex_buf);
+            printf("cmd_vel msg: %f %f %f\n", impl->cmd_vel_buf.cmd_vel.x,
+                   impl->cmd_vel_buf.cmd_vel.y, impl->cmd_vel_buf.cmd_vel.yaw);
             return AGV_OK;
         }
         default:

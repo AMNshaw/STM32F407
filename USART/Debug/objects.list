@@ -51,6 +51,3 @@
 "./Middlewares/Third_Party/FreeRTOS/Source/timers.o"
 "./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.o"
 "./Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.o"
-"./USB_HOST/App/usb_host.o"
-"./USB_HOST/Target/usbh_conf.o"
-"./USB_HOST/Target/usbh_platform.o"

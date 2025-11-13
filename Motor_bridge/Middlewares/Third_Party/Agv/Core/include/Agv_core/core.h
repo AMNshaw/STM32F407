@@ -5,28 +5,17 @@
 #include "Agv_core/modules/control_law_base.h"
 #include "Agv_core/modules/host_communication_base.h"
 #include "Agv_core/modules/kinematics_base.h"
-#include "Agv_core/modules/motor_communication_base.h"
-
-// FreeRTOS
-#include "FreeRTOS.h"
-#include "semphr.h"
-#include "task.h"
+#include "Agv_core/modules/motors_base.h"
 
 typedef struct {
     AgvKinematicsBase kinematic_base;
-    AgvMotorCommunicationBase motors_communication_base;
+    AgvMotorsBase motors_base;
     AgvControlLawBase control_law_base;
     AgvHostCommunicationBase host_communication_base;
 
-    VelCmd cmd_latest;
-    Odom odom;
+    Twist2D cmd_latest;
+    Odometry odom;
 
-    // 同步
-    SemaphoreHandle_t mtx_state;
-
-    // 任務
-    TaskHandle_t task_cmd_ctrl;
-    TaskHandle_t task_read_odom;
 } AgvCore;
 
 #endif  // AGV_CORE__CORE_H_

@@ -18,7 +18,6 @@ int Motor_blvr_init(AgvMotorBlvrConfig* blvr_cfg);
 int Kinematic_Mecanum_init(AgvMecanumConfig* mecanum_cfg);
 int Control_pid_init(AgvPidConfig* pid_cfg);
 
-int AGV_attach_core_isr(AgvCore* agv_core);
 int AGV_attach_core_task(AgvCore* agv_core);
 
 #endif  // __AGV_APP_H__

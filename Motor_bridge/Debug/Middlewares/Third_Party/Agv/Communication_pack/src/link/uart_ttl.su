@@ -1,0 +1,7 @@
+C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/src/link/uart_ttl.c:57:5:Link_uart_ttl_create	24	static
+C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/src/link/uart_ttl.c:104:12:destroy_ttl	24	static
+C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/src/link/uart_ttl.c:129:12:send_bytes_ttl	40	static
+C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/src/link/uart_ttl.c:151:12:recv_bytes_ttl	40	static
+C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/src/link/uart_ttl.c:170:12:pop_rx_queue_ttl	64	dynamic
+C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/src/link/uart_ttl.c:194:13:ttl_idle_handler	32	static
+C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/src/link/uart_ttl.c:206:5:on_rx_rcv_ttl	64	dynamic,ignoring_inline_asm

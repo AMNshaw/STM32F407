@@ -1,7 +1,9 @@
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "Agv_communication_pack/communication_iface.h"
 #include "Agv_communication_pack/configs/comm_link_config.h"
+#include "Agv_communication_pack/link/uart_isr_register.h"
 #include "Agv_core/error_codes/error_common.h"
 #include "Agv_core/error_codes/error_communication.h"
 #include "FreeRTOS.h"
@@ -36,14 +38,17 @@ static int send_bytes_ttl(AgvCommLinkIface* iface, const uint8_t* data_in,
                           size_t data_len);
 
 static int recv_bytes_ttl(AgvCommLinkIface* iface, uint8_t* data_out,
-                          size_t* data_len);
-
-static int on_rx_rcv_ttl(AgvCommLinkIface* iface, size_t data_len);
+                          size_t data_len);
 
 static int pop_rx_queue_ttl(AgvCommLinkIface* iface, uint8_t* buf_out,
                             size_t* buf_len_out, uint32_t* timestamp_out);
 
 static int destroy_ttl(AgvCommLinkIface* iface);
+
+static void ttl_idle_handler(void* ctx, UART_HandleTypeDef* huart,
+                             uint16_t size);
+
+int on_rx_rcv_ttl(AgvCommLinkIface* iface, size_t data_len);
 
 /**
  * Private definitions
@@ -76,12 +81,17 @@ int Link_uart_ttl_create(AgvCommLinkIface* out,
     out->impl = impl;
     out->send_bytes = send_bytes_ttl;
     out->recv_bytes = recv_bytes_ttl;
-    out->on_data_rcv = on_rx_rcv_ttl;
     out->read_buf = pop_rx_queue_ttl;
     out->destroy = destroy_ttl;
 
     if (HAL_UARTEx_ReceiveToIdle_DMA(cfg->huart, impl->rx_buf,
                                      cfg->max_data_len) != HAL_OK) {
+        vQueueDelete(impl->rx_data_queue);
+        free(impl->rx_buf);
+        free(impl);
+        return AGV_ERR_COMM_LINK_HAL;
+    }
+    if (UartIsr_Register(cfg->huart, ttl_idle_handler, out) != 0) {
         vQueueDelete(impl->rx_data_queue);
         free(impl->rx_buf);
         free(impl);
@@ -111,7 +121,6 @@ static int destroy_ttl(AgvCommLinkIface* iface) {
     iface->impl = NULL;
     iface->send_bytes = NULL;
     iface->recv_bytes = NULL;
-    iface->on_data_rcv = NULL;
     iface->read_buf = NULL;
     iface->destroy = NULL;
     return AGV_OK;
@@ -128,7 +137,9 @@ static int send_bytes_ttl(AgvCommLinkIface* iface, const uint8_t* data_in,
     if (!cfg || !cfg->huart) return AGV_ERR_NO_MEMORY;
 
     UART_HandleTypeDef* huart = cfg->huart;
-
+    if (huart->gState != HAL_UART_STATE_READY) {
+        HAL_UART_AbortTransmit(huart);
+    }
     HAL_StatusTypeDef st = HAL_UART_Transmit(huart, data_in, (uint16_t)data_len,
                                              cfg->operation_timeout_ms);
 
@@ -138,9 +149,8 @@ static int send_bytes_ttl(AgvCommLinkIface* iface, const uint8_t* data_in,
 }
 
 static int recv_bytes_ttl(AgvCommLinkIface* iface, uint8_t* data_out,
-                          size_t* data_len) {
-    if (!iface || !iface->impl || !data_out || !data_len || *data_len == 0)
-        return AGV_ERR_INVALID_ARG;
+                          size_t data_len) {
+    if (!iface || !data_out || data_len == 0) return AGV_ERR_INVALID_ARG;
 
     UartTtlImpl* impl = (UartTtlImpl*)iface->impl;
     if (!impl) return AGV_ERR_NO_MEMORY;
@@ -149,39 +159,11 @@ static int recv_bytes_ttl(AgvCommLinkIface* iface, uint8_t* data_out,
 
     UART_HandleTypeDef* huart = cfg->huart;
 
-    HAL_StatusTypeDef st = HAL_UART_Receive(
-        huart, data_out, (uint16_t)(*data_len), cfg->operation_timeout_ms);
+    // HAL_StatusTypeDef st = HAL_UART_Receive(
+    //     huart, data_out, (uint16_t)(data_len), cfg->operation_timeout_ms);
 
-    if (st != HAL_OK) return AGV_ERR_COMM_LINK_HAL;
+    // if (st != HAL_OK) return AGV_ERR_COMM_LINK_HAL;
 
-    return AGV_OK;
-}
-
-static int on_rx_rcv_ttl(AgvCommLinkIface* iface, size_t data_len) {
-    if (!iface || data_len == 0) return AGV_ERR_INVALID_ARG;
-
-    UartTtlImpl* impl = (UartTtlImpl*)iface->impl;
-    if (!impl) return AGV_ERR_NO_MEMORY;
-
-    if (data_len > impl->cfg->max_data_len)
-        return AGV_ERR_COMM_LINK_BUFFER_OVERFLOW;
-
-    impl->rx_len = data_len;
-
-    uint8_t raw[impl->frame_item_size];
-    TtlFrame* frame = (TtlFrame*)raw;
-
-    frame->timestamp = xTaskGetTickCountFromISR();
-    frame->len = data_len;
-    memcpy(frame->data, impl->rx_buf, data_len);
-
-    BaseType_t hpw = pdFALSE;
-    if (xQueueSendFromISR(impl->rx_data_queue, frame, &hpw) != pdPASS) {
-        ++impl->num_dropped_data;
-        return AGV_ERR_COMM_LINK_BUFFER_OVERFLOW;
-    }
-
-    portYIELD_FROM_ISR(hpw);
     return AGV_OK;
 }
 
@@ -205,6 +187,50 @@ static int pop_rx_queue_ttl(AgvCommLinkIface* iface, uint8_t* buf_out,
     *timestamp_out = frame->timestamp;
     *buf_len = frame->len;
     memcpy(buf_out, frame->data, *buf_len);
+
+    return AGV_OK;
+}
+
+static void ttl_idle_handler(void* ctx, UART_HandleTypeDef* huart,
+                             uint16_t size) {
+    AgvCommLinkIface* link = (AgvCommLinkIface*)ctx;
+    if (!link) return;
+    UartTtlImpl* impl = (UartTtlImpl*)link->impl;
+    if (!impl || !impl->cfg) return;
+
+    on_rx_rcv_ttl(link, size);
+
+    HAL_UARTEx_ReceiveToIdle_DMA(huart, impl->rx_buf, impl->cfg->max_data_len);
+}
+
+int on_rx_rcv_ttl(AgvCommLinkIface* iface, size_t data_len) {
+    if (!iface || data_len == 0) return AGV_ERR_INVALID_ARG;
+
+    UartTtlImpl* impl = (UartTtlImpl*)iface->impl;
+    if (!impl) return AGV_ERR_NO_MEMORY;
+
+    if (data_len > impl->cfg->max_data_len)
+        return AGV_ERR_COMM_LINK_BUFFER_OVERFLOW;
+
+    impl->rx_len = data_len;
+
+    uint8_t raw[impl->frame_item_size];
+    TtlFrame* frame = (TtlFrame*)raw;
+
+    frame->timestamp = xTaskGetTickCountFromISR();
+    frame->len = data_len;
+    memcpy(frame->data, impl->rx_buf, data_len);
+
+    BaseType_t hpw = pdFALSE;
+    if (xQueueSendFromISR(impl->rx_data_queue, frame, &hpw) != pdPASS) {
+        ++impl->num_dropped_data;
+        HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_SET);
+        return AGV_ERR_COMM_LINK_BUFFER_OVERFLOW;
+    }
+    portYIELD_FROM_ISR(hpw);
+
+    HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_RESET);
+    HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12);
 
     return AGV_OK;
 }

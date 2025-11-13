@@ -1,0 +1,3 @@
+C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/src/link/uart_isr_register.c:17:5:UartIsr_Register	32	static
+C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/src/link/uart_isr_register.c:31:5:UartIsr_Unregister	32	static
+C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/src/link/uart_isr_register.c:46:6:HAL_UARTEx_RxEventCallback	32	static

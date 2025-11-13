@@ -1,0 +1,3 @@
+../Core/Src/uart_isr_register.c:15:5:UartIsr_Register	5
+../Core/Src/uart_isr_register.c:29:5:UartIsr_Unregister	7
+../Core/Src/uart_isr_register.c:45:6:HAL_UARTEx_RxEventCallback	4

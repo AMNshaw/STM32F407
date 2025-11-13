@@ -1,20 +1,20 @@
 /* USER CODE BEGIN Header */
 /**
-  ******************************************************************************
-  * @file           : main.c
-  * @brief          : Main program body
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2025 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file           : main.c
+ * @brief          : Main program body
+ ******************************************************************************
+ * @attention
+ *
+ * Copyright (c) 2025 STMicroelectronics.
+ * All rights reserved.
+ *
+ * This software is licensed under terms that can be found in the LICENSE file
+ * in the root directory of this software component.
+ * If no LICENSE file comes with this software, it is provided AS-IS.
+ *
+ ******************************************************************************
+ */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
@@ -29,7 +29,10 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <stdio.h>
 
+#include "Agv_core/error_codes/error_common.h"
+#include "agv_app.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -50,7 +53,8 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+AgvCore agv_core;
+AgvHostRosCfg host_ros_cfg;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -82,7 +86,7 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-
+    setbuf(stdout, NULL);
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -99,9 +103,13 @@ int main(void)
   MX_I2S3_Init();
   MX_SPI1_Init();
   MX_USART2_UART_Init();
-  MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
-
+    if (Agv_comm_init(&agv_core, &host_ros_cfg) == AGV_OK) {
+        printf("agv_comm test init\n");
+    }
+    if (AGV_attach_core_task(&agv_core) == AGV_OK) {
+        printf("task linked\n");
+    }
   /* USER CODE END 2 */
 
   /* Init scheduler */
@@ -170,6 +178,13 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+int _write(int file, char* ptr, int len) {
+    (void)file;
+    for (int i = 0; i < len; i++) {
+        ITM_SendChar((uint32_t)*ptr++);  // ITM Stimulus Port 0
+    }
+    return len;
+}
 
 /* USER CODE END 4 */
 
@@ -202,11 +217,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
-  /* User can add his own implementation to report the HAL error return state */
-  __disable_irq();
-  while (1)
-  {
-  }
+    /* User can add his own implementation to report the HAL error return state
+     */
+    __disable_irq();
+    while (1) {
+    }
   /* USER CODE END Error_Handler_Debug */
 }
 #ifdef USE_FULL_ASSERT
@@ -220,8 +235,9 @@ void Error_Handler(void)
 void assert_failed(uint8_t *file, uint32_t line)
 {
   /* USER CODE BEGIN 6 */
-  /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+    /* User can add his own implementation to report the file name and line
+       number, ex: printf("Wrong parameters value: file %s on line %d\r\n",
+       file, line) */
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */

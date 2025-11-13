@@ -2,8 +2,8 @@
 #define AGV_KINEMATICS__MECANUM_CONFIG_H_
 
 typedef struct {
-    float R;
-    float L, B;
+    float wheel_radius;
+    float L, W;
 } AgvMecanumConfig;
 
 #endif  // AGV_KINEMATICS__MECANUM_CONFIG_H_

@@ -1,0 +1,6 @@
+C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/src/mecanum.c:36:5:Kinematics_mecanum_create	4
+C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/src/mecanum.c:52:12:Kinematics_mecanum_destroy	3
+C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/src/mecanum.c:67:12:mecanum_calculate_wheels_vel	6
+C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/src/mecanum.c:78:12:mecanum_calculate_odom	8
+C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/src/mecanum.c:96:5:forward_kine	4
+C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/src/mecanum.c:115:5:inverse_kine	4

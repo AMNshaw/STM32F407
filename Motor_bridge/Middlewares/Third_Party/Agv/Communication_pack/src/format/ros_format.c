@@ -238,7 +238,6 @@ static int rosFmt_make_frame(AgvCommFormatIface* iface, const uint8_t* payload,
     memcpy(&frame_out[idx], &payload[2], data_len);
     idx += data_len;
 
-    // 計算 CRC
     uint8_t crc = crc8_compute(&cfg->crc_cfg, frame_out,
                                idx);  // [header0, header1, cmd, size, data...]
     frame_out[idx++] = crc;

@@ -4,17 +4,26 @@
 #include <stdint.h>
 
 typedef struct {
-    float vx, vy, wz;
-} VelCmd;
+    float x;
+    float y;
+    float yaw;
+} XYYaw;
+
+typedef XYYaw Pose2D;
+typedef XYYaw Twist2D;
 
 typedef struct {
-    float w[4];
-} WheelsVel;
+    float data[4];
+} Wheels4F;
+
+typedef Wheels4F WheelsStep;
+typedef Wheels4F WheelsAng;
+typedef Wheels4F WheelsVel;
 
 typedef struct {
-    float x, y, yaw;
-    VelCmd twist;
-} Odom;
+    Pose2D pose;
+    Twist2D twist;
+} Odometry;
 
 // 小工具
 static inline float clampf(float v, float lo, float hi) {

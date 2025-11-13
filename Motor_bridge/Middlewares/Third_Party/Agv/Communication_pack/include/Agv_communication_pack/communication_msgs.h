@@ -2,31 +2,17 @@
 #define AGV_COMMUNICATION_PACK__COMMUNICATION_MSGS_H_
 
 #include <stdlib.h>
+
+#include "Agv_core/agv_types.h"
 /**
  * Host msg
  */
 typedef enum { VEL_CMD, ODOMETRY } HostMsgType;
-typedef struct {
-    float x;
-    float y;
-    float yaw;
-} Position;
-
-typedef struct {
-    float v_x;
-    float v_y;
-    float v_yaw;
-} Velocity;
-
-typedef struct {
-    Position pos;
-    Velocity vel;
-} Odometry;
 
 typedef struct {
     HostMsgType type;
     union {
-        Velocity vel;
+        Twist2D vel;
         Odometry odom;
     } msg;
 } HostCommMsg;

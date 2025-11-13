@@ -13,8 +13,8 @@
                 "${workspaceFolder}/Middlewares/Third_Party/Agv/Control/include",
                 "${workspaceFolder}/Middlewares/Third_Party/Agv/Host_communication/include",
                 "${workspaceFolder}/Middlewares/Third_Party/Agv/Kinematics/include",
-                "${workspaceFolder}/Middlewares/Third_Party/Agv/Module_factory/include",
-                "${workspaceFolder}/Middlewares/Third_Party/Agv/Motor_communication/include",
+                "${workspaceFolder}/Middlewares/Third_Party/Agv/Factory/include",
+                "${workspaceFolder}/Middlewares/Third_Party/Agv/Motors/include",
                 "${workspaceFolder}/**"
             ],
             "defines": [

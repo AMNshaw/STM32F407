@@ -47,6 +47,10 @@
         "error_common.h": "c",
         "agv_factory.h": "c",
         "uart_ttl.h": "c",
-        "ros_host.h": "c"
+        "ros_host.h": "c",
+        "uart_isr_register.h": "c",
+        "ros_host_config.h": "c",
+        "mecanum_config.h": "c",
+        "cstdlib": "c"
     }
 }

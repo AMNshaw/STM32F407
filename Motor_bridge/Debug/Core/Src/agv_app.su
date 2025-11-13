@@ -1,0 +1,6 @@
+../Core/Src/agv_app.c:8:5:Host_ros_init	16	static
+../Core/Src/agv_app.c:28:5:Motor_blvr_init	16	static
+../Core/Src/agv_app.c:34:5:Kinematic_Mecanum_init	16	static
+../Core/Src/agv_app.c:41:5:Control_pid_init	16	static
+../Core/Src/agv_app.c:48:5:Agv_garmin_init	32	static
+../Core/Src/agv_app.c:63:5:Agv_comm_init	24	static

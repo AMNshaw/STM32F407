@@ -1,5 +1,8 @@
 #include "agv_app.h"
 
+#include <stdio.h>
+
+#include "Agv_core/error_codes/error_common.h"
 #include "usart.h"
 
 int Host_ros_init(AgvHostRosCfg* host_ros_cfg) {
@@ -18,21 +21,27 @@ int Host_ros_init(AgvHostRosCfg* host_ros_cfg) {
     host_ros_cfg->rosFmt_cfg.max_frame_len = 256;
 
     host_ros_cfg->prtcl_host_cfg.max_payload_len = 128;
+
+    return 0;
 }
 
 int Motor_blvr_init(AgvMotorBlvrConfig* blvr_cfg) {
     blvr_cfg->axis_count = 4;
     blvr_cfg->prtcl_blvr_cfg.axis_count = blvr_cfg->axis_count;
+    return 0;
 }
 
 int Kinematic_Mecanum_init(AgvMecanumConfig* mecanum_cfg) {
-    mecanum_cfg->R = 0.3;
-    mecanum_cfg->B = 0.5;
+    mecanum_cfg->wheel_radius = 0.076;
+    mecanum_cfg->W = 0.259;
+    mecanum_cfg->L = 0.27;
+    return 0;
 }
 
 int Control_pid_init(AgvPidConfig* pid_cfg) {
     pid_cfg->kp_lin = 1;
     pid_cfg->kd_lin = 1;
+    return 0;
 }
 
 // clang-format off
@@ -48,9 +57,23 @@ int Agv_garmin_init(AgvCore* agv_core,
     Control_pid_init(pid_cfg);
 
     Agv_garmin_create(agv_core, host_ros_cfg, blvr_cfg, mecanum_cfg, pid_cfg);
+    return 0;
+}
+
+int Agv_comm_kin_init(AgvCore* agv_core, AgvHostRosCfg* host_ros_cfg,
+                      AgvMecanumConfig* mecanum_cfg) {
+    Host_ros_init(host_ros_cfg);
+    Kinematic_Mecanum_init(mecanum_cfg);
+    int code = Agv_comm_kin_create(agv_core, host_ros_cfg, mecanum_cfg);
+    if (code != AGV_OK) printf("Failed to init agv, code: %d", code);
+
+    return AGV_OK;
 }
 
 int Agv_comm_init(AgvCore* agv_core, AgvHostRosCfg* host_ros_cfg) {
     Host_ros_init(host_ros_cfg);
-    Agv_comm_create(agv_core, host_ros_cfg);
+    int code = Agv_comm_create(agv_core, host_ros_cfg);
+    if (code != AGV_OK) printf("Failed to init agv, code: %d", code);
+
+    return AGV_OK;
 }

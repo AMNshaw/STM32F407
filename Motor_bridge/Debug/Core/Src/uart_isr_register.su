@@ -1,0 +1,3 @@
+../Core/Src/uart_isr_register.c:15:5:UartIsr_Register	32	static
+../Core/Src/uart_isr_register.c:29:5:UartIsr_Unregister	32	static
+../Core/Src/uart_isr_register.c:45:6:HAL_UARTEx_RxEventCallback	32	static

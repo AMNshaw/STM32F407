@@ -1,0 +1,7 @@
+C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/src/protocol/blvr_protocol.c:43:5:Protocol_blvr_create	24	static
+C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/src/protocol/blvr_protocol.c:62:12:BlvrProto_destroy	16	static
+C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/src/protocol/blvr_protocol.c:75:12:BlvrProto_feed_payload	224	static
+C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/src/protocol/blvr_protocol.c:159:12:BlvrProto_pop_msg	24	static
+C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/src/protocol/blvr_protocol.c:174:12:BlvrProto_make_payload	240	static
+C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/src/protocol/blvr_protocol.c:342:17:put_be32	16	static
+C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/src/protocol/blvr_protocol.c:350:23:get_be32	24	static

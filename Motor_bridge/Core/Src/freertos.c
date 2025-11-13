@@ -26,7 +26,11 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <stdio.h>
+
+#include "Agv_core/error_codes/error_common.h"
 #include "agv_app.h"
+#include "usart.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -47,6 +51,20 @@
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
 static AgvCore* s_agv_core = NULL;
+
+osThreadId_t odomTaskHandle;
+const osThreadAttr_t odomTask_attributes = {
+    .name = "odomTask",
+    .stack_size = 1024 * 4,
+    .priority = (osPriority_t)osPriorityNormal,
+};
+
+osThreadId_t hostMsgTaskHandle;
+const osThreadAttr_t hostMsgTask_attributes = {
+    .name = "hostMsgTask",
+    .stack_size = 1024 * 4,
+    .priority = (osPriority_t)osPriorityHigh,
+};
 /* USER CODE END Variables */
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
@@ -58,10 +76,12 @@ const osThreadAttr_t defaultTask_attributes = {
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
-
+void StartSendOdomTask(void* argument);
+void UartPollTestTask(void* argument);
 /* USER CODE END FunctionPrototypes */
 
 void StartDefaultTask(void* argument);
+void OnHostMsgTask(void* argument);
 
 extern void MX_USB_HOST_Init(void);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
@@ -99,6 +119,9 @@ void MX_FREERTOS_Init(void) {
 
     /* USER CODE BEGIN RTOS_THREADS */
     /* add threads, ... */
+    odomTaskHandle = osThreadNew(StartSendOdomTask, NULL, &odomTask_attributes);
+    hostMsgTaskHandle =
+        osThreadNew(OnHostMsgTask, NULL, &hostMsgTask_attributes);
     /* USER CODE END RTOS_THREADS */
 
     /* USER CODE BEGIN RTOS_EVENTS */
@@ -126,5 +149,37 @@ void StartDefaultTask(void* argument) {
 
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
+
+int AGV_attach_core_task(AgvCore* agv_core) {
+    if (!agv_core) return -1;
+    s_agv_core = agv_core;
+    return 0;
+}
+
+void StartSendOdomTask(void* argument) {
+    int send_count = 0;
+    for (;;) {
+        HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
+        Odometry odom;
+        odom.pose.x = 1.0;
+        odom.pose.y = 2.0;
+        odom.pose.yaw = 3.0;
+        int code = s_agv_core->host_communication_base.send_odom(
+            &s_agv_core->host_communication_base, &odom);
+        if (code == AGV_OK) printf("Odom sent %d \n", send_count++);
+        osDelay(5000);
+    }
+}
+
+void OnHostMsgTask(void* argument) {
+    for (;;) {
+        printf("Waiting for new host msg...\n");
+        int code =
+            s_agv_core->host_communication_base.process_pending_msg_to_buffer(
+                &s_agv_core->host_communication_base);
+        if (code != AGV_OK)
+            printf("Decoding bytes queue failed, err code %d \n", code);
+    }
+}
 
 /* USER CODE END Application */

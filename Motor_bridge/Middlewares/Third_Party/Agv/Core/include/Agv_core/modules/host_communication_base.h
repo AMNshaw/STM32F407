@@ -4,8 +4,9 @@
 #include "Agv_core/agv_types.h"
 
 typedef struct AgvHostCommunicationBase {
-    int (*get_des_vel_from_buffer)(AgvHostCommunicationBase* base, VelCmd* out);
-    int (*send_odom)(struct AgvHostCommunicationBase* base, const Odom* in);
+    int (*get_des_vel_from_buffer)(struct AgvHostCommunicationBase* base,
+                                   Twist2D* out);
+    int (*send_odom)(struct AgvHostCommunicationBase* base, const Odometry* in);
     int (*send_heartbeat)(struct AgvHostCommunicationBase* base);
     int (*process_pending_msg_to_buffer)(struct AgvHostCommunicationBase* base);
     int (*destroy)(struct AgvHostCommunicationBase* base);

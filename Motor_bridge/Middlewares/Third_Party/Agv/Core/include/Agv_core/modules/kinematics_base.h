@@ -4,10 +4,12 @@
 #include "Agv_core/agv_types.h"
 
 typedef struct AgvKinematicsBase {
-    void (*control_motors)(struct AgvKinematicsBase* base, const VelCmd* cmd_in,
-                           const WheelsVel* meas, WheelsVel* target_out);
-    void (*calculate_odom)(struct AgvKinematicsBase* base,
-                           const WheelsVel* meas, Odom* odom_out);
+    int (*calculate_wheels_vel)(struct AgvKinematicsBase* base,
+                                const Twist2D* cmd_vel_in,
+                                WheelsVel* wheels_vel_out);
+    int (*calculate_odom)(struct AgvKinematicsBase* base,
+                          const WheelsAng* wheels_ang_in,
+                          const WheelsVel* wheels_vel_in, Odometry* odom_out);
     int (*destroy)(struct AgvKinematicsBase* base);
     void* impl;
 } AgvKinematicsBase;

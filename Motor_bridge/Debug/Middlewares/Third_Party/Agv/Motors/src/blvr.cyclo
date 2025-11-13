@@ -1,0 +1,8 @@
+C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/src/blvr.c:62:5:Motors_blvr_create	9
+C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/src/blvr.c:115:12:Motors_blvr_destroy	8
+C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/src/blvr.c:144:12:blvr_set_des_vel	5
+C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/src/blvr.c:159:12:blvr_get_curr_vel	5
+C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/src/blvr.c:172:12:blvr_get_state	3
+C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/src/blvr.c:182:12:blvr_read_and_write	8
+C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/src/blvr.c:245:9:SI_to_regUnit	1
+C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/src/blvr.c:250:7:regUnit_to_SI	1

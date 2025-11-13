@@ -84,7 +84,6 @@ static int hostProto_feed_payload(AgvCommProtocolIface* iface,
     size_t idx = 0;
     uint8_t cmd = payload_in[idx++];
     uint8_t len = payload_in[idx++];
-    const uint8_t* data = &payload_in[idx++];
 
     if (2 + len != payload_len) {
         return AGV_ERR_COMM_PRTCL_BAD_PAYLOAD;
@@ -92,6 +91,7 @@ static int hostProto_feed_payload(AgvCommProtocolIface* iface,
 
     AgvCommMsg msg;
     msg.msg_type = HOST_MSG;
+    msg.u.host_msg.type = VEL_CMD;
 
     switch (cmd) {
         case HOST_COMM_CMD_SET_VEL: {
@@ -99,9 +99,9 @@ static int hostProto_feed_payload(AgvCommProtocolIface* iface,
             if (len != expected_len) return AGV_ERR_COMM_PRTCL_BAD_PAYLOAD;
             uint8_t* p = &payload_in[idx];
 
-            p = get_f32_le(p, &msg.u.host_msg.msg.vel.v_x);
-            p = get_f32_le(p, &msg.u.host_msg.msg.vel.v_y);
-            p = get_f32_le(p, &msg.u.host_msg.msg.vel.v_yaw);
+            p = get_f32_le(p, &msg.u.host_msg.msg.vel.x);
+            p = get_f32_le(p, &msg.u.host_msg.msg.vel.y);
+            p = get_f32_le(p, &msg.u.host_msg.msg.vel.yaw);
 
             impl->pending_msg = msg;
             impl->has_pending = 1;
@@ -139,26 +139,26 @@ static int hostProto_make_payload(AgvCommProtocolIface* iface,
     HostCommMsg* host_msg = &msg_in->u.host_msg;
 
     uint8_t cmd = 0;
-    uint8_t len = 0;
+    uint8_t data_len = 0;
 
     size_t idx = 0;
     switch (host_msg->type) {
         case ODOMETRY: {
             cmd = HOST_COMM_CMD_ODOMETRY_FEEDBACK;
-            len = 2 + 6 * sizeof(float);  // cmd + len + float * (x, y, yaw, vx,
-                                          // vy, vyaw)
-            if (*payload_len < len) return AGV_ERR_OUTPUT_OVERFLOW;
+            data_len = 6 * sizeof(float);  // cmd + len + float * (x, y, yaw,
+                                           // vx, vy, vyaw)
+            if (*payload_len < data_len) return AGV_ERR_OUTPUT_OVERFLOW;
 
             payload_out[idx++] = cmd;
-            payload_out[idx++] = len;
+            payload_out[idx++] = data_len;
             uint8_t* p = &payload_out[idx];
 
-            p = put_f32_le(p, host_msg->msg.odom.pos.x);
-            p = put_f32_le(p, host_msg->msg.odom.pos.y);
-            p = put_f32_le(p, host_msg->msg.odom.pos.yaw);
-            p = put_f32_le(p, host_msg->msg.odom.vel.v_x);
-            p = put_f32_le(p, host_msg->msg.odom.vel.v_y);
-            p = put_f32_le(p, host_msg->msg.odom.vel.v_yaw);
+            p = put_f32_le(p, host_msg->msg.odom.pose.x);
+            p = put_f32_le(p, host_msg->msg.odom.pose.y);
+            p = put_f32_le(p, host_msg->msg.odom.pose.yaw);
+            p = put_f32_le(p, host_msg->msg.odom.twist.x);
+            p = put_f32_le(p, host_msg->msg.odom.twist.y);
+            p = put_f32_le(p, host_msg->msg.odom.twist.yaw);
 
             idx = (size_t)(p - payload_out);
             *payload_len = idx;

@@ -17,7 +17,7 @@ static int send_bytes_rs485(AgvCommLinkIface* iface, const uint8_t* data_in,
                             size_t data_len);
 
 static int recv_bytes_rs485(AgvCommLinkIface* iface, uint8_t* data_out,
-                            size_t* data_len);
+                            size_t data_len);
 
 static int destroy_rs485(AgvCommLinkIface* iface);
 
@@ -37,7 +37,6 @@ int Link_uart_rs485_create(AgvCommLinkIface* out,
     out->impl = impl;
     out->send_bytes = send_bytes_rs485;
     out->recv_bytes = recv_bytes_rs485;
-    out->on_data_rcv = NULL;
     out->read_buf = NULL;
     out->destroy = destroy_rs485;
 
@@ -58,7 +57,6 @@ static int destroy_rs485(AgvCommLinkIface* iface) {
     iface->impl = NULL;
     iface->send_bytes = NULL;
     iface->recv_bytes = NULL;
-    iface->on_data_rcv = NULL;
     iface->read_buf = NULL;
     iface->destroy = NULL;
 
@@ -84,7 +82,7 @@ static int send_bytes_rs485(AgvCommLinkIface* iface, const uint8_t* data_in,
 }
 
 static int recv_bytes_rs485(AgvCommLinkIface* iface, uint8_t* data_out,
-                            size_t* data_len) {
+                            size_t data_len) {
     if (!iface || !data_out || data_len == 0) return AGV_ERR_INVALID_ARG;
 
     UartRs485Impl* impl = (UartRs485Impl*)iface->impl;
@@ -92,9 +90,8 @@ static int recv_bytes_rs485(AgvCommLinkIface* iface, uint8_t* data_out,
 
     UART_HandleTypeDef* huart = impl->cfg->huart;
 
-    HAL_StatusTypeDef st =
-        HAL_UART_Receive(huart, data_out, (uint16_t)(*data_len),
-                         impl->cfg->operation_timeout_ms);
+    HAL_StatusTypeDef st = HAL_UART_Receive(
+        huart, data_out, (uint16_t)(data_len), impl->cfg->operation_timeout_ms);
 
     if (st != HAL_OK) return AGV_ERR_COMM_LINK_HAL;
 
