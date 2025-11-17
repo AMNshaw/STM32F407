@@ -16,7 +16,11 @@ typedef struct {
     AgvCommPrtclBlvrCfg prtcl_blvr_cfg;
 
     size_t axis_count;
-    float gear_ratio;
+
+    float unit_step_degree;
+    float unit_vel_rpm;
+
+    float gearRatio_motor_to_wheel;
 } AgvMotorBlvrConfig;
 
 #endif  // AGV_MOTORS__BLVR_CONFIG_H_

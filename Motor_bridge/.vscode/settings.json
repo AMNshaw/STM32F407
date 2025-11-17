@@ -51,6 +51,12 @@
         "uart_isr_register.h": "c",
         "ros_host_config.h": "c",
         "mecanum_config.h": "c",
-        "cstdlib": "c"
+        "cstdlib": "c",
+        "control_law_builder.h": "c",
+        "control_law_base.h": "c",
+        "task.h": "c",
+        "kinematics_base.h": "c",
+        "passthrough.h": "c",
+        "typeinfo": "c"
     }
 }

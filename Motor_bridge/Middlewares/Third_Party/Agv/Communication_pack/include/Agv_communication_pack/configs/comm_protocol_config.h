@@ -21,7 +21,6 @@ typedef struct {
     size_t max_payload_len;
 
     size_t axis_count;
-    float unit_rpm;
 
     size_t byte_per_rgstr;
     size_t num_rgster_per_cmd;

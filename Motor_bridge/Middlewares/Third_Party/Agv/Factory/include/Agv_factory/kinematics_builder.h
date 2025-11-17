@@ -5,6 +5,6 @@
 #include "Agv_kinematics/mecanum_config.h"
 
 int Kinematics_mecanum_create(AgvKinematicsBase* out,
-                              const AgvMecanumConfig* cfg);
+                              const AgvKineMecanumConfig* cfg);
 
 #endif  // AGV_FACTORY__KINEMATICS_BUILDER_H_

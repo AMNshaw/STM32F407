@@ -14,7 +14,9 @@ typedef struct {
     // protocol
     AgvCommPrtclHostCfg prtcl_host_cfg;
 
-    uint32_t data_expiration_threshold;
+    uint32_t data_expiration_ticks;
+    uint32_t cmd_vel_timeout_ticks;
+
 } AgvHostRosCfg;
 
 #endif  // AGV_HOST_COMMUNICATION__ROS_HOST_CFG_H_

@@ -29,7 +29,9 @@
 #include <stdio.h>
 
 #include "Agv_core/error_codes/error_common.h"
+#include "adc.h"
 #include "agv_app.h"
+#include "joystick.h"
 #include "usart.h"
 /* USER CODE END Includes */
 
@@ -63,6 +65,13 @@ osThreadId_t hostMsgTaskHandle;
 const osThreadAttr_t hostMsgTask_attributes = {
     .name = "hostMsgTask",
     .stack_size = 1024 * 4,
+    .priority = (osPriority_t)osPriorityNormal,
+};
+
+osThreadId_t joystickTaskHandle;
+const osThreadAttr_t joystickTask_attributes = {
+    .name = "joystickTask",
+    .stack_size = 1024 * 4,
     .priority = (osPriority_t)osPriorityHigh,
 };
 /* USER CODE END Variables */
@@ -77,11 +86,11 @@ const osThreadAttr_t defaultTask_attributes = {
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
 void StartSendOdomTask(void* argument);
-void UartPollTestTask(void* argument);
+void OnHostMsgTask(void* argument);
+void joystickTask(void* argument);
 /* USER CODE END FunctionPrototypes */
 
 void StartDefaultTask(void* argument);
-void OnHostMsgTask(void* argument);
 
 extern void MX_USB_HOST_Init(void);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
@@ -122,6 +131,8 @@ void MX_FREERTOS_Init(void) {
     odomTaskHandle = osThreadNew(StartSendOdomTask, NULL, &odomTask_attributes);
     hostMsgTaskHandle =
         osThreadNew(OnHostMsgTask, NULL, &hostMsgTask_attributes);
+    joystickTaskHandle =
+        osThreadNew(joystickTask, NULL, &joystickTask_attributes);
     /* USER CODE END RTOS_THREADS */
 
     /* USER CODE BEGIN RTOS_EVENTS */
@@ -158,27 +169,43 @@ int AGV_attach_core_task(AgvCore* agv_core) {
 
 void StartSendOdomTask(void* argument) {
     int send_count = 0;
+    printf("Start sending odom ...\n");
     for (;;) {
-        HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
         Odometry odom;
         odom.pose.x = 1.0;
         odom.pose.y = 2.0;
         odom.pose.yaw = 3.0;
         int code = s_agv_core->host_communication_base.send_odom(
             &s_agv_core->host_communication_base, &odom);
-        if (code == AGV_OK) printf("Odom sent %d \n", send_count++);
+        if (code == AGV_OK)
+            printf("Odom sent %d \n", send_count++);
+        else
+            printf("error code: %d", code);
+        HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
         osDelay(5000);
     }
 }
 
 void OnHostMsgTask(void* argument) {
     for (;;) {
-        printf("Waiting for new host msg...\n");
         int code =
             s_agv_core->host_communication_base.process_pending_msg_to_buffer(
                 &s_agv_core->host_communication_base);
-        if (code != AGV_OK)
-            printf("Decoding bytes queue failed, err code %d \n", code);
+    }
+}
+
+void joystickTask(void* argument) {
+    Joystick_Init(&hadc1);
+    JoystickCmd cmd;
+    printf("Start updating joystick...\n");
+    for (;;) {
+        uint32_t now = xTaskGetTickCount() * portTICK_PERIOD_MS;
+        Joystick_Update(&cmd, now);
+
+        // if (cmd.has_cmd) printf("cmd: %f, %f, %f \n", cmd.vx, cmd.vy,
+        // cmd.vyaw);
+
+        osDelay(20);  // 100 Hz
     }
 }
 

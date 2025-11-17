@@ -57,6 +57,8 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define button_yellow_Pin GPIO_PIN_2
+#define button_yellow_GPIO_Port GPIOE
 #define CS_I2C_SPI_Pin GPIO_PIN_3
 #define CS_I2C_SPI_GPIO_Port GPIOE
 #define PC14_OSC32_IN_Pin GPIO_PIN_14
@@ -81,8 +83,18 @@ void Error_Handler(void);
 #define SPI1_MISO_GPIO_Port GPIOA
 #define SPI1_MOSI_Pin GPIO_PIN_7
 #define SPI1_MOSI_GPIO_Port GPIOA
+#define ADC_Joystick_x_Pin GPIO_PIN_0
+#define ADC_Joystick_x_GPIO_Port GPIOB
+#define ADC_Joystick_y_Pin GPIO_PIN_1
+#define ADC_Joystick_y_GPIO_Port GPIOB
 #define BOOT1_Pin GPIO_PIN_2
 #define BOOT1_GPIO_Port GPIOB
+#define Joystick_switch_Pin GPIO_PIN_8
+#define Joystick_switch_GPIO_Port GPIOE
+#define Green_button_Pin GPIO_PIN_9
+#define Green_button_GPIO_Port GPIOE
+#define Yellow_button_Pin GPIO_PIN_10
+#define Yellow_button_GPIO_Port GPIOE
 #define CLK_IN_Pin GPIO_PIN_10
 #define CLK_IN_GPIO_Port GPIOB
 #define LD4_Pin GPIO_PIN_12
@@ -121,6 +133,8 @@ void Error_Handler(void);
 #define Audio_SCL_GPIO_Port GPIOB
 #define Audio_SDA_Pin GPIO_PIN_9
 #define Audio_SDA_GPIO_Port GPIOB
+#define button_green_Pin GPIO_PIN_0
+#define button_green_GPIO_Port GPIOE
 #define MEMS_INT2_Pin GPIO_PIN_1
 #define MEMS_INT2_GPIO_Port GPIOE
 

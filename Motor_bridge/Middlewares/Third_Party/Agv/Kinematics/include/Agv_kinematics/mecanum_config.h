@@ -4,6 +4,6 @@
 typedef struct {
     float wheel_radius;
     float L, W;
-} AgvMecanumConfig;
+} AgvKineMecanumConfig;
 
 #endif  // AGV_KINEMATICS__MECANUM_CONFIG_H_

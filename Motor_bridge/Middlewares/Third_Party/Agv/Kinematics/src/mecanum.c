@@ -9,7 +9,7 @@
  */
 
 typedef struct {
-    const AgvMecanumConfig* cfg;
+    const AgvKineMecanumConfig* cfg;
 
 } KineMecanumImpl;
 
@@ -24,28 +24,29 @@ static int mecanum_calculate_odom(AgvKinematicsBase* base,
                                   const WheelsVel* wheels_vel_in,
                                   Odometry* odom_out);
 
-int forward_kine(const AgvMecanumConfig* cfg, const Wheels4F* wheels_in,
+int forward_kine(const AgvKineMecanumConfig* cfg, const Wheels4F* wheels_in,
                  XYYaw* body_out);
 
-int inverse_kine(const AgvMecanumConfig* cfg, const Twist2D* body_in,
+int inverse_kine(const AgvKineMecanumConfig* cfg, const Twist2D* body_in,
                  Wheels4F* wheels_out);
 /**
  * private definitions
  */
 
 int Kinematics_mecanum_create(AgvKinematicsBase* out,
-                              const AgvMecanumConfig* cfg) {
+                              const AgvKineMecanumConfig* cfg) {
     if (!out || !cfg) return AGV_ERR_INVALID_ARG;
     KineMecanumImpl* impl = (KineMecanumImpl*)malloc(sizeof(KineMecanumImpl));
     if (!impl) return AGV_ERR_NO_MEMORY;
-
     impl->cfg = cfg;
 
+    out->name = "Mecanum kine";
     out->impl = impl;
     out->calculate_wheels_vel = mecanum_calculate_wheels_vel;
     out->calculate_odom = mecanum_calculate_odom;
     out->destroy = Kinematics_mecanum_destroy;
 
+    LOG(out->name, "Kinematics module created");
     return AGV_OK;
 }
 
@@ -93,7 +94,7 @@ static int mecanum_calculate_odom(AgvKinematicsBase* base,
     return code;
 }
 
-int forward_kine(const AgvMecanumConfig* cfg, const Wheels4F* wheels_in,
+int forward_kine(const AgvKineMecanumConfig* cfg, const Wheels4F* wheels_in,
                  XYYaw* body_out) {
     if (!cfg || !wheels_in || !body_out) return AGV_ERR_INVALID_ARG;
 
@@ -112,7 +113,7 @@ int forward_kine(const AgvMecanumConfig* cfg, const Wheels4F* wheels_in,
     return AGV_OK;
 }
 
-int inverse_kine(const AgvMecanumConfig* cfg, const Twist2D* body_in,
+int inverse_kine(const AgvKineMecanumConfig* cfg, const Twist2D* body_in,
                  Wheels4F* wheels_out) {
     if (!cfg || !body_in || !wheels_out) return AGV_ERR_INVALID_ARG;
 

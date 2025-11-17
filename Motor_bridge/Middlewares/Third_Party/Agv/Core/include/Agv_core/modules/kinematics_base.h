@@ -4,6 +4,8 @@
 #include "Agv_core/agv_types.h"
 
 typedef struct AgvKinematicsBase {
+    char* name;
+
     int (*calculate_wheels_vel)(struct AgvKinematicsBase* base,
                                 const Twist2D* cmd_vel_in,
                                 WheelsVel* wheels_vel_out);

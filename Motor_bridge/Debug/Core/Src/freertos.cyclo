@@ -1,5 +1,6 @@
-../Core/Src/freertos.c:94:6:MX_FREERTOS_Init	1
-../Core/Src/freertos.c:139:6:StartDefaultTask	1
-../Core/Src/freertos.c:153:5:AGV_attach_core_task	2
-../Core/Src/freertos.c:159:6:StartSendOdomTask	2
-../Core/Src/freertos.c:174:6:OnHostMsgTask	2
+../Core/Src/freertos.c:103:6:MX_FREERTOS_Init	1
+../Core/Src/freertos.c:150:6:StartDefaultTask	1
+../Core/Src/freertos.c:164:5:AGV_attach_core_task	2
+../Core/Src/freertos.c:170:6:StartSendOdomTask	2
+../Core/Src/freertos.c:189:6:OnHostMsgTask	1
+../Core/Src/freertos.c:197:6:joystickTask	1

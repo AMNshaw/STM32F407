@@ -4,6 +4,8 @@
 #include "Agv_core/agv_types.h"
 
 typedef struct AgvHostCommunicationBase {
+    char* name;
+
     int (*get_des_vel_from_buffer)(struct AgvHostCommunicationBase* base,
                                    Twist2D* out);
     int (*send_odom)(struct AgvHostCommunicationBase* base, const Odometry* in);

@@ -1,0 +1,5 @@
+../Core/Src/joystick.c:32:6:Joystick_Init	16	static
+../Core/Src/joystick.c:36:23:read_js_left_raw	8	static
+../Core/Src/joystick.c:39:23:read_js_right_raw	8	static
+../Core/Src/joystick.c:43:13:debounce_button	24	static
+../Core/Src/joystick.c:60:6:Joystick_Update	32	static
