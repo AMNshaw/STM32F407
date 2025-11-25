@@ -19,6 +19,8 @@ typedef struct {
     uint32_t operation_timeout_ms;
 
     uint32_t char_time_10x_us;
+
+    size_t queue_len;
 } AgvCommLnkUartRs485Cfg;
 
 typedef struct {

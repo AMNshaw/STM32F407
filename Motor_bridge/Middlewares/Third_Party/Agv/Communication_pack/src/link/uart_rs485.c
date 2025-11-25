@@ -1,7 +1,11 @@
 #include "Agv_communication_pack/communication_iface.h"
 #include "Agv_communication_pack/configs/comm_link_config.h"
+#include "Agv_communication_pack/link/uart_isr_register.h"
 #include "Agv_core/error_codes/error_common.h"
 #include "Agv_core/error_codes/error_communication.h"
+#include "Agv_core/utils.h"
+#include "FreeRTOS.h"
+#include "queue.h"
 #include "stm32f4xx_hal.h"
 
 /**
@@ -9,17 +13,40 @@
  */
 
 typedef struct {
+    uint32_t timestamp;
+    size_t len;
+    uint8_t data[];
+} DataFrame;
+
+typedef struct {
     const AgvCommLnkUartRs485Cfg* cfg;
+
+    uint8_t* rx_buf;
+    size_t rx_len;
+    QueueHandle_t rx_data_queue;
+
+    size_t frame_item_size;
+    size_t num_dropped_data;
 
 } UartRs485Impl;
 
-static int send_bytes_rs485(AgvCommLinkIface* iface, const uint8_t* data_in,
-                            size_t data_len);
+static int LnkRs485_send_bytes(AgvCommLinkIface* iface, const uint8_t* data_in,
+                               size_t data_len);
 
-static int recv_bytes_rs485(AgvCommLinkIface* iface, uint8_t* data_out,
-                            size_t data_len);
+static int LnkRs485_recv_bytes(AgvCommLinkIface* iface, uint8_t* data_out,
+                               size_t* data_len);
 
-static int destroy_rs485(AgvCommLinkIface* iface);
+static int LnkRs485_pop_rx_queue(AgvCommLinkIface* iface, uint8_t* buf_out,
+                                 size_t* buf_len_out, uint32_t* timestamp_out);
+
+static int LnkRs485_destroy(AgvCommLinkIface* iface);
+
+// DMA Idle callback
+
+static void LnkRs485_idle_handler(void* ctx, UART_HandleTypeDef* huart,
+                                  uint16_t size);
+
+int LnkRs485_on_rx_rcv(AgvCommLinkIface* iface, size_t data_len);
 
 /**
  * Private definitions
@@ -27,29 +54,65 @@ static int destroy_rs485(AgvCommLinkIface* iface);
 
 int Link_uart_rs485_create(AgvCommLinkIface* out,
                            const AgvCommLnkUartRs485Cfg* cfg) {
-    if (!out || !cfg) return AGV_ERR_INVALID_ARG;
+    if (!out || !cfg || !cfg->huart) return AGV_ERR_INVALID_ARG;
 
     UartRs485Impl* impl = (UartRs485Impl*)malloc(sizeof(UartRs485Impl));
     if (!impl) return AGV_ERR_NO_MEMORY;
 
     impl->cfg = cfg;
+    impl->rx_buf = (uint8_t*)malloc(cfg->max_data_len * sizeof(uint8_t));
+    if (!impl->rx_buf) {
+        free(impl);
+        return AGV_ERR_NO_MEMORY;
+    }
+    impl->rx_len = 0;
+
+    impl->frame_item_size = sizeof(DataFrame) + cfg->max_data_len;
+    impl->rx_data_queue = xQueueCreate(cfg->queue_len, impl->frame_item_size);
+    if (!impl->rx_data_queue) {
+        free(impl->rx_buf);
+        free(impl);
+        return AGV_ERR_NO_MEMORY;
+    }
+    impl->num_dropped_data = 0;
 
     out->impl = impl;
-    out->send_bytes = send_bytes_rs485;
-    out->recv_bytes = recv_bytes_rs485;
-    out->read_buf = NULL;
-    out->destroy = destroy_rs485;
+    out->send_bytes = LnkRs485_send_bytes;
+    out->recv_bytes = LnkRs485_recv_bytes;
+    out->read_buf = LnkRs485_pop_rx_queue;
+    out->destroy = LnkRs485_destroy;
 
-    if (!cfg->huart) return AGV_ERR_NO_MEMORY;
+    if (UartIsr_Register(cfg->huart, LnkRs485_idle_handler, out) != 0) {
+        vQueueDelete(impl->rx_data_queue);
+        free(impl->rx_buf);
+        free(impl);
+        return AGV_ERR_COMM_LINK_HAL;
+    }
+
+    if (HAL_UARTEx_ReceiveToIdle_DMA(cfg->huart, impl->rx_buf,
+                                     cfg->max_data_len) != HAL_OK) {
+        vQueueDelete(impl->rx_data_queue);
+        free(impl->rx_buf);
+        free(impl);
+        return AGV_ERR_COMM_LINK_HAL;
+    }
 
     return AGV_OK;
 }
 
-static int destroy_rs485(AgvCommLinkIface* iface) {
+static int LnkRs485_destroy(AgvCommLinkIface* iface) {
     if (!iface) return AGV_OK;
 
     UartRs485Impl* impl = (UartRs485Impl*)iface->impl;
     if (impl) {
+        if (impl->rx_buf) {
+            free(impl->rx_buf);
+            impl->rx_buf = NULL;
+        }
+        if (impl->rx_data_queue != NULL) {
+            vQueueDelete(impl->rx_data_queue);
+            impl->rx_data_queue = NULL;
+        }
         impl->cfg = NULL;
         free(impl);
     }
@@ -63,12 +126,12 @@ static int destroy_rs485(AgvCommLinkIface* iface) {
     return AGV_OK;
 }
 
-static int send_bytes_rs485(AgvCommLinkIface* iface, const uint8_t* data_in,
-                            size_t data_len) {
+static int LnkRs485_send_bytes(AgvCommLinkIface* iface, const uint8_t* data_in,
+                               size_t data_len) {
     if (!iface || !data_in || data_len == 0) return AGV_ERR_INVALID_ARG;
 
     UartRs485Impl* impl = (UartRs485Impl*)iface->impl;
-    if (!impl || !impl->cfg || impl->cfg->huart) return AGV_ERR_NO_MEMORY;
+    if (!impl || !impl->cfg || !impl->cfg->huart) return AGV_ERR_NO_MEMORY;
 
     UART_HandleTypeDef* huart = impl->cfg->huart;
 
@@ -78,22 +141,100 @@ static int send_bytes_rs485(AgvCommLinkIface* iface, const uint8_t* data_in,
 
     if (st != HAL_OK) return AGV_ERR_COMM_LINK_HAL;
 
+    HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_13);
     return AGV_OK;
 }
 
-static int recv_bytes_rs485(AgvCommLinkIface* iface, uint8_t* data_out,
-                            size_t data_len) {
-    if (!iface || !data_out || data_len == 0) return AGV_ERR_INVALID_ARG;
+static int LnkRs485_recv_bytes(AgvCommLinkIface* iface, uint8_t* data_out,
+                               size_t* data_len) {
+    if (!iface || !data_out || !data_len || *data_len == 0)
+        return AGV_ERR_INVALID_ARG;
 
     UartRs485Impl* impl = (UartRs485Impl*)iface->impl;
     if (!impl || !impl->cfg || !impl->cfg->huart) return AGV_ERR_NO_MEMORY;
 
     UART_HandleTypeDef* huart = impl->cfg->huart;
 
-    HAL_StatusTypeDef st = HAL_UART_Receive(
-        huart, data_out, (uint16_t)(data_len), impl->cfg->operation_timeout_ms);
+    HAL_StatusTypeDef st =
+        HAL_UART_Receive(huart, data_out, (uint16_t)(*data_len),
+                         impl->cfg->operation_timeout_ms);
+
+    size_t rx_done = huart->RxXferSize - huart->RxXferCount;
+    *data_len = rx_done;
+
+    LOG("rs485", "buf size: %d buf count: %d, done: %d", huart->RxXferSize,
+        huart->RxXferCount, rx_done);
+
+    if (st == HAL_TIMEOUT) return AGV_ERR_COMM_LINK_TIMEOUT;
 
     if (st != HAL_OK) return AGV_ERR_COMM_LINK_HAL;
+
+    return AGV_OK;
+}
+
+static int LnkRs485_pop_rx_queue(AgvCommLinkIface* iface, uint8_t* buf_out,
+                                 size_t* buf_len, uint32_t* timestamp_out) {
+    if (!iface || !buf_out || !buf_len || !timestamp_out)
+        return AGV_ERR_INVALID_ARG;
+
+    UartRs485Impl* impl = (UartRs485Impl*)iface->impl;
+    if (!impl) return AGV_ERR_NO_MEMORY;
+    if (!impl->rx_data_queue) return AGV_ERR_NO_MEMORY;
+
+    uint8_t raw[impl->frame_item_size];
+    DataFrame* frame = (DataFrame*)raw;
+
+    if (xQueueReceive(impl->rx_data_queue, frame,
+                      pdMS_TO_TICKS(impl->cfg->operation_timeout_ms)) != pdPASS)
+        return AGV_ERR_COMM_LINK_TIMEOUT;
+
+    if (*buf_len < frame->len) return AGV_ERR_OUTPUT_OVERFLOW;
+
+    *timestamp_out = frame->timestamp;
+    *buf_len = frame->len;
+    memcpy(buf_out, frame->data, *buf_len);
+
+    return AGV_OK;
+}
+
+static void LnkRs485_idle_handler(void* ctx, UART_HandleTypeDef* huart,
+                                  uint16_t size) {
+    AgvCommLinkIface* link = (AgvCommLinkIface*)ctx;
+    if (!link) return;
+    UartRs485Impl* impl = (UartRs485Impl*)link->impl;
+    if (!impl || !impl->cfg) return;
+
+    LnkRs485_on_rx_rcv(link, size);
+
+    HAL_UARTEx_ReceiveToIdle_DMA(huart, impl->rx_buf, impl->cfg->max_data_len);
+}
+
+int LnkRs485_on_rx_rcv(AgvCommLinkIface* iface, size_t data_len) {
+    if (!iface || data_len == 0) return AGV_ERR_INVALID_ARG;
+
+    UartRs485Impl* impl = (UartRs485Impl*)iface->impl;
+    if (!impl) return AGV_ERR_NO_MEMORY;
+
+    if (data_len > impl->cfg->max_data_len)
+        return AGV_ERR_COMM_LINK_BUFFER_OVERFLOW;
+
+    impl->rx_len = data_len;
+
+    uint8_t raw[impl->frame_item_size];
+    DataFrame* frame = (DataFrame*)raw;
+
+    frame->timestamp = xTaskGetTickCountFromISR();
+    frame->len = data_len;
+    memcpy(frame->data, impl->rx_buf, data_len);
+
+    BaseType_t hpw = pdFALSE;
+    if (xQueueSendFromISR(impl->rx_data_queue, frame, &hpw) != pdPASS) {
+        ++impl->num_dropped_data;
+        return AGV_ERR_COMM_LINK_BUFFER_OVERFLOW;
+    }
+    portYIELD_FROM_ISR(hpw);
+
+    HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_13);
 
     return AGV_OK;
 }

@@ -34,8 +34,9 @@ int Motor_blvr_init(AgvMotorBlvrConfig* blvr_cfg) {
 
     blvr_cfg->uart_cfg.huart = &huart3;
     blvr_cfg->uart_cfg.baudrate = huart3.Init.BaudRate;
-    blvr_cfg->uart_cfg.max_data_len = 512;
+    blvr_cfg->uart_cfg.max_data_len = 256;
     blvr_cfg->uart_cfg.operation_timeout_ms = 1000;
+    blvr_cfg->uart_cfg.queue_len = 20;
 
     blvr_cfg->modbus_cfg.crc_cfg.crc_init = (uint16_t)0xFFFFu;
     blvr_cfg->modbus_cfg.crc_cfg.crc_poly = (uint16_t)0xA001u;
@@ -44,11 +45,11 @@ int Motor_blvr_init(AgvMotorBlvrConfig* blvr_cfg) {
     blvr_cfg->prtcl_blvr_cfg.axis_count = blvr_cfg->axis_count;
     blvr_cfg->prtcl_blvr_cfg.byte_per_rgstr = 2;
     blvr_cfg->prtcl_blvr_cfg.max_payload_len = 400;
-    blvr_cfg->prtcl_blvr_cfg.num_read_cmd = 4;
-    blvr_cfg->prtcl_blvr_cfg.num_write_cmd = 5;
+    blvr_cfg->prtcl_blvr_cfg.num_rgster_read_cmd = 7;
+    blvr_cfg->prtcl_blvr_cfg.num_rgster_write_cmd = 10;
     blvr_cfg->prtcl_blvr_cfg.operation_trigger = (int32_t)0x01;
     blvr_cfg->prtcl_blvr_cfg.operation_type = (int32_t)0x10;
-    blvr_cfg->prtcl_blvr_cfg.reg_address_read.driver_status = (uint16_t)10;
+    blvr_cfg->prtcl_blvr_cfg.reg_address_read.driver_status = (uint16_t)11;
     blvr_cfg->prtcl_blvr_cfg.reg_address_read.real_pos = (uint16_t)12;
     blvr_cfg->prtcl_blvr_cfg.reg_address_read.real_vel = (uint16_t)14;
     blvr_cfg->prtcl_blvr_cfg.reg_address_read.present_alarm = (uint16_t)16;
@@ -57,6 +58,7 @@ int Motor_blvr_init(AgvMotorBlvrConfig* blvr_cfg) {
     blvr_cfg->prtcl_blvr_cfg.reg_address_write.cmd_dec = (uint16_t)4;
     blvr_cfg->prtcl_blvr_cfg.reg_address_write.cmd_op = (uint16_t)6;
     blvr_cfg->prtcl_blvr_cfg.reg_address_write.cmd_trg = (uint16_t)8;
+    blvr_cfg->prtcl_blvr_cfg.reg_address_write.cmd_driver = (uint16_t)10;
     blvr_cfg->prtcl_blvr_cfg.shared_id = (uint16_t)0x0F;
 
     return 0;
@@ -65,7 +67,7 @@ int Motor_blvr_init(AgvMotorBlvrConfig* blvr_cfg) {
 int Kinematic_Mecanum_init(AgvKineMecanumConfig* mecanum_cfg) {
     mecanum_cfg->wheel_radius = 0.076;
     mecanum_cfg->W = 0.259;
-    mecanum_cfg->L = 0.27;
+    mecanum_cfg->L = 0.270;
     return 0;
 }
 

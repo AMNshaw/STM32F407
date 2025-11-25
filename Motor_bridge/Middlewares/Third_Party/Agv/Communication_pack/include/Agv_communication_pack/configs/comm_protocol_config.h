@@ -23,9 +23,8 @@ typedef struct {
     size_t axis_count;
 
     size_t byte_per_rgstr;
-    size_t num_rgster_per_cmd;
-    size_t num_read_cmd;
-    size_t num_write_cmd;
+    size_t num_rgster_read_cmd;
+    size_t num_rgster_write_cmd;
 
     int32_t operation_type;
     int32_t operation_trigger;
@@ -43,6 +42,7 @@ typedef struct {
         uint16_t cmd_dec;
         uint16_t cmd_op;
         uint16_t cmd_trg;
+        uint16_t cmd_driver
     } reg_address_write;
 
 } AgvCommPrtclBlvrCfg;

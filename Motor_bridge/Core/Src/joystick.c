@@ -18,10 +18,12 @@ typedef struct {
     // 按鈕去抖後狀態 (0:沒按, 1:按著)
     uint8_t btn_left;
     uint8_t btn_right;
+    uint8_t btn_reset;
 
     // 內部用
     uint8_t btn_left_cnt;
     uint8_t btn_right_cnt;
+    uint8_t btn_reset_cnt;
 
     // 活動偵測
     uint32_t last_active_ms;
@@ -38,6 +40,9 @@ static inline uint8_t read_js_left_raw(void) {
 }
 static inline uint8_t read_js_right_raw(void) {
     return (HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_10) == GPIO_PIN_RESET);
+}
+static inline uint8_t read_js_reset_raw(void) {
+    return (HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_11) == GPIO_PIN_RESET);
 }
 
 static void debounce_button(uint8_t raw, uint8_t* state, uint8_t* cnt) {
@@ -82,9 +87,11 @@ void Joystick_Update(JoystickCmd* out, uint32_t now_ms) {
     // 4) 按鈕去抖
     uint8_t raw_left = read_js_left_raw();
     uint8_t raw_right = read_js_right_raw();
+    uint8_t raw_reset = read_js_reset_raw();
 
     debounce_button(raw_left, &state.btn_left, &state.btn_left_cnt);
     debounce_button(raw_right, &state.btn_right, &state.btn_right_cnt);
+    debounce_button(raw_reset, &state.btn_reset, &state.btn_reset_cnt);
 
     // 5) 映射到速度
     // 注意: 你可以定義 X=前後、Y=左右 或反過來，這裡假設：
@@ -95,6 +102,8 @@ void Joystick_Update(JoystickCmd* out, uint32_t now_ms) {
     if (state.btn_left) yaw_dir -= 1;
     if (state.btn_right) yaw_dir += 1;
     out->vyaw = (float)yaw_dir * VYAW_MAX;
+
+    out->reset = state.btn_reset;
 
     // 6) 判斷「目前有沒有在操控」
     uint8_t active = 0;
@@ -113,6 +122,7 @@ void Joystick_Update(JoystickCmd* out, uint32_t now_ms) {
         out->vx = 0.0f;
         out->vy = 0.0f;
         out->vyaw = 0.0f;
+        out->has_cmd = active;
     } else {
         out->has_cmd = active;
     }

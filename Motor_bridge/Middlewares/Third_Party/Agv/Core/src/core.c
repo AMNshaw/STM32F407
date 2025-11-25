@@ -1,6 +1,7 @@
 #include "Agv_core/core.h"
 
 #include "Agv_core/error_codes/error_common.h"
+#include "Agv_core/utils.h"
 
 int AgvCore_step_on_host_msg(AgvCore* core) {
     if (!core) return AGV_ERR_INVALID_ARG;
@@ -35,7 +36,7 @@ int AgvCore_step_host_control(AgvCore* core) {
     WheelsVel wheels_cmd;
     code = kine->calculate_wheels_vel(kine, &cmd, &wheels_cmd);
     if (code != AGV_OK) return code;
-    code = motors->set_des_wheel_vel_to_buffer(motors, &wheels_cmd);
+    code = motors->set_des_wheel_vel(motors, &wheels_cmd);
     if (code != AGV_OK) return code;
 
     return AGV_OK;
@@ -54,12 +55,25 @@ int AgvCore_step_motor_io(AgvCore* core) {
     int code = 0;
     code = motors->readTo_and_writeFrom_buffer(motors);
     if (code != AGV_OK) return code;
-    code = motors->get_curr_wheels_ang_from_buffer(motors, &wheels_ang);
+    code = motors->get_curr_wheels_ang(motors, &wheels_ang);
     if (code != AGV_OK) return code;
-    code = motors->get_curr_wheels_vel_from_buffer(motors, &wheels_vel);
+    code = motors->get_curr_wheels_vel(motors, &wheels_vel);
     if (code != AGV_OK) return code;
     code = kine->calculate_odom(kine, &wheels_ang, &wheels_vel, &odom_out);
     if (code != AGV_OK) return code;
+
+    static size_t time = 0;
+    time++;
+    if (time == 10) {
+        for (size_t i = 0; i < 4; i++) {
+            LOG("core", "wheelang: %f, wheelvel %f", wheels_ang.data[i],
+                wheels_vel.data[i]);
+        }
+        LOG("core", "Odom: %f %f %f %f %f %f", odom_out.pose.x, odom_out.pose.y,
+            odom_out.pose.yaw, odom_out.twist.x, odom_out.twist.y,
+            odom_out.twist.yaw);
+        time = 0;
+    }
 
     xSemaphoreTake(core->mutex_odom, portMAX_DELAY);
     core->odom = odom_out;
@@ -107,7 +121,19 @@ int AgvCore_set_cmd_vel(AgvCore* core, Twist2D cmd_in) {
     WheelsVel wheels_cmd;
     code = kine->calculate_wheels_vel(kine, &cmd_in, &wheels_cmd);
     if (code != AGV_OK) return code;
-    code = motors->set_des_wheel_vel_to_buffer(motors, &wheels_cmd);
+
+    code = motors->set_des_wheel_vel(motors, &wheels_cmd);
+    if (code != AGV_OK) return code;
+    return AGV_OK;
+}
+
+int AgvCore_reset_motor(AgvCore* core) {
+    if (!core) return AGV_ERR_INVALID_ARG;
+
+    AgvMotorsBase* motors = &core->motors_base;
+
+    int code = 0;
+    code = motors->reset(motors);
     if (code != AGV_OK) return code;
 
     return AGV_OK;

@@ -14,7 +14,7 @@ typedef struct AgvCommLinkIface {
     int (*send_bytes)(struct AgvCommLinkIface* iface, const uint8_t* data,
                       size_t data_len);
     int (*recv_bytes)(struct AgvCommLinkIface* iface, uint8_t* data,
-                      size_t data_len);
+                      size_t* data_len);
     int (*read_buf)(struct AgvCommLinkIface* iface, uint8_t* buf_out,
                     size_t* buf_len, uint32_t* timestamp_out);
     int (*destroy)(struct AgvCommLinkIface* iface);

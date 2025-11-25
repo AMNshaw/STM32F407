@@ -132,7 +132,8 @@ static int hostProto_pop_msg(AgvCommProtocolIface* iface, AgvCommMsg* msg_out) {
 static int hostProto_make_payload(AgvCommProtocolIface* iface,
                                   const AgvCommMsg* msg_in,
                                   uint8_t* payload_out, size_t* payload_len) {
-    if (!msg_in || !payload_out || !payload_len) return AGV_ERR_INVALID_ARG;
+    if (!iface || !msg_in || !payload_out || !payload_len)
+        return AGV_ERR_INVALID_ARG;
 
     if (msg_in->msg_type != HOST_MSG)
         return AGV_ERR_COMM_PRTCL_INVALID_MSG_TYPE;

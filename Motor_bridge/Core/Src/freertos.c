@@ -71,6 +71,13 @@ const osThreadAttr_t hostMsgTask_attributes = {
 osThreadId_t joystickTaskHandle;
 const osThreadAttr_t joystickTask_attributes = {
     .name = "joystickTask",
+    .stack_size = 2048 * 4,
+    .priority = (osPriority_t)osPriorityHigh,
+};
+
+osThreadId_t motorIoTaskHandle;
+const osThreadAttr_t motorIoTask_attributes = {
+    .name = "motorIoTask",
     .stack_size = 1024 * 4,
     .priority = (osPriority_t)osPriorityHigh,
 };
@@ -88,6 +95,7 @@ const osThreadAttr_t defaultTask_attributes = {
 void StartSendOdomTask(void* argument);
 void OnHostMsgTask(void* argument);
 void joystickTask(void* argument);
+void motorIoTask(void* argument);
 /* USER CODE END FunctionPrototypes */
 
 void StartDefaultTask(void* argument);
@@ -133,6 +141,7 @@ void MX_FREERTOS_Init(void) {
         osThreadNew(OnHostMsgTask, NULL, &hostMsgTask_attributes);
     joystickTaskHandle =
         osThreadNew(joystickTask, NULL, &joystickTask_attributes);
+    motorIoTaskHandle = osThreadNew(motorIoTask, NULL, &motorIoTask_attributes);
     /* USER CODE END RTOS_THREADS */
 
     /* USER CODE BEGIN RTOS_EVENTS */
@@ -197,15 +206,31 @@ void OnHostMsgTask(void* argument) {
 void joystickTask(void* argument) {
     Joystick_Init(&hadc1);
     JoystickCmd cmd;
+    Twist2D agv_cmd;
     printf("Start updating joystick...\n");
     for (;;) {
         uint32_t now = xTaskGetTickCount() * portTICK_PERIOD_MS;
         Joystick_Update(&cmd, now);
 
-        // if (cmd.has_cmd) printf("cmd: %f, %f, %f \n", cmd.vx, cmd.vy,
-        // cmd.vyaw);
+        if (cmd.has_cmd) {
+            if (cmd.reset) AgvCore_reset_motor(s_agv_core);
+            continue;
 
-        osDelay(20);  // 100 Hz
+            agv_cmd.x = cmd.vx;
+            agv_cmd.y = cmd.vy;
+            agv_cmd.yaw = cmd.vyaw;
+            AgvCore_set_cmd_vel(s_agv_core, agv_cmd);
+        }
+
+        osDelay(50);  // 100 Hz
+    }
+}
+
+void motorIoTask(void* argument) {
+    for (;;) {
+        int code = AgvCore_step_motor_io(s_agv_core);
+        if (code != AGV_OK) printf("Motor Io error code: %d\n", code);
+        vTaskDelay(50);  // 20 Hz
     }
 }
 

@@ -8,7 +8,6 @@
 #include "Agv_core/error_codes/error_communication.h"
 #include "FreeRTOS.h"
 #include "queue.h"
-#include "semphr.h"
 #include "stm32f4xx_hal.h"
 
 /**
@@ -19,7 +18,7 @@ typedef struct {
     uint32_t timestamp;
     size_t len;
     uint8_t data[];
-} TtlFrame;
+} DataFrame;
 
 typedef struct {
     const AgvCommLnkUartTtlCfg* cfg;
@@ -34,21 +33,23 @@ typedef struct {
     // SemaphoreHandle_t rx_mutex; FreeRTOS will handle the semaphore of queue
 } UartTtlImpl;
 
-static int send_bytes_ttl(AgvCommLinkIface* iface, const uint8_t* data_in,
-                          size_t data_len);
+static int LnkTtl_send_bytes(AgvCommLinkIface* iface, const uint8_t* data_in,
+                             size_t data_len);
 
-static int recv_bytes_ttl(AgvCommLinkIface* iface, uint8_t* data_out,
-                          size_t data_len);
+static int LnkTtl_recv_bytes(AgvCommLinkIface* iface, uint8_t* data_out,
+                             size_t* data_len);
 
-static int pop_rx_queue_ttl(AgvCommLinkIface* iface, uint8_t* buf_out,
-                            size_t* buf_len_out, uint32_t* timestamp_out);
+static int LnkTtl_pop_rx_queue(AgvCommLinkIface* iface, uint8_t* buf_out,
+                               size_t* buf_len_out, uint32_t* timestamp_out);
 
-static int destroy_ttl(AgvCommLinkIface* iface);
+static int LnkTtl_destroy(AgvCommLinkIface* iface);
 
-static void ttl_idle_handler(void* ctx, UART_HandleTypeDef* huart,
-                             uint16_t size);
+// DMA Idle callback
 
-int on_rx_rcv_ttl(AgvCommLinkIface* iface, size_t data_len);
+static void LnkTtl_idle_handler(void* ctx, UART_HandleTypeDef* huart,
+                                uint16_t size);
+
+int LnkTtl_on_rx_rcv(AgvCommLinkIface* iface, size_t data_len);
 
 /**
  * Private definitions
@@ -69,7 +70,7 @@ int Link_uart_ttl_create(AgvCommLinkIface* out,
     }
     impl->rx_len = 0;
 
-    impl->frame_item_size = sizeof(TtlFrame) + cfg->max_data_len;
+    impl->frame_item_size = sizeof(DataFrame) + cfg->max_data_len;
     impl->rx_data_queue = xQueueCreate(cfg->queue_len, impl->frame_item_size);
     if (!impl->rx_data_queue) {
         free(impl->rx_buf);
@@ -79,19 +80,20 @@ int Link_uart_ttl_create(AgvCommLinkIface* out,
     impl->num_dropped_data = 0;
 
     out->impl = impl;
-    out->send_bytes = send_bytes_ttl;
-    out->recv_bytes = recv_bytes_ttl;
-    out->read_buf = pop_rx_queue_ttl;
-    out->destroy = destroy_ttl;
+    out->send_bytes = LnkTtl_send_bytes;
+    out->recv_bytes = LnkTtl_recv_bytes;
+    out->read_buf = LnkTtl_pop_rx_queue;
+    out->destroy = LnkTtl_destroy;
 
-    if (HAL_UARTEx_ReceiveToIdle_DMA(cfg->huart, impl->rx_buf,
-                                     cfg->max_data_len) != HAL_OK) {
+    if (UartIsr_Register(cfg->huart, LnkTtl_idle_handler, out) != 0) {
         vQueueDelete(impl->rx_data_queue);
         free(impl->rx_buf);
         free(impl);
         return AGV_ERR_COMM_LINK_HAL;
     }
-    if (UartIsr_Register(cfg->huart, ttl_idle_handler, out) != 0) {
+
+    if (HAL_UARTEx_ReceiveToIdle_DMA(cfg->huart, impl->rx_buf,
+                                     cfg->max_data_len) != HAL_OK) {
         vQueueDelete(impl->rx_data_queue);
         free(impl->rx_buf);
         free(impl);
@@ -101,7 +103,7 @@ int Link_uart_ttl_create(AgvCommLinkIface* out,
     return AGV_OK;
 }
 
-static int destroy_ttl(AgvCommLinkIface* iface) {
+static int LnkTtl_destroy(AgvCommLinkIface* iface) {
     if (!iface) return AGV_OK;
 
     UartTtlImpl* impl = (UartTtlImpl*)iface->impl;
@@ -126,8 +128,8 @@ static int destroy_ttl(AgvCommLinkIface* iface) {
     return AGV_OK;
 }
 
-static int send_bytes_ttl(AgvCommLinkIface* iface, const uint8_t* data_in,
-                          size_t data_len) {
+static int LnkTtl_send_bytes(AgvCommLinkIface* iface, const uint8_t* data_in,
+                             size_t data_len) {
     if (!iface || !iface->impl || !data_in || data_len == 0)
         return AGV_ERR_INVALID_ARG;
 
@@ -148,8 +150,8 @@ static int send_bytes_ttl(AgvCommLinkIface* iface, const uint8_t* data_in,
     return AGV_OK;
 }
 
-static int recv_bytes_ttl(AgvCommLinkIface* iface, uint8_t* data_out,
-                          size_t data_len) {
+static int LnkTtl_recv_bytes(AgvCommLinkIface* iface, uint8_t* data_out,
+                             size_t* data_len) {
     if (!iface || !data_out || data_len == 0) return AGV_ERR_INVALID_ARG;
 
     UartTtlImpl* impl = (UartTtlImpl*)iface->impl;
@@ -167,8 +169,8 @@ static int recv_bytes_ttl(AgvCommLinkIface* iface, uint8_t* data_out,
     return AGV_OK;
 }
 
-static int pop_rx_queue_ttl(AgvCommLinkIface* iface, uint8_t* buf_out,
-                            size_t* buf_len, uint32_t* timestamp_out) {
+static int LnkTtl_pop_rx_queue(AgvCommLinkIface* iface, uint8_t* buf_out,
+                               size_t* buf_len, uint32_t* timestamp_out) {
     if (!iface || !buf_out || !buf_len || !timestamp_out)
         return AGV_ERR_INVALID_ARG;
 
@@ -177,7 +179,7 @@ static int pop_rx_queue_ttl(AgvCommLinkIface* iface, uint8_t* buf_out,
     if (!impl->rx_data_queue) return AGV_ERR_NO_MEMORY;
 
     uint8_t raw[impl->frame_item_size];
-    TtlFrame* frame = (TtlFrame*)raw;
+    DataFrame* frame = (DataFrame*)raw;
 
     if (xQueueReceive(impl->rx_data_queue, frame, portMAX_DELAY) != pdPASS)
         return AGV_ERR_COMM_LINK_RX_EMPTY;
@@ -191,19 +193,19 @@ static int pop_rx_queue_ttl(AgvCommLinkIface* iface, uint8_t* buf_out,
     return AGV_OK;
 }
 
-static void ttl_idle_handler(void* ctx, UART_HandleTypeDef* huart,
-                             uint16_t size) {
+static void LnkTtl_idle_handler(void* ctx, UART_HandleTypeDef* huart,
+                                uint16_t size) {
     AgvCommLinkIface* link = (AgvCommLinkIface*)ctx;
     if (!link) return;
     UartTtlImpl* impl = (UartTtlImpl*)link->impl;
     if (!impl || !impl->cfg) return;
 
-    on_rx_rcv_ttl(link, size);
+    LnkTtl_on_rx_rcv(link, size);
 
     HAL_UARTEx_ReceiveToIdle_DMA(huart, impl->rx_buf, impl->cfg->max_data_len);
 }
 
-int on_rx_rcv_ttl(AgvCommLinkIface* iface, size_t data_len) {
+int LnkTtl_on_rx_rcv(AgvCommLinkIface* iface, size_t data_len) {
     if (!iface || data_len == 0) return AGV_ERR_INVALID_ARG;
 
     UartTtlImpl* impl = (UartTtlImpl*)iface->impl;
@@ -215,7 +217,7 @@ int on_rx_rcv_ttl(AgvCommLinkIface* iface, size_t data_len) {
     impl->rx_len = data_len;
 
     uint8_t raw[impl->frame_item_size];
-    TtlFrame* frame = (TtlFrame*)raw;
+    DataFrame* frame = (DataFrame*)raw;
 
     frame->timestamp = xTaskGetTickCountFromISR();
     frame->len = data_len;

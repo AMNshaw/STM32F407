@@ -57,6 +57,8 @@
         "task.h": "c",
         "kinematics_base.h": "c",
         "passthrough.h": "c",
-        "typeinfo": "c"
+        "typeinfo": "c",
+        "host_protocol_defs.h": "c",
+        "stdlib.h": "c"
     }
 }

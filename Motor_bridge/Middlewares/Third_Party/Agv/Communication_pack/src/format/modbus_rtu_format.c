@@ -8,7 +8,6 @@
  */
 
 typedef enum {
-    ST_IDLE,
     ST_WAIT_ADDR,
     ST_WAIT_FUNC,
     ST_WAIT_DATA,
@@ -20,8 +19,13 @@ typedef struct {
     const AgvCommFmtModbusRtuCfg* cfg;
     ModbusRtuFmtState state;
 
-    uint8_t address;
-    uint8_t function;
+    uint8_t expct_address;
+    uint8_t expct_function;
+    uint8_t expct_bytes;
+
+    size_t byte_idx;
+    uint8_t crc_high;
+    uint8_t crc_low;
 
     uint8_t* payload_buf;
     size_t payload_len;
@@ -55,7 +59,7 @@ int Format_modbus_create(AgvCommFormatIface* out,
     if (!impl) return AGV_ERR_NO_MEMORY;
 
     impl->cfg = cfg;
-    impl->state = ST_IDLE;
+    impl->state = ST_WAIT_ADDR;
 
     impl->payload_buf = (uint8_t*)malloc(cfg->max_frame_len * sizeof(uint8_t));
     if (!impl->payload_buf) {
@@ -70,6 +74,7 @@ int Format_modbus_create(AgvCommFormatIface* out,
     out->feed_bytes = modbusFmt_feed_bytes;
     out->pop_payload = modbusFmt_pop_payload;
     out->make_frame = modbusFmt_make_frame;
+    out->destroy = modbusFmt_destroy;
 
     return AGV_OK;
 }
@@ -104,47 +109,67 @@ static int modbusFmt_feed_bytes(AgvCommFormatIface* iface,
 
     const AgvCommFmtModbusRtuCfg* cfg = impl->cfg;
 
-    if (bytes_len == 0) {
-        return AGV_OK;  // 沒東西就當沒事
+    for (size_t i = 0; i < bytes_len; ++i) {
+        uint8_t b = bytes_in[i];
+        switch (impl->state) {
+            case ST_WAIT_ADDR: {
+                impl->byte_idx = 0;
+                if (b == impl->expct_address) {
+                    impl->state = ST_WAIT_FUNC;
+                    impl->payload_buf[impl->byte_idx++] = b;
+                }
+                break;
+            }
+            case ST_WAIT_FUNC: {
+                if (b == impl->expct_function) {
+                    impl->state = ST_WAIT_DATA;
+                    impl->payload_buf[impl->byte_idx++] = b;
+                } else {
+                    impl->state = ST_WAIT_ADDR;
+                }
+                break;
+            }
+            case ST_WAIT_DATA: {
+                impl->payload_buf[impl->byte_idx++] = b;
+
+                if (impl->byte_idx == impl->expct_bytes - 2) {  //  - crc
+                    impl->state = ST_WAIT_CRC_LO;
+                }
+                break;
+            }
+            case ST_WAIT_CRC_LO: {
+                impl->crc_low = b;
+                impl->state = ST_WAIT_CRC_HI;
+                break;
+            }
+            case ST_WAIT_CRC_HI: {
+                impl->crc_high = b;
+                uint16_t rcv_crc = 0;
+                rcv_crc |= (uint16_t)impl->crc_low;
+                rcv_crc |= (uint16_t)impl->crc_high << 8;
+                uint16_t calc_crc = modbus_crc16(
+                    &cfg->crc_cfg, impl->payload_buf, impl->expct_bytes - 2);
+
+                impl->state = ST_WAIT_ADDR;
+                if (rcv_crc != calc_crc) {
+                    impl->has_payload = 0;
+                    impl->payload_len = 0;
+                    return AGV_ERR_COMM_FMT_BAD_CRC;
+                }
+                impl->payload_len = impl->expct_bytes - 2;
+                impl->has_payload = 1;
+                return AGV_OK;
+            }
+            default:
+                return AGV_ERR_UNKNOWN;
+        }
     }
-
-    if (bytes_len < 4) {
-        // Addr(1) + Func(1) + CRC(2) 都不夠
-        return AGV_ERR_COMM_FMT_FRAME_TOO_SHORT;
-    }
-
-    if (bytes_len > cfg->max_frame_len) {
-        return AGV_ERR_COMM_FMT_FRAME_TOO_LONG;
-    }
-
-    // 收到的 CRC：最後兩個 byte，Modbus 是低位在前
-    uint16_t rcv_crc = (uint16_t)bytes_in[bytes_len - 2] |
-                       ((uint16_t)bytes_in[bytes_len - 1] << 8);
-
-    // 計算 CRC（不含最後兩個 CRC byte）
-    uint16_t calc_crc = modbus_crc16(&cfg->crc_cfg, bytes_in, bytes_len - 2);
-
-    if (rcv_crc != calc_crc) {
-        // CRC 錯誤，這一坨丟掉
-        impl->has_payload = 0;
-        impl->payload_len = 0;
-        impl->state = ST_IDLE;
-        return AGV_ERR_COMM_FMT_BAD_CRC;
-    }
-
-    impl->address = bytes_in[0];
-    impl->function = bytes_in[1];
-    memcpy(impl->payload_buf, bytes_in, bytes_len);
-    impl->payload_len = bytes_len;
-    impl->has_payload = 1;
-    impl->state = ST_IDLE;
-
-    return AGV_OK;
+    return AGV_ERR_COMM_FMT_NO_COMPLETE_FRAME;
 }
 
 static int modbusFmt_pop_payload(AgvCommFormatIface* iface,
                                  uint8_t* payload_out, size_t* payload_len) {
-    if (!iface || payload_out || !payload_len) return AGV_ERR_INVALID_ARG;
+    if (!iface || !payload_out || !payload_len) return AGV_ERR_INVALID_ARG;
 
     ModbusRtuFmtImpl* impl = (ModbusRtuFmtImpl*)iface->impl;
     if (!impl) return AGV_ERR_NO_MEMORY;
@@ -159,7 +184,7 @@ static int modbusFmt_pop_payload(AgvCommFormatIface* iface,
 
     memcpy(payload_out, impl->payload_buf, impl->payload_len);
     impl->has_payload = 0;
-    impl->payload_len = *payload_len;
+    *payload_len = impl->payload_len;
 
     return AGV_OK;
 }
@@ -180,17 +205,37 @@ static int modbusFmt_make_frame(AgvCommFormatIface* iface,
         return AGV_ERR_COMM_FMT_FRAME_TOO_LONG;
     }
     // 先拷貝 payload
-    memcpy(frame_out, payload_in, *frame_len);
+    memcpy(frame_out, payload_in, payload_len);
 
     // 計算 CRC
 
-    uint16_t crc = modbus_crc16(&impl->cfg->crc_cfg, frame_out, frame_len_temp);
+    uint16_t crc = modbus_crc16(&impl->cfg->crc_cfg, frame_out, payload_len);
 
     // Modbus RTU 是低位在前
     frame_out[payload_len] = (uint8_t)(crc & 0x00FF);             // CRC_L
     frame_out[payload_len + 1] = (uint8_t)((crc >> 8) & 0x00FF);  // CRC_H
 
     *frame_len = frame_len_temp;
+
+    return AGV_OK;
+}
+
+int modbusFmt_set_check_item(AgvCommFormatIface* iface, uint8_t addr,
+                             uint8_t func, size_t expected_bytes) {
+    if (!iface) return AGV_ERR_INVALID_ARG;
+
+    ModbusRtuFmtImpl* impl = (ModbusRtuFmtImpl*)iface->impl;
+    if (!impl || !impl->cfg) return AGV_ERR_NO_MEMORY;
+
+    const AgvCommFmtModbusRtuCfg* cfg = impl->cfg;
+
+    impl->expct_address = addr;
+    impl->expct_function = func;
+    impl->expct_bytes = expected_bytes;
+    impl->state = ST_WAIT_ADDR;
+    impl->has_payload = 0;
+    impl->payload_len = 0;
+    impl->byte_idx = 0;
 
     return AGV_OK;
 }

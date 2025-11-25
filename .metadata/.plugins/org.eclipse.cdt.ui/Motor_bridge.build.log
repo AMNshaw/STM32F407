@@ -1,10 +1,10 @@
-16:17:04 **** Incremental Build of configuration Debug for project Motor_bridge ****
+17:57:44 **** Incremental Build of configuration Debug for project Motor_bridge ****
 make -j18 all 
 arm-none-eabi-size  Motor_bridge.elf 
    text	   data	    bss	    dec	    hex	filename
- 103276	    504	  74144	 177924	  2b704	Motor_bridge.elf
+ 106636	    504	  74264	 181404	  2c49c	Motor_bridge.elf
 Finished building: default.size.stdout
  
 
-16:17:04 Build Finished. 0 errors, 0 warnings. (took 766ms)
+17:57:44 Build Finished. 0 errors, 0 warnings. (took 721ms)
 

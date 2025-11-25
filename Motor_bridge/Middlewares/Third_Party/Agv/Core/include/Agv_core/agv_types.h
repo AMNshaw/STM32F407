@@ -1,7 +1,8 @@
 #ifndef AGV_CORE__AGV_TYPES_H_
 #define AGV_CORE__AGV_TYPES_H_
 
-#include <stdint.h>
+#include <stdbool.h>
+#include <stdlib.h>
 
 typedef struct {
     float x;

@@ -20,13 +20,14 @@ typedef struct {
 /**
  * Motor msg
  */
-typedef enum { READ, WRITE, READ_WRITE } MotorMsgType;
+typedef enum { READ, WRITE, READ_WRITE } MotorCmdType;
 typedef struct {
     int32_t des_vel;  // vel of wheel
     int32_t des_acc;
     int32_t des_dec;
     int32_t spd_ctrl;
     int32_t trigger;
+    int32_t driver_cmd;
 
     int32_t driver_st;
     int32_t rl_pos;
@@ -34,7 +35,7 @@ typedef struct {
     int32_t alrm;
 } MotorMsgPack;
 typedef struct {
-    MotorMsgType type;
+    MotorCmdType type;
     MotorMsgPack msgs[4];
 } MotorsCommMsg;
 

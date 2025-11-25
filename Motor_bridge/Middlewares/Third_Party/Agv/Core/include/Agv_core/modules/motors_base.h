@@ -5,14 +5,12 @@
 
 typedef struct AgvMotorsBase {
     char* name;
-
-    int (*get_state_from_buffer)(struct AgvMotorsBase* base);
-    int (*get_curr_wheels_vel_from_buffer)(struct AgvMotorsBase* base,
-                                           WheelsVel* out);
-    int (*get_curr_wheels_ang_from_buffer)(struct AgvMotorsBase* base,
-                                           WheelsVel* out);
-    int (*set_des_wheel_vel_to_buffer)(struct AgvMotorsBase* base,
-                                       const WheelsVel* in);
+    int (*reset)(struct AgvMotorsBase* base);
+    int (*on_off)(struct AgvMotorsBase* base, bool state);
+    int (*get_state)(struct AgvMotorsBase* base);
+    int (*get_curr_wheels_vel)(struct AgvMotorsBase* base, WheelsVel* out);
+    int (*get_curr_wheels_ang)(struct AgvMotorsBase* base, WheelsAng* out);
+    int (*set_des_wheel_vel)(struct AgvMotorsBase* base, const WheelsVel* in);
     int (*readTo_and_writeFrom_buffer)(struct AgvMotorsBase* base);
     int (*destroy)(struct AgvMotorsBase* base);
     void* impl;
