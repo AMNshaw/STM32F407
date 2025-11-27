@@ -4,7 +4,6 @@
 #include <string.h>
 
 #include "Agv_communication_pack/communication_iface.h"
-#include "Agv_communication_pack/communication_msgs.h"
 #include "Agv_communication_pack/configs/comm_protocol_config.h"
 #include "Agv_communication_pack/protocol_defs/blvr_protocol_defs.h"
 #include "Agv_core/error_codes/error_common.h"
@@ -18,7 +17,7 @@
 typedef struct {
     const AgvCommPrtclBlvrCfg* cfg;
 
-    AgvCommMsg pending_msg;
+    BlvrMsg pending_msg;
     int has_pending;
 
 } BlvrPrtclImpl;
@@ -27,11 +26,12 @@ static int BlvrProto_feed_payload(AgvCommProtocolIface* iface,
                                   const uint8_t* payload_in,
                                   size_t payload_len);
 
-static int BlvrProto_pop_msg(AgvCommProtocolIface* iface, AgvCommMsg* msg_out);
+static int BlvrProto_pop_msg(AgvCommProtocolIface* iface, void* msg_out,
+                             size_t msg_size);
 
 static int BlvrProto_make_payload(AgvCommProtocolIface* iface,
-                                  const AgvCommMsg* msg_in, uint8_t* frame_out,
-                                  size_t* frame_len);
+                                  const void* msg_in, size_t msg_size,
+                                  uint8_t* payload_out, size_t* payload_len);
 
 static int BlvrProto_destroy(AgvCommProtocolIface* iface);
 
@@ -96,7 +96,7 @@ static int BlvrProto_feed_payload(AgvCommProtocolIface* iface,
         return AGV_ERR_COMM_PRTCL_EXCEPTION;
     }
 
-    if (addr != cfg->shared_id) return AGV_ERR_COMM_PRTCL_UNSUPPORTED_SHARED_ID;
+    if (addr != BLVR_SHARED_ID) return AGV_ERR_COMM_PRTCL_UNSUPPORTED_SHARED_ID;
 
     if (payload_len < 3) {  // [address 1][func 1][data *]
         return AGV_ERR_COMM_FMT_FRAME_TOO_SHORT;
@@ -117,32 +117,31 @@ static int BlvrProto_feed_payload(AgvCommProtocolIface* iface,
             size_t reg_byte_count = data[0];
 
             const uint8_t* registers_data = &data[1];
-            size_t bytes_per_axis =
-                cfg->num_rgster_read_cmd * cfg->byte_per_rgstr +
-                2;  // + 2 error check
+            size_t bytes_per_axis = BLVR_DATA_READ_REG_COUNT * BLVR_RGSTR_BYTE +
+                                    2;  // + 2 error check
             uint16_t expected_bytes =
                 cfg->axis_count *
                 (uint16_t)bytes_per_axis;  // including error check bytes
             if (reg_byte_count != expected_bytes) {
                 return AGV_ERR_COMM_PRTCL_BAD_PAYLOAD;
             }
-            LOG("blvr", "payload_len=%d, addr=%02X, func=%02X, byteCount=%d",
-                (int)payload_len, addr, func, data[0]);
-            AgvCommMsg msg = {0};
-            msg.msg_type = MOTOR_MSG;
+            BlvrMsg blvr_msg;
+            blvr_msg.msg_type = READ_WRITE;
             for (size_t i = 0; i < cfg->axis_count; ++i) {
                 size_t axis_byte_idx = i * bytes_per_axis;
                 const uint8_t* p = &registers_data[axis_byte_idx];
 
                 // p = get_be32(p, &msg.u.motors_msg.msgs[i].driver_st);
-                msg.u.motors_msg.msgs[i].driver_st |= (int32_t)(*p++) << 8;
-                msg.u.motors_msg.msgs[i].driver_st |= (int32_t)(*p++);
-                p = get_be32(p, &msg.u.motors_msg.msgs[i].rl_pos);
-                p = get_be32(p, &msg.u.motors_msg.msgs[i].rl_rpm);
-                p = get_be32(p, &msg.u.motors_msg.msgs[i].alrm);
+                int32_t driver = 0;
+                driver |= (int32_t)(*p++) << 8;
+                driver |= (int32_t)(*p++);
+                blvr_msg.u.read_msg.msgs[i].driver_st = driver;
+                p = get_be32(p, &blvr_msg.u.read_msg.msgs[i].rl_pos);
+                p = get_be32(p, &blvr_msg.u.read_msg.msgs[i].rl_rpm);
+                p = get_be32(p, &blvr_msg.u.read_msg.msgs[i].alrm);
             }
 
-            impl->pending_msg = msg;
+            impl->pending_msg = blvr_msg;
             impl->has_pending = 1;
 
             return AGV_OK;
@@ -159,127 +158,60 @@ static int BlvrProto_feed_payload(AgvCommProtocolIface* iface,
     }
 }
 
-static int BlvrProto_pop_msg(AgvCommProtocolIface* iface, AgvCommMsg* msg_out) {
+static int BlvrProto_pop_msg(AgvCommProtocolIface* iface, void* msg_out,
+                             size_t msg_size) {
     if (!iface || !msg_out) return AGV_ERR_INVALID_ARG;
 
     BlvrPrtclImpl* impl = (BlvrPrtclImpl*)iface->impl;
     if (!impl) return AGV_ERR_NO_MEMORY;
 
+    if (msg_size != sizeof(BlvrMsg)) return AGV_ERR_COMM_PRTCL_INVALID_MSG_TYPE;
+
     if (!impl->has_pending)
         return AGV_ERR_COMM_PRTCL_NO_PENDING_MSG;  // 沒有可用訊息
 
-    *msg_out = impl->pending_msg;
+    BlvrMsg* out = (BlvrMsg*)msg_out;
+    *out = impl->pending_msg;
     impl->has_pending = 0;
 
     return 0;
 }
 
 static int BlvrProto_make_payload(AgvCommProtocolIface* iface,
-                                  const AgvCommMsg* msg_in,
+                                  const void* msg_in, size_t msg_size,
                                   uint8_t* payload_out, size_t* payload_len) {
     if (!iface || !msg_in || !payload_out || !payload_len) {
         return AGV_ERR_INVALID_ARG;
     }
 
     BlvrPrtclImpl* impl = (BlvrPrtclImpl*)iface->impl;
-    if (!impl) return AGV_ERR_NO_MEMORY;
+    if (!impl || !impl->cfg) return AGV_ERR_NO_MEMORY;
     const AgvCommPrtclBlvrCfg* cfg = impl->cfg;
-    if (!cfg) return AGV_ERR_NO_MEMORY;
 
-    if (msg_in->msg_type != MOTOR_MSG)
-        return AGV_ERR_COMM_PRTCL_INVALID_MSG_TYPE;
+    if (msg_size != sizeof(BlvrMsg)) return AGV_ERR_COMM_PRTCL_INVALID_MSG_TYPE;
 
-    MotorsCommMsg motors_msg = msg_in->u.motors_msg;
+    BlvrMsg* blvr_msg = (BlvrMsg*)msg_in;
 
     size_t idx = 0;
-    switch (motors_msg.type) {
-        case WRITE: {
-            const uint16_t reg_start = cfg->reg_address_write.cmd_vel;
-            const uint16_t totol_rgstr_count =
-                cfg->axis_count * cfg->num_rgster_write_cmd;
-            uint16_t totol_byte_count = totol_rgstr_count * cfg->byte_per_rgstr;
-
-            size_t needed = 1                    // addr
-                            + 1                  // func
-                            + 2                  // start addr
-                            + 2                  // reg_count
-                            + 1                  // byte_count
-                            + totol_byte_count;  // data
-
-            if (*payload_len < needed) {
-                return AGV_ERR_COMM_FMT_FRAME_TOO_SHORT;  // 呼叫方給的 buffer
-                                                          // 不夠大
-            }
-
-            // Addr
-            payload_out[idx++] = cfg->shared_id;
-            // Function code
-
-            payload_out[idx++] = BLVR_FC_WRITE_MULTIPLE_REGISTERS;
-
-            // modbus is a 8bit format, but BLVR is using 16bit, so we should
-            // split the var to 2 8bit (upper & lower)
-
-            // Start address
-            payload_out[idx++] = (uint8_t)(reg_start >> 8);
-            payload_out[idx++] = (uint8_t)(reg_start & 0xFF);
-
-            // Register count
-            payload_out[idx++] = (uint8_t)(totol_rgstr_count >> 8);
-            payload_out[idx++] = (uint8_t)(totol_rgstr_count & 0xFF);
-
-            // Byte count
-            payload_out[idx++] = totol_byte_count;
-
-            uint8_t* p = &payload_out[idx];
-            for (uint8_t i = 0; i < cfg->axis_count; ++i) {
-                p = put_be32(p, motors_msg.msgs[i].des_vel);
-                p = put_be32(p, motors_msg.msgs[i].des_acc);
-                p = put_be32(p, motors_msg.msgs[i].des_dec);
-                p = put_be32(p, motors_msg.msgs[i].spd_ctrl);
-                p = put_be32(p, motors_msg.msgs[i].trigger);
-            }
-
-            *payload_len = idx;
-
-            return AGV_OK;
-        }
-
-        case READ: {
-            const uint16_t addr = cfg->reg_address_read.driver_status;
-            const uint16_t totol_rgstr_count =
-                cfg->axis_count * (cfg->num_rgster_read_cmd);
-
-            size_t needed = 1     // addr
-                            + 1   // func
-                            + 2   // start addr
-                            + 2;  // reg count
-
-            if (*payload_len < needed) {
-                return AGV_ERR_COMM_FMT_FRAME_TOO_SHORT;
-            }
-
-            payload_out[idx++] = cfg->shared_id;
-            // payload_out[idx++] = 0x04;
-            payload_out[idx++] = BLVR_FC_READ_HOLDING_REGISTERS;
-            payload_out[idx++] = (uint8_t)(addr >> 8);
-            payload_out[idx++] = (uint8_t)(addr & 0xFF);
-            payload_out[idx++] = (uint8_t)(totol_rgstr_count >> 8);
-            payload_out[idx++] = (uint8_t)(totol_rgstr_count & 0xFF);
-
-            *payload_len = idx;
-            return AGV_OK;
-        }
+    switch (blvr_msg->msg_type) {
         case READ_WRITE: {
-            const uint16_t reg_start_read = cfg->reg_address_read.driver_status;
-            const uint16_t reg_start_write = cfg->reg_address_write.cmd_vel;
+            const uint16_t reg_start_read = BLVR_DATA_REG_ADDRESS_DRIVER_OUT_ST;
             const uint16_t totol_read_rgstr_count =
-                cfg->axis_count * (cfg->num_rgster_read_cmd +
+                cfg->axis_count * (BLVR_DATA_READ_REG_COUNT +
                                    1);  // +1 depends on the document p281.
-            const uint16_t totol_write_rgstr_count =
-                cfg->axis_count * cfg->num_rgster_write_cmd;
+
+            uint16_t reg_start_write, totol_write_rgstr_count;
+            if (blvr_msg->u.write_msg.write_type == SET_DRIVER) {
+                reg_start_write = BLVR_DATA_REG_ADDRESS_CMD_DRIVER;
+                totol_write_rgstr_count =
+                    cfg->axis_count * 1;  // driver state only have 1 registers
+            } else if (blvr_msg->u.write_msg.write_type == SET_MOVE) {
+                reg_start_write = BLVR_DATA_REG_ADDRESS_CMD_VEL;
+                totol_write_rgstr_count =
+                    cfg->axis_count * BLVR_DATA_WRITE_REG_COUNT;
+            }
             const uint16_t write_byte_count =
-                totol_write_rgstr_count * cfg->byte_per_rgstr;
+                totol_write_rgstr_count * BLVR_RGSTR_BYTE;
 
             size_t needed = 1                    // addr
                             + 1                  // func
@@ -295,7 +227,7 @@ static int BlvrProto_make_payload(AgvCommProtocolIface* iface,
             }
 
             // Addr
-            payload_out[idx++] = cfg->shared_id;
+            payload_out[idx++] = BLVR_SHARED_ID;
             // Function code
 
             payload_out[idx++] = BLVR_FC_READWRITE_MULTIPLE_REGISTERS;
@@ -323,13 +255,26 @@ static int BlvrProto_make_payload(AgvCommProtocolIface* iface,
             payload_out[idx++] = write_byte_count;
 
             uint8_t* p = &payload_out[idx];
-            for (uint8_t i = 0; i < cfg->axis_count; ++i) {
-                p = put_be32(p, motors_msg.msgs[i].des_vel);
-                p = put_be32(p, motors_msg.msgs[i].des_acc);
-                p = put_be32(p, motors_msg.msgs[i].des_dec);
-                p = put_be32(p, motors_msg.msgs[i].spd_ctrl);
-                p = put_be32(p, motors_msg.msgs[i].trigger);
+
+            if (blvr_msg->u.write_msg.write_type == SET_DRIVER) {
+                for (size_t i = 0; i < cfg->axis_count; ++i) {
+                    // p = put_be32(p,
+                    // blvr_msg->u.write_msg.msgs[i].driver_cmd);
+                    uint16_t cmd =
+                        (uint16_t)blvr_msg->u.write_msg.msgs[i].driver_cmd;
+                    *p++ = (uint8_t)(cmd >> 8);  // high byte
+                    *p++ = (uint8_t)(cmd & 0xFF);
+                }
+            } else if (blvr_msg->u.write_msg.write_type == SET_MOVE) {
+                for (size_t i = 0; i < cfg->axis_count; ++i) {
+                    p = put_be32(p, blvr_msg->u.write_msg.msgs[i].des_vel);
+                    p = put_be32(p, blvr_msg->u.write_msg.msgs[i].des_acc);
+                    p = put_be32(p, blvr_msg->u.write_msg.msgs[i].des_dec);
+                    p = put_be32(p, blvr_msg->u.write_msg.msgs[i].spd_ctrl);
+                    p = put_be32(p, blvr_msg->u.write_msg.msgs[i].trigger);
+                }
             }
+
             idx = (size_t)(p - payload_out);
 
             *payload_len = idx;
@@ -344,21 +289,19 @@ static int BlvrProto_make_payload(AgvCommProtocolIface* iface,
 }
 
 int BlvrProto_get_response_frame_len(AgvCommProtocolIface* iface,
-                                     const AgvCommMsg* request,
+                                     const BlvrMsg* request,
                                      size_t* frame_len) {
-    if (!iface || !request || request->msg_type != MOTOR_MSG || !frame_len)
-        return AGV_ERR_INVALID_ARG;
+    if (!iface || !request || !frame_len) return AGV_ERR_INVALID_ARG;
 
     BlvrPrtclImpl* impl = (BlvrPrtclImpl*)iface->impl;
-    if (!impl) return AGV_ERR_NO_MEMORY;
+    if (!impl || !impl->cfg) return AGV_ERR_NO_MEMORY;
     const AgvCommPrtclBlvrCfg* cfg = impl->cfg;
-    if (!cfg) return AGV_ERR_NO_MEMORY;
 
     size_t expected_len = 0;
-    switch (request->u.motors_msg.type) {
+    switch (request->msg_type) {
         case READ_WRITE:
-            size_t total_read_bytes = cfg->axis_count * cfg->byte_per_rgstr *
-                                      cfg->num_rgster_read_cmd;
+            size_t total_read_bytes =
+                cfg->axis_count * BLVR_RGSTR_BYTE * BLVR_DATA_READ_REG_COUNT;
             size_t total_error_check_bytes = 2 * cfg->axis_count;
             expected_len = 1                   // address
                            + 1                 // fucntion code

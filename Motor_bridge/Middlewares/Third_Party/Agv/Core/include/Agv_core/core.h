@@ -33,4 +33,8 @@ int AgvCore_set_cmd_vel(AgvCore* core, Twist2D cmd_in);
 
 int AgvCore_reset_motor(AgvCore* core);
 
+int AgvCore_enable_motor(AgvCore* core);
+
+int AgvCore_get_modules_state(AgvCore* core);
+
 #endif  // AGV_CORE__CORE_H_

@@ -3,8 +3,8 @@
 #include <string.h>
 
 #include "Agv_communication_pack/communication_iface.h"
-#include "Agv_communication_pack/communication_msgs.h"
 #include "Agv_communication_pack/configs/comm_protocol_config.h"
+#include "Agv_communication_pack/msg/ros_host_msgs.h"
 #include "Agv_communication_pack/protocol_defs/host_protocol_defs.h"
 #include "Agv_core/error_codes/error_common.h"
 #include "Agv_core/error_codes/error_communication.h"
@@ -16,7 +16,7 @@
 typedef struct {
     const AgvCommPrtclHostCfg* cfg;
 
-    AgvCommMsg pending_msg;
+    RosHostMsg pending_msg;
     int has_pending;
 } HostProtoImpl;
 
@@ -24,10 +24,11 @@ static int hostProto_feed_payload(AgvCommProtocolIface* iface,
                                   const uint8_t* payload_in,
                                   size_t payload_len);
 
-static int hostProto_pop_msg(AgvCommProtocolIface* iface, AgvCommMsg* msg_out);
+static int hostProto_pop_msg(AgvCommProtocolIface* iface, void* msg_out,
+                             size_t msg_size);
 
 static int hostProto_make_payload(AgvCommProtocolIface* iface,
-                                  const AgvCommMsg* msg_in,
+                                  const void* msg_in, size_t msg_size,
                                   uint8_t* payload_out, size_t* payload_len);
 
 static int hostProto_destroy(AgvCommProtocolIface* iface);
@@ -89,21 +90,21 @@ static int hostProto_feed_payload(AgvCommProtocolIface* iface,
         return AGV_ERR_COMM_PRTCL_BAD_PAYLOAD;
     }
 
-    AgvCommMsg msg;
-    msg.msg_type = HOST_MSG;
-    msg.u.host_msg.type = VEL_CMD;
+    RosHostMsg host_msg;
 
     switch (cmd) {
         case HOST_COMM_CMD_SET_VEL: {
             size_t expected_len = 3 * sizeof(float);  // float * (vx, vy, vyaw)
             if (len != expected_len) return AGV_ERR_COMM_PRTCL_BAD_PAYLOAD;
+            host_msg.msg_type = VEL_CMD;
+
             uint8_t* p = &payload_in[idx];
 
-            p = get_f32_le(p, &msg.u.host_msg.msg.vel.x);
-            p = get_f32_le(p, &msg.u.host_msg.msg.vel.y);
-            p = get_f32_le(p, &msg.u.host_msg.msg.vel.yaw);
+            p = get_f32_le(p, &host_msg.u.vel.x);
+            p = get_f32_le(p, &host_msg.u.vel.y);
+            p = get_f32_le(p, &host_msg.u.vel.yaw);
 
-            impl->pending_msg = msg;
+            impl->pending_msg = host_msg;
             impl->has_pending = 1;
 
             return AGV_OK;
@@ -115,7 +116,8 @@ static int hostProto_feed_payload(AgvCommProtocolIface* iface,
     return AGV_OK;
 }
 
-static int hostProto_pop_msg(AgvCommProtocolIface* iface, AgvCommMsg* msg_out) {
+static int hostProto_pop_msg(AgvCommProtocolIface* iface, void* msg_out,
+                             size_t msg_size) {
     if (!iface || !msg_out) return AGV_ERR_INVALID_ARG;
 
     HostProtoImpl* impl = (HostProtoImpl*)iface->impl;
@@ -123,27 +125,32 @@ static int hostProto_pop_msg(AgvCommProtocolIface* iface, AgvCommMsg* msg_out) {
 
     if (!impl->has_pending) return AGV_ERR_COMM_PRTCL_NO_PENDING_MSG;
 
-    *msg_out = impl->pending_msg;
+    if (msg_size != sizeof(impl->pending_msg))
+        return AGV_ERR_COMM_PRTCL_INVALID_MSG_TYPE;
+
+    RosHostMsg* out = (RosHostMsg*)msg_out;
+    *out = impl->pending_msg;
     impl->has_pending = 0;
 
     return 0;
 }
 
 static int hostProto_make_payload(AgvCommProtocolIface* iface,
-                                  const AgvCommMsg* msg_in,
+                                  const void* msg_in, size_t msg_size,
                                   uint8_t* payload_out, size_t* payload_len) {
     if (!iface || !msg_in || !payload_out || !payload_len)
         return AGV_ERR_INVALID_ARG;
 
-    if (msg_in->msg_type != HOST_MSG)
+    if (msg_size != sizeof(RosHostMsg))
         return AGV_ERR_COMM_PRTCL_INVALID_MSG_TYPE;
-    HostCommMsg* host_msg = &msg_in->u.host_msg;
+
+    RosHostMsg* host_msg = (RosHostMsg*)msg_in;
 
     uint8_t cmd = 0;
     uint8_t data_len = 0;
 
     size_t idx = 0;
-    switch (host_msg->type) {
+    switch (host_msg->msg_type) {
         case ODOMETRY: {
             cmd = HOST_COMM_CMD_ODOMETRY_FEEDBACK;
             data_len = 6 * sizeof(float);  // cmd + len + float * (x, y, yaw,
@@ -154,12 +161,12 @@ static int hostProto_make_payload(AgvCommProtocolIface* iface,
             payload_out[idx++] = data_len;
             uint8_t* p = &payload_out[idx];
 
-            p = put_f32_le(p, host_msg->msg.odom.pose.x);
-            p = put_f32_le(p, host_msg->msg.odom.pose.y);
-            p = put_f32_le(p, host_msg->msg.odom.pose.yaw);
-            p = put_f32_le(p, host_msg->msg.odom.twist.x);
-            p = put_f32_le(p, host_msg->msg.odom.twist.y);
-            p = put_f32_le(p, host_msg->msg.odom.twist.yaw);
+            p = put_f32_le(p, host_msg->u.odom.pose.x);
+            p = put_f32_le(p, host_msg->u.odom.pose.y);
+            p = put_f32_le(p, host_msg->u.odom.pose.yaw);
+            p = put_f32_le(p, host_msg->u.odom.twist.x);
+            p = put_f32_le(p, host_msg->u.odom.twist.y);
+            p = put_f32_le(p, host_msg->u.odom.twist.yaw);
 
             idx = (size_t)(p - payload_out);
             *payload_len = idx;

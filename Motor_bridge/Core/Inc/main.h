@@ -95,6 +95,8 @@ void Error_Handler(void);
 #define Green_button_GPIO_Port GPIOE
 #define Yellow_button_Pin GPIO_PIN_10
 #define Yellow_button_GPIO_Port GPIOE
+#define Red_button_Pin GPIO_PIN_11
+#define Red_button_GPIO_Port GPIOE
 #define CLK_IN_Pin GPIO_PIN_10
 #define CLK_IN_GPIO_Port GPIOB
 #define LD4_Pin GPIO_PIN_12

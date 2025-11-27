@@ -4,6 +4,7 @@
 
 #include "Agv_communication_pack/communication_iface.h"
 #include "Agv_communication_pack/configs/comm_format_config.h"
+#include "Agv_communication_pack/protocol_defs/host_protocol_defs.h"
 #include "Agv_core/error_codes/error_common.h"
 #include "Agv_core/error_codes/error_communication.h"
 
@@ -43,7 +44,8 @@ static int rosFmt_pop_payload(AgvCommFormatIface* iface, uint8_t* payload_out,
 static int rosFmt_make_frame(AgvCommFormatIface* iface,
                              const uint8_t* payload_in, size_t payload_len,
                              uint8_t* frame_out, size_t* frame_len);
-static uint8_t crc8_compute(const CrcCfg* cfg, const uint8_t* data, size_t len);
+
+uint8_t crc8_compute(const uint8_t* data, size_t len);
 
 /**
  * Private definitions
@@ -114,13 +116,13 @@ static int rosFmt_feed_bytes(AgvCommFormatIface* iface, const uint8_t* bytes,
 
         switch (impl->state) {
             case ST_WAIT_H0:
-                if (b == cfg->header0) {
+                if (b == HOST_COMM_HEADER0) {
                     impl->state = ST_WAIT_H1;
                 }
                 break;
 
             case ST_WAIT_H1:
-                if (b == cfg->header1) {
+                if (b == HOST_COMM_HEADER1) {
                     impl->state = ST_WAIT_CMD;
                 } else {
                     impl->state = ST_WAIT_H0;
@@ -156,7 +158,7 @@ static int rosFmt_feed_bytes(AgvCommFormatIface* iface, const uint8_t* bytes,
                 payload[payload_idx++] = impl->data_len;
                 memcpy(&payload[payload_idx], data, impl->data_len);
                 payload_idx += impl->data_len;
-                uint8_t crc = crc8_compute(&cfg->crc_cfg, payload, payload_idx);
+                uint8_t crc = crc8_compute(payload, payload_idx);
                 if (crc != b) {
                     impl->state = ST_WAIT_H0;
                 } else {
@@ -166,7 +168,7 @@ static int rosFmt_feed_bytes(AgvCommFormatIface* iface, const uint8_t* bytes,
             }
 
             case ST_WAIT_T0: {
-                if (b == cfg->tail0) {
+                if (b == HOST_COMM_TAIL0) {
                     impl->state = ST_WAIT_T1;
                 } else {
                     impl->state = ST_WAIT_H0;
@@ -175,7 +177,7 @@ static int rosFmt_feed_bytes(AgvCommFormatIface* iface, const uint8_t* bytes,
             }
 
             case ST_WAIT_T1: {
-                if (b == cfg->tail1) {
+                if (b == HOST_COMM_TAIL1) {
                     impl->payload_buf[0] = impl->cmd;
                     impl->payload_buf[1] = impl->data_len;
                     memcpy(&impl->payload_buf[2], data, impl->data_len);
@@ -231,28 +233,27 @@ static int rosFmt_make_frame(AgvCommFormatIface* iface, const uint8_t* payload,
     if (*frame_len < need) return AGV_ERR_OUTPUT_OVERFLOW;
 
     size_t idx = 0;
-    frame_out[idx++] = cfg->header0;
-    frame_out[idx++] = cfg->header1;
+    frame_out[idx++] = HOST_COMM_HEADER0;
+    frame_out[idx++] = HOST_COMM_HEADER1;
     frame_out[idx++] = cmd;
     frame_out[idx++] = data_len;
     memcpy(&frame_out[idx], &payload[2], data_len);
     idx += data_len;
 
-    uint8_t crc = crc8_compute(&cfg->crc_cfg, frame_out,
+    uint8_t crc = crc8_compute(frame_out,
                                idx);  // [header0, header1, cmd, size, data...]
     frame_out[idx++] = crc;
-    frame_out[idx++] = cfg->tail0;
-    frame_out[idx++] = cfg->tail1;
+    frame_out[idx++] = HOST_COMM_TAIL0;
+    frame_out[idx++] = HOST_COMM_TAIL1;
 
     *frame_len = idx;
     return 0;
 }
 
-static uint8_t crc8_compute(const CrcCfg* cfg, const uint8_t* data,
-                            size_t data_len) {
-    uint8_t crc = cfg->crc_init;
-    const uint8_t poly = cfg->crc_poly;  // 你可以換成實際用的
-    for (size_t i = 0; i < data_len; ++i) {
+uint8_t crc8_compute(const uint8_t* data, size_t len) {
+    uint8_t crc = ROSFMT_CRC_INIT;
+    const uint8_t poly = ROSFMT_CRC_POLY;  // 你可以換成實際用的
+    for (size_t i = 0; i < len; ++i) {
         crc ^= data[i];
         for (int b = 0; b < 8; ++b) {
             if (crc & 0x80)

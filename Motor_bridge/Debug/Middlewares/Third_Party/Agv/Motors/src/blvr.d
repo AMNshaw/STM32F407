@@ -2,8 +2,6 @@ Middlewares/Third_Party/Agv/Motors/src/blvr.o: \
  C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/src/blvr.c \
  C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include/Agv_communication_pack/communication_builder.h \
  C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include/Agv_communication_pack/communication_iface.h \
- C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include/Agv_communication_pack/communication_msgs.h \
- C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/agv_types.h \
  C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include/Agv_communication_pack/configs/comm_format_config.h \
  C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include/Agv_communication_pack/configs/comm_link_config.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
@@ -46,7 +44,10 @@ Middlewares/Third_Party/Agv/Motors/src/blvr.o: \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
  C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include/Agv_communication_pack/configs/comm_protocol_config.h \
  C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include/Agv_communication_pack/format/modbus_rtu_format.h \
+ C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include/Agv_communication_pack/msg/blvr_motor_msgs.h \
+ C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/agv_types.h \
  C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include/Agv_communication_pack/protocol/blvr_protocol.h \
+ C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include/Agv_communication_pack/protocol_defs/blvr_protocol_defs.h \
  C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/error_codes/error_common.h \
  C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/error_codes/error_communication.h \
  C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/modules/motors_base.h \
@@ -65,8 +66,6 @@ Middlewares/Third_Party/Agv/Motors/src/blvr.o: \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
 C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include/Agv_communication_pack/communication_builder.h:
 C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include/Agv_communication_pack/communication_iface.h:
-C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include/Agv_communication_pack/communication_msgs.h:
-C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/agv_types.h:
 C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include/Agv_communication_pack/configs/comm_format_config.h:
 C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include/Agv_communication_pack/configs/comm_link_config.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
@@ -109,7 +108,10 @@ C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Comm
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h:
 C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include/Agv_communication_pack/configs/comm_protocol_config.h:
 C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include/Agv_communication_pack/format/modbus_rtu_format.h:
+C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include/Agv_communication_pack/msg/blvr_motor_msgs.h:
+C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/agv_types.h:
 C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include/Agv_communication_pack/protocol/blvr_protocol.h:
+C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include/Agv_communication_pack/protocol_defs/blvr_protocol_defs.h:
 C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/error_codes/error_common.h:
 C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/error_codes/error_communication.h:
 C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/modules/motors_base.h:

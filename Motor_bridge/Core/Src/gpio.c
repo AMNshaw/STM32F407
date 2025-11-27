@@ -104,8 +104,8 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(BOOT1_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : Joystick_switch_Pin Green_button_Pin Yellow_button_Pin */
-  GPIO_InitStruct.Pin = Joystick_switch_Pin|Green_button_Pin|Yellow_button_Pin;
+  /*Configure GPIO pins : Joystick_switch_Pin Green_button_Pin Yellow_button_Pin Red_button_Pin */
+  GPIO_InitStruct.Pin = Joystick_switch_Pin|Green_button_Pin|Yellow_button_Pin|Red_button_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);

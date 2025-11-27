@@ -1,7 +1,8 @@
-../Core/Src/freertos.c:111:6:MX_FREERTOS_Init	1
-../Core/Src/freertos.c:159:6:StartDefaultTask	1
-../Core/Src/freertos.c:173:5:AGV_attach_core_task	2
-../Core/Src/freertos.c:179:6:StartSendOdomTask	2
-../Core/Src/freertos.c:198:6:OnHostMsgTask	1
-../Core/Src/freertos.c:206:6:joystickTask	3
-../Core/Src/freertos.c:229:6:motorIoTask	2
+../Core/Src/freertos.c:120:6:MX_FREERTOS_Init	1
+../Core/Src/freertos.c:172:6:StartDefaultTask	1
+../Core/Src/freertos.c:186:5:AGV_attach_core_task	2
+../Core/Src/freertos.c:192:6:AgvHeartbeatTask	1
+../Core/Src/freertos.c:203:6:AgvSendOdomTask	2
+../Core/Src/freertos.c:221:6:AgvHostMsgCallbackTask	1
+../Core/Src/freertos.c:228:6:joystickTask	2
+../Core/Src/freertos.c:250:6:AgvMotorIoTask	2

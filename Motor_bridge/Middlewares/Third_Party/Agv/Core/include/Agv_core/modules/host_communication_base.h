@@ -10,7 +10,7 @@ typedef struct AgvHostCommunicationBase {
                                    Twist2D* out);
     int (*send_odom)(struct AgvHostCommunicationBase* base, const Odometry* in);
     int (*send_heartbeat)(struct AgvHostCommunicationBase* base);
-    int (*process_pending_msg_to_buffer)(struct AgvHostCommunicationBase* base);
+    int (*process_pending_msg)(struct AgvHostCommunicationBase* base);
     int (*destroy)(struct AgvHostCommunicationBase* base);
     void* impl;
 } AgvHostCommunicationBase;

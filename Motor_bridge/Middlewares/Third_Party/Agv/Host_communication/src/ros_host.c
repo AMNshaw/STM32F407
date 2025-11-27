@@ -1,6 +1,6 @@
 #include "Agv_communication_pack/communication_builder.h"
 #include "Agv_communication_pack/communication_iface.h"
-#include "Agv_communication_pack/communication_msgs.h"
+#include "Agv_communication_pack/msg/ros_host_msgs.h"
 #include "Agv_core/agv_types.h"
 #include "Agv_core/error_codes/error_common.h"
 #include "Agv_core/modules/host_communication_base.h"
@@ -93,7 +93,7 @@ int Host_communication_ros_create(AgvHostCommunicationBase* out,
     out->name = name;
     out->impl = impl;
     out->get_des_vel_from_buffer = ros_get_des_vel_from_buf;
-    out->process_pending_msg_to_buffer = ros_process_pending_msg_to_buf;
+    out->process_pending_msg = ros_process_pending_msg_to_buf;
     out->send_odom = ros_send_odom;
     out->send_heartbeat = ros_send_heartbeat;
     out->destroy = Host_communication_ros_destroy;
@@ -120,7 +120,7 @@ static int Host_communication_ros_destroy(AgvHostCommunicationBase* base) {
 
     base->impl = NULL;
     base->get_des_vel_from_buffer = NULL;
-    base->process_pending_msg_to_buffer = NULL;
+    base->process_pending_msg = NULL;
     base->send_odom = NULL;
     base->send_heartbeat = NULL;
     base->destroy = NULL;
@@ -168,19 +168,19 @@ static int ros_send_odom(AgvHostCommunicationBase* base,
 
     int code = AGV_OK;
 
-    AgvCommMsg msg;
-    msg.msg_type = HOST_MSG;
-    msg.u.host_msg.type = ODOMETRY;
-    msg.u.host_msg.msg.odom.pose.x = odom_in->pose.x;
-    msg.u.host_msg.msg.odom.pose.y = odom_in->pose.y;
-    msg.u.host_msg.msg.odom.pose.yaw = odom_in->pose.yaw;
-    msg.u.host_msg.msg.odom.twist.x = odom_in->twist.x;
-    msg.u.host_msg.msg.odom.twist.y = odom_in->twist.y;
-    msg.u.host_msg.msg.odom.twist.yaw = odom_in->twist.yaw;
+    RosHostMsg host_msg;
+    host_msg.msg_type = ODOMETRY;
+    host_msg.u.odom.pose.x = odom_in->pose.x;
+    host_msg.u.odom.pose.y = odom_in->pose.y;
+    host_msg.u.odom.pose.yaw = odom_in->pose.yaw;
+    host_msg.u.odom.twist.x = odom_in->twist.x;
+    host_msg.u.odom.twist.y = odom_in->twist.y;
+    host_msg.u.odom.twist.yaw = odom_in->twist.yaw;
 
     size_t payload_len = cfg->prtcl_host_cfg.max_payload_len;
     uint8_t payload[payload_len];
-    code = prtcl->make_payload(prtcl, &msg, payload, &payload_len);
+    code = prtcl->make_payload(prtcl, &host_msg, sizeof(host_msg), payload,
+                               &payload_len);
     if (code != AGV_OK) return code;
 
     size_t frame_len = cfg->rosFmt_cfg.max_frame_len;
@@ -226,17 +226,16 @@ static int ros_process_pending_msg_to_buf(AgvHostCommunicationBase* base) {
 
     code = prtcl->feed_payload(prtcl, payload, ros_payload_len);
     if (code != AGV_OK) return code;
-    AgvCommMsg msg_popped;
-    msg_popped.msg_type = HOST_MSG;
-    code = prtcl->pop_msg(prtcl, &msg_popped);
+    RosHostMsg msg_popped;
+    code = prtcl->pop_msg(prtcl, &msg_popped, sizeof(msg_popped));
     if (code != AGV_OK) return code;
 
-    switch (msg_popped.u.host_msg.type) {
+    switch (msg_popped.msg_type) {
         case VEL_CMD: {
             xSemaphoreTake(impl->mutex_buf, portMAX_DELAY);
-            impl->cmd_vel_buf.cmd_vel.x = msg_popped.u.host_msg.msg.vel.x;
-            impl->cmd_vel_buf.cmd_vel.y = msg_popped.u.host_msg.msg.vel.y;
-            impl->cmd_vel_buf.cmd_vel.yaw = msg_popped.u.host_msg.msg.vel.yaw;
+            impl->cmd_vel_buf.cmd_vel.x = msg_popped.u.vel.x;
+            impl->cmd_vel_buf.cmd_vel.y = msg_popped.u.vel.y;
+            impl->cmd_vel_buf.cmd_vel.yaw = msg_popped.u.vel.yaw;
             impl->cmd_vel_buf.timestamp = (TickType_t)timestamp;
             xSemaphoreGive(impl->mutex_buf);
             return AGV_OK;

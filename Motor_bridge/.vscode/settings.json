@@ -59,6 +59,8 @@
         "passthrough.h": "c",
         "typeinfo": "c",
         "host_protocol_defs.h": "c",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "blvr_motor_msgs.h": "c",
+        "roshost_protocol_defs.h": "c"
     }
 }

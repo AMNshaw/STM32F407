@@ -230,6 +230,8 @@ int LnkRs485_on_rx_rcv(AgvCommLinkIface* iface, size_t data_len) {
     BaseType_t hpw = pdFALSE;
     if (xQueueSendFromISR(impl->rx_data_queue, frame, &hpw) != pdPASS) {
         ++impl->num_dropped_data;
+        LOG("TaskQUeue", "dropped: %d", impl->num_dropped_data);
+        HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_14);
         return AGV_ERR_COMM_LINK_BUFFER_OVERFLOW;
     }
     portYIELD_FROM_ISR(hpw);

@@ -1,5 +1,6 @@
 #include "Agv_communication_pack/communication_iface.h"
 #include "Agv_communication_pack/configs/comm_format_config.h"
+#include "Agv_communication_pack/protocol_defs/blvr_protocol_defs.h"
 #include "Agv_core/error_codes/error_common.h"
 #include "Agv_core/error_codes/error_communication.h"
 
@@ -44,7 +45,7 @@ static int modbusFmt_make_frame(AgvCommFormatIface* iface,
 
 static int modbusFmt_destroy(AgvCommFormatIface* iface);
 
-uint16_t modbus_crc16(const CrcCfg* cfg, const uint8_t* data, size_t len);
+uint16_t modbus_crc16(const uint8_t* data, size_t len);
 
 /**
  * Private definitions
@@ -105,9 +106,7 @@ static int modbusFmt_feed_bytes(AgvCommFormatIface* iface,
     if (!iface || !bytes_in) return AGV_ERR_INVALID_ARG;
 
     ModbusRtuFmtImpl* impl = (ModbusRtuFmtImpl*)iface->impl;
-    if (!impl || !impl->cfg) return AGV_ERR_NO_MEMORY;
-
-    const AgvCommFmtModbusRtuCfg* cfg = impl->cfg;
+    if (!impl) return AGV_ERR_NO_MEMORY;
 
     for (size_t i = 0; i < bytes_len; ++i) {
         uint8_t b = bytes_in[i];
@@ -147,8 +146,8 @@ static int modbusFmt_feed_bytes(AgvCommFormatIface* iface,
                 uint16_t rcv_crc = 0;
                 rcv_crc |= (uint16_t)impl->crc_low;
                 rcv_crc |= (uint16_t)impl->crc_high << 8;
-                uint16_t calc_crc = modbus_crc16(
-                    &cfg->crc_cfg, impl->payload_buf, impl->expct_bytes - 2);
+                uint16_t calc_crc =
+                    modbus_crc16(impl->payload_buf, impl->expct_bytes - 2);
 
                 impl->state = ST_WAIT_ADDR;
                 if (rcv_crc != calc_crc) {
@@ -209,7 +208,7 @@ static int modbusFmt_make_frame(AgvCommFormatIface* iface,
 
     // 計算 CRC
 
-    uint16_t crc = modbus_crc16(&impl->cfg->crc_cfg, frame_out, payload_len);
+    uint16_t crc = modbus_crc16(frame_out, payload_len);
 
     // Modbus RTU 是低位在前
     frame_out[payload_len] = (uint8_t)(crc & 0x00FF);             // CRC_L
@@ -225,9 +224,7 @@ int modbusFmt_set_check_item(AgvCommFormatIface* iface, uint8_t addr,
     if (!iface) return AGV_ERR_INVALID_ARG;
 
     ModbusRtuFmtImpl* impl = (ModbusRtuFmtImpl*)iface->impl;
-    if (!impl || !impl->cfg) return AGV_ERR_NO_MEMORY;
-
-    const AgvCommFmtModbusRtuCfg* cfg = impl->cfg;
+    if (!impl) return AGV_ERR_NO_MEMORY;
 
     impl->expct_address = addr;
     impl->expct_function = func;
@@ -240,14 +237,15 @@ int modbusFmt_set_check_item(AgvCommFormatIface* iface, uint8_t addr,
     return AGV_OK;
 }
 
-uint16_t modbus_crc16(const CrcCfg* cfg, const uint8_t* data, size_t len) {
-    uint16_t crc = cfg->crc_init;  // 一般是 0xFFFF
+uint16_t modbus_crc16(const uint8_t* data, size_t len) {
+    uint16_t crc = MODBUS_RTU_CRC_INIT;  // 一般是 0xFFFF
 
     for (size_t i = 0; i < len; ++i) {
         crc ^= data[i];  // 低位對齊 XOR 進來
         for (int b = 0; b < 8; ++b) {
             if (crc & 0x0001) {
-                crc = (crc >> 1) ^ cfg->crc_poly;  // LSB = 1：右移 + XOR poly
+                crc = (crc >> 1) ^
+                      MODBUS_RTU_CRC_POLY;  // LSB = 1：右移 + XOR poly
             } else {
                 crc >>= 1;  // 否則只右移
             }

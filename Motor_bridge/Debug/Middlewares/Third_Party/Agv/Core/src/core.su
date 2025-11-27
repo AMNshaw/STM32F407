@@ -1,6 +1,8 @@
 C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/src/core.c:6:5:AgvCore_step_on_host_msg	24	static
 C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/src/core.c:13:5:AgvCore_step_host_control	80	static
-C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/src/core.c:45:5:AgvCore_step_motor_io	168	static
-C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/src/core.c:85:5:AgvCore_step_feedback	56	static
-C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/src/core.c:100:5:AgvCore_set_cmd_vel	72	static
-C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/src/core.c:130:5:AgvCore_reset_motor	24	static
+C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/src/core.c:45:5:AgvCore_step_motor_io	96	static
+C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/src/core.c:86:5:AgvCore_step_feedback	56	static
+C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/src/core.c:101:5:AgvCore_set_cmd_vel	72	static
+C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/src/core.c:131:5:AgvCore_reset_motor	24	static
+C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/src/core.c:143:5:AgvCore_enable_motor	24	static
+C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/src/core.c:155:5:AgvCore_get_modules_state	24	static

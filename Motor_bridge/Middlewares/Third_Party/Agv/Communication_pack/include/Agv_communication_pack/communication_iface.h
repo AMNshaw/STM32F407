@@ -4,8 +4,6 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#include "Agv_communication_pack/communication_msgs.h"
-
 /**
  * Link
  */
@@ -44,9 +42,10 @@ typedef struct AgvCommFormatIface {
 typedef struct AgvCommProtocolIface {
     int (*feed_payload)(struct AgvCommProtocolIface* iface,
                         const uint8_t* payload_in, size_t payload_len);
-    int (*pop_msg)(struct AgvCommProtocolIface* iface, AgvCommMsg* msg_out);
-    int (*make_payload)(struct AgvCommProtocolIface* iface,
-                        const AgvCommMsg* msg, uint8_t* payload_out,
+    int (*pop_msg)(struct AgvCommProtocolIface* iface, void* msg_out,
+                   size_t msg_size);
+    int (*make_payload)(struct AgvCommProtocolIface* iface, const void* msg_in,
+                        size_t msg_size, uint8_t* payload_out,
                         size_t* payload_len);
     int (*destroy)(struct AgvCommProtocolIface* iface);
     void* impl;

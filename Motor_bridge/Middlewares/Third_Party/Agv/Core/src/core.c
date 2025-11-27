@@ -7,7 +7,7 @@ int AgvCore_step_on_host_msg(AgvCore* core) {
     if (!core) return AGV_ERR_INVALID_ARG;
     AgvHostCommunicationBase* host_comm = &core->host_communication_base;
 
-    return host_comm->process_pending_msg_to_buffer(host_comm);
+    return host_comm->process_pending_msg(host_comm);
 }
 
 int AgvCore_step_host_control(AgvCore* core) {
@@ -62,18 +62,19 @@ int AgvCore_step_motor_io(AgvCore* core) {
     code = kine->calculate_odom(kine, &wheels_ang, &wheels_vel, &odom_out);
     if (code != AGV_OK) return code;
 
-    static size_t time = 0;
-    time++;
-    if (time == 10) {
-        for (size_t i = 0; i < 4; i++) {
-            LOG("core", "wheelang: %f, wheelvel %f", wheels_ang.data[i],
-                wheels_vel.data[i]);
-        }
-        LOG("core", "Odom: %f %f %f %f %f %f", odom_out.pose.x, odom_out.pose.y,
-            odom_out.pose.yaw, odom_out.twist.x, odom_out.twist.y,
-            odom_out.twist.yaw);
-        time = 0;
-    }
+    // static size_t time = 0;
+    // time++;
+    // if (time == 10) {
+    //     for (size_t i = 0; i < 4; i++) {
+    //         LOG("core", "wheelang: %f, wheelvel %f", wheels_ang.data[i],
+    //             wheels_vel.data[i]);
+    //     }
+    //     LOG("core", "Odom: %f %f %f %f %f %f", odom_out.pose.x,
+    //     odom_out.pose.y,
+    //         odom_out.pose.yaw, odom_out.twist.x, odom_out.twist.y,
+    //         odom_out.twist.yaw);
+    //     time = 0;
+    // }
 
     xSemaphoreTake(core->mutex_odom, portMAX_DELAY);
     core->odom = odom_out;
@@ -134,6 +135,30 @@ int AgvCore_reset_motor(AgvCore* core) {
 
     int code = 0;
     code = motors->reset(motors);
+    if (code != AGV_OK) return code;
+
+    return AGV_OK;
+}
+
+int AgvCore_enable_motor(AgvCore* core) {
+    if (!core) return AGV_ERR_INVALID_ARG;
+
+    AgvMotorsBase* motors = &core->motors_base;
+
+    int code = 0;
+    code = motors->on_off(motors, true);
+    if (code != AGV_OK) return code;
+
+    return AGV_OK;
+}
+
+int AgvCore_get_modules_state(AgvCore* core) {
+    if (!core) return AGV_ERR_INVALID_ARG;
+
+    AgvMotorsBase* motors = &core->motors_base;
+
+    int code = 0;
+    code = motors->get_state(motors);
     if (code != AGV_OK) return code;
 
     return AGV_OK;
