@@ -111,7 +111,6 @@ int AgvCore_set_cmd_vel(AgvCore* core, Twist2D cmd_in) {
     xSemaphoreGive(core->mutex_odom);
 
     int code = 0;
-    if (code != AGV_OK) return code;
     code = ctrl->set_des_vel(ctrl, &cmd_in);
     if (code != AGV_OK) return code;
     code = ctrl->set_curr_vel(ctrl, &curr_vel);

@@ -101,10 +101,17 @@ int Motors_blvr_create(AgvMotorsBase* out, const AgvMotorBlvrConfig* cfg) {
 
     impl->read_buf =
         (BlvrReadBuff*)malloc(cfg->axis_count * sizeof(BlvrReadBuff));
-    if (!impl->read_buf) return AGV_ERR_NO_MEMORY;
+    if (!impl->read_buf) {
+        free(impl);
+        return AGV_ERR_NO_MEMORY;
+    }
     impl->write_buf =
         (BlvrWriteBuff*)malloc(cfg->axis_count * sizeof(BlvrWriteBuff));
-    if (!impl->write_buf) return AGV_ERR_NO_MEMORY;
+    if (!impl->write_buf) {
+        free(impl->read_buf);
+        free(impl);
+        return AGV_ERR_NO_MEMORY;
+    }
 
     impl->pending_cmd = MOVE;
 
@@ -413,22 +420,20 @@ static int blvr_read_and_write(AgvMotorsBase* base) {
     size_t expected_bytes_len;
     code =
         BlvrProto_get_response_frame_len(prtcl, &msg_send, &expected_bytes_len);
+    if (code != AGV_OK) return code;
+
     code = modbusFmt_set_check_item(fmt, frame_made[0], frame_made[1],
                                     expected_bytes_len);
+    if (code != AGV_OK) return code;
+
     code = AGV_ERR_COMM_FMT_NO_COMPLETE_FRAME;
     while (code == AGV_ERR_COMM_FMT_NO_COMPLETE_FRAME) {
         size_t data_len = impl->cfg->uart_cfg.max_data_len;
-        uint8_t data_rcv[frame_len];
+        uint8_t data_rcv[data_len];
         uint32_t data_timeStamp;
         code = link->read_buf(link, data_rcv, &data_len, &data_timeStamp);
         if (code != AGV_OK) return code;
-        // LOG(base->name, "Bytes received, len: %d", data_len);
-        // for (size_t i = 0; i < data_len; i++) {
-        //     printf("%02X ", data_rcv[i]);
-        // }
-        // printf("\n");
 
-        // LOG(base->name, "feeding bytes");
         code = fmt->feed_bytes(fmt, data_rcv, data_len);
     }
     if (code != AGV_OK) return code;
