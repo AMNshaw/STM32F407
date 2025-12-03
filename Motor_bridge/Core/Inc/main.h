@@ -117,10 +117,6 @@ void Error_Handler(void);
 #define Audio_RST_GPIO_Port GPIOD
 #define OTG_FS_OverCurrent_Pin GPIO_PIN_5
 #define OTG_FS_OverCurrent_GPIO_Port GPIOD
-#define Audio_SCL_Pin GPIO_PIN_6
-#define Audio_SCL_GPIO_Port GPIOB
-#define Audio_SDA_Pin GPIO_PIN_9
-#define Audio_SDA_GPIO_Port GPIOB
 #define button_green_Pin GPIO_PIN_0
 #define button_green_GPIO_Port GPIOE
 #define MEMS_INT2_Pin GPIO_PIN_1
