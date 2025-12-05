@@ -98,16 +98,18 @@ int forward_kine(const AgvKineMecanumConfig* cfg, const Wheels4F* wheels_in,
                  XYYaw* body_out) {
     if (!cfg || !wheels_in || !body_out) return AGV_ERR_INVALID_ARG;
 
-    body_out->x = (wheels_in->data[0] + wheels_in->data[1] +
-                   wheels_in->data[2] + wheels_in->data[3]) *
-                  cfg->wheel_radius / 4;
+    float omega[4];
+    for (size_t i = 0; i < 4; ++i) {
+        omega[i] = wheels_in->data[i] * cfg->axis_dir[i];
+    }
 
-    body_out->y = (-wheels_in->data[0] + wheels_in->data[1] +
-                   wheels_in->data[2] - wheels_in->data[3]) *
-                  cfg->wheel_radius / 4;
+    body_out->x =
+        (omega[0] + omega[1] + omega[2] + omega[3]) * cfg->wheel_radius / 4;
 
-    body_out->yaw = (-wheels_in->data[0] + wheels_in->data[1] -
-                     wheels_in->data[2] + wheels_in->data[3]) *
+    body_out->y =
+        (-omega[0] + omega[1] + omega[2] - omega[3]) * cfg->wheel_radius / 4;
+
+    body_out->yaw = (-omega[0] + omega[1] - omega[2] + omega[3]) *
                     cfg->wheel_radius / (4 * (cfg->L + cfg->W));
 
     return AGV_OK;
@@ -118,19 +120,20 @@ int inverse_kine(const AgvKineMecanumConfig* cfg, const Twist2D* body_in,
     if (!cfg || !body_in || !wheels_out) return AGV_ERR_INVALID_ARG;
 
     float tmp = cfg->L + cfg->W;
+    float omega[4];
 
-    wheels_out->data[0] = cfg->axis_dir[0] *
-                          (body_in->x - body_in->y - tmp * (body_in->yaw)) /
-                          cfg->wheel_radius;
-    wheels_out->data[1] = cfg->axis_dir[1] *
-                          (body_in->x + body_in->y + tmp * (body_in->yaw)) /
-                          cfg->wheel_radius;
-    wheels_out->data[2] = cfg->axis_dir[2] *
-                          (body_in->x + body_in->y - tmp * (body_in->yaw)) /
-                          cfg->wheel_radius;
-    wheels_out->data[3] = cfg->axis_dir[3] *
-                          (body_in->x - body_in->y + tmp * (body_in->yaw)) /
-                          cfg->wheel_radius;
+    omega[0] =
+        (body_in->x - body_in->y - tmp * body_in->yaw) / cfg->wheel_radius;
+    omega[1] =
+        (body_in->x + body_in->y + tmp * body_in->yaw) / cfg->wheel_radius;
+    omega[2] =
+        (body_in->x + body_in->y - tmp * body_in->yaw) / cfg->wheel_radius;
+    omega[3] =
+        (body_in->x - body_in->y + tmp * body_in->yaw) / cfg->wheel_radius;
+
+    for (size_t i = 0; i < 4; ++i) {
+        wheels_out->data[i] = cfg->axis_dir[i] * omega[i];
+    }
 
     return AGV_OK;
 }
