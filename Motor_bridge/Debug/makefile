@@ -9,8 +9,6 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
--include USB_HOST/Target/subdir.mk
--include USB_HOST/App/subdir.mk
 -include Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/subdir.mk
 -include Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/subdir.mk
 -include Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/subdir.mk
@@ -24,8 +22,6 @@ RM := rm -rf
 -include Middlewares/Third_Party/Agv/Communication_pack/src/protocol/subdir.mk
 -include Middlewares/Third_Party/Agv/Communication_pack/src/link/subdir.mk
 -include Middlewares/Third_Party/Agv/Communication_pack/src/format/subdir.mk
--include Middlewares/ST/STM32_USB_Host_Library/Core/Src/subdir.mk
--include Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/subdir.mk
 -include Drivers/STM32F4xx_HAL_Driver/Src/subdir.mk
 -include Core/ThreadSafe/subdir.mk
 -include Core/Startup/subdir.mk

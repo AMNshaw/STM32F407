@@ -1,5 +1,5 @@
 Middlewares/Third_Party/Agv/Control/src/passthrough.o: \
- C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/src/passthrough.c \
+ ../Middlewares/Third_Party/Agv/Control/src/passthrough.c \
  C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/agv_types.h \
  C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/error_codes/error_common.h \
  C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/modules/control_law_base.h \

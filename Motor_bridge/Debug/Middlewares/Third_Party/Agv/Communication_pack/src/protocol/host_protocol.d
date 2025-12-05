@@ -1,5 +1,5 @@
 Middlewares/Third_Party/Agv/Communication_pack/src/protocol/host_protocol.o: \
- C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/src/protocol/host_protocol.c \
+ ../Middlewares/Third_Party/Agv/Communication_pack/src/protocol/host_protocol.c \
  C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include/Agv_communication_pack/communication_iface.h \
  C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include/Agv_communication_pack/configs/comm_protocol_config.h \
  C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include/Agv_communication_pack/msg/ros_host_msgs.h \

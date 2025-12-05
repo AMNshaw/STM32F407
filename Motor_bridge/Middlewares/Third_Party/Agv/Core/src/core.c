@@ -64,7 +64,7 @@ int AgvCore_step_motor_io(AgvCore* core) {
 
     // static size_t time = 0;
     // time++;
-    // if (time == 10) {
+    // if (time == 50) {
     //     for (size_t i = 0; i < 4; i++) {
     //         LOG("core", "wheelang: %f, wheelvel %f", wheels_ang.data[i],
     //             wheels_vel.data[i]);
@@ -121,6 +121,21 @@ int AgvCore_set_cmd_vel(AgvCore* core, Twist2D cmd_in) {
     WheelsVel wheels_cmd;
     code = kine->calculate_wheels_vel(kine, &cmd_in, &wheels_cmd);
     if (code != AGV_OK) return code;
+
+    // wheels_cmd.data[0] = 0.0;
+    // wheels_cmd.data[1] = 0.0;
+    // wheels_cmd.data[2] = 0.5;
+    // wheels_cmd.data[3] = 0.0;
+    static size_t time = 0;
+    time++;
+    if (time == 5) {
+        LOG("core", "cmd_vel: %f %f %f", cmd_in.x, cmd_in.y, cmd_in.yaw);
+        LOG("core", "wheels_cmd:");
+        for (size_t i = 0; i < 4; i++) {
+            LOG("core", "%f ", wheels_cmd.data[i]);
+        }
+        time = 0;
+    }
 
     code = motors->set_des_wheel_vel(motors, &wheels_cmd);
     if (code != AGV_OK) return code;

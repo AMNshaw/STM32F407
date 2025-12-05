@@ -1,5 +1,5 @@
 Middlewares/Third_Party/Agv/Communication_pack/src/protocol/blvr_protocol.o: \
- C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/src/protocol/blvr_protocol.c \
+ ../Middlewares/Third_Party/Agv/Communication_pack/src/protocol/blvr_protocol.c \
  C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include/Agv_communication_pack/protocol/blvr_protocol.h \
  C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include/Agv_communication_pack/communication_iface.h \
  C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include/Agv_communication_pack/msg/blvr_motor_msgs.h \

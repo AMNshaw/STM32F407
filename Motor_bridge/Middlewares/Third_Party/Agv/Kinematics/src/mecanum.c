@@ -119,14 +119,18 @@ int inverse_kine(const AgvKineMecanumConfig* cfg, const Twist2D* body_in,
 
     float tmp = cfg->L + cfg->W;
 
-    wheels_out->data[0] =
-        (body_in->x - body_in->y - tmp * (body_in->yaw)) / cfg->wheel_radius;
-    wheels_out->data[1] =
-        (body_in->x + body_in->y + tmp * (body_in->yaw)) / cfg->wheel_radius;
-    wheels_out->data[2] =
-        (body_in->x + body_in->y - tmp * (body_in->yaw)) / cfg->wheel_radius;
-    wheels_out->data[3] =
-        (body_in->x - body_in->y + tmp * (body_in->yaw)) / cfg->wheel_radius;
+    wheels_out->data[0] = cfg->axis_dir[0] *
+                          (body_in->x - body_in->y - tmp * (body_in->yaw)) /
+                          cfg->wheel_radius;
+    wheels_out->data[1] = cfg->axis_dir[1] *
+                          (body_in->x + body_in->y + tmp * (body_in->yaw)) /
+                          cfg->wheel_radius;
+    wheels_out->data[2] = cfg->axis_dir[2] *
+                          (body_in->x + body_in->y - tmp * (body_in->yaw)) /
+                          cfg->wheel_radius;
+    wheels_out->data[3] = cfg->axis_dir[3] *
+                          (body_in->x - body_in->y + tmp * (body_in->yaw)) /
+                          cfg->wheel_radius;
 
     return AGV_OK;
 }

@@ -44,6 +44,10 @@ int Kinematic_Mecanum_init(AgvKineMecanumConfig* mecanum_cfg) {
     mecanum_cfg->wheel_radius = 0.076;
     mecanum_cfg->W = 0.259;
     mecanum_cfg->L = 0.270;
+    int8_t dir[4] = {-1, 1, -1, 1};  // 跟你現在一樣的 pattern
+    for (size_t i = 0; i < 4; ++i) {
+        mecanum_cfg->axis_dir[i] = dir[i];
+    }
     return 0;
 }
 

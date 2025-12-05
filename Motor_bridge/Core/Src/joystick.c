@@ -87,6 +87,7 @@ void Joystick_Update(JoystickCmd* out, uint32_t now_ms) {
     // 4) 按鈕去抖
     uint8_t raw_left = read_js_left_raw();
     uint8_t raw_right = read_js_right_raw();
+    if (raw_right) HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_14);
     uint8_t raw_reset = read_js_reset_raw();
 
     debounce_button(raw_left, &state.btn_left, &state.btn_left_cnt);

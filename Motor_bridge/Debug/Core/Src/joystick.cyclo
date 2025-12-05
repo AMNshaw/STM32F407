@@ -3,4 +3,4 @@
 ../Core/Src/joystick.c:41:23:read_js_right_raw	1
 ../Core/Src/joystick.c:44:23:read_js_reset_raw	1
 ../Core/Src/joystick.c:48:13:debounce_button	4
-../Core/Src/joystick.c:65:6:Joystick_Update	14
+../Core/Src/joystick.c:65:6:Joystick_Update	15

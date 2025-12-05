@@ -60,7 +60,7 @@ static int Motors_blvr_destroy(AgvMotorsBase* base);
 
 static int blvr_reset(AgvMotorsBase* base);
 
-static int blvr_on_off(AgvMotorsBase* base, bool state);
+static int blvr_on_off(AgvMotorsBase* base, bool cmd);
 
 static int blvr_set_des_vel(AgvMotorsBase* base, const WheelsVel* vel_in);
 
@@ -248,10 +248,14 @@ static int blvr_reset(AgvMotorsBase* base) {
     }
     xSemaphoreGive(impl->mutex_buf_write);
 
+    HAL_GPIO_WritePin(GPIOD, GPIO_PIN_10, GPIO_PIN_RESET);
+    vTaskDelay(pdMS_TO_TICKS(100));
+    HAL_GPIO_WritePin(GPIOD, GPIO_PIN_10, GPIO_PIN_SET);
+
     return AGV_OK;
 }
 
-static int blvr_on_off(AgvMotorsBase* base, bool state) {
+static int blvr_on_off(AgvMotorsBase* base, bool cmd) {
     if (!base) return AGV_ERR_INVALID_ARG;
     MotorsBlvrImpl* impl = (MotorsBlvrImpl*)base->impl;
     if (!impl || !impl->cfg) return AGV_ERR_NO_MEMORY;
@@ -267,15 +271,14 @@ static int blvr_on_off(AgvMotorsBase* base, bool state) {
     xSemaphoreTake(impl->mutex_buf_write, portMAX_DELAY);
     for (size_t i = 0; i < axis_count; ++i) {
         bool curr_on = is_servo_on(curr_st[i]);
-        bool should_cmd = !(state && curr_on);
+        bool should_cmd = !(cmd && curr_on);
         if (should_cmd) {
             impl->pending_cmd = DRIVER;
             impl->write_buf[i].driver_cmd =
-                state ? BLVR_DRIVER_SERVO_ON : BLVR_DRIVER_SERVO_OFF;
+                cmd ? BLVR_DRIVER_SERVO_ON : BLVR_DRIVER_SERVO_OFF;
         }
     }
     xSemaphoreGive(impl->mutex_buf_write);
-
     return AGV_OK;
 }
 
@@ -349,6 +352,15 @@ static int blvr_get_state(AgvMotorsBase* base) {
     }
     xSemaphoreGive(impl->mutex_buf_read);
 
+    static size_t time = 0;
+    time++;
+    if (time == 5) {
+        for (size_t i = 0; i < axis_count; ++i) {
+            LOG(base->name, "alarm: %d", is_alarm(curr_state[i]));
+            LOG(base->name, "on_off: %d", is_servo_on(curr_state[i]));
+        }
+        time = 0;
+    }
     return AGV_OK;
 }
 

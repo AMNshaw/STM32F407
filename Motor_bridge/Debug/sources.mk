@@ -26,8 +26,6 @@ Core/Src \
 Core/Startup \
 Core/ThreadSafe \
 Drivers/STM32F4xx_HAL_Driver/Src \
-Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src \
-Middlewares/ST/STM32_USB_Host_Library/Core/Src \
 Middlewares/Third_Party/Agv/Communication_pack/src/format \
 Middlewares/Third_Party/Agv/Communication_pack/src/link \
 Middlewares/Third_Party/Agv/Communication_pack/src/protocol \
@@ -41,6 +39,4 @@ Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 \
 Middlewares/Third_Party/FreeRTOS/Source \
 Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F \
 Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang \
-USB_HOST/App \
-USB_HOST/Target \
 
