@@ -6,6 +6,7 @@
 #include "Agv_core/utils.h"
 #include "FreeRTOS.h"
 #include "queue.h"
+#include "semphr.h"
 #include "stm32f4xx_hal.h"
 
 /**
@@ -20,6 +21,8 @@ typedef struct {
 
 typedef struct {
     const AgvCommLnkUartRs485Cfg* cfg;
+
+    SemaphoreHandle_t tx_mutex;
 
     uint8_t* rx_buf;
     size_t rx_len;
@@ -48,6 +51,12 @@ static void LnkRs485_idle_handler(void* ctx, UART_HandleTypeDef* huart,
 
 int LnkRs485_on_rx_rcv(AgvCommLinkIface* iface, size_t data_len);
 
+// helpers
+
+int set_tx_mode(const AgvCommLnkUartRs485Cfg* cfg);
+
+int set_rx_mode(const AgvCommLnkUartRs485Cfg* cfg);
+
 /**
  * Private definitions
  */
@@ -58,6 +67,11 @@ int Link_uart_rs485_create(AgvCommLinkIface* out,
 
     UartRs485Impl* impl = (UartRs485Impl*)malloc(sizeof(UartRs485Impl));
     if (!impl) return AGV_ERR_NO_MEMORY;
+
+    if (!cfg->auto_DE && cfg->DE_port == NULL) {
+        free(impl);
+        return AGV_ERR_INVALID_ARG;
+    }
 
     impl->cfg = cfg;
     impl->rx_buf = (uint8_t*)malloc(cfg->max_data_len * sizeof(uint8_t));
@@ -76,6 +90,14 @@ int Link_uart_rs485_create(AgvCommLinkIface* out,
     }
     impl->num_dropped_data = 0;
 
+    impl->tx_mutex = xSemaphoreCreateMutex();
+    if (!impl->tx_mutex) {
+        vQueueDelete(impl->rx_data_queue);
+        free(impl->rx_buf);
+        free(impl);
+        return AGV_ERR_NO_MEMORY;
+    }
+
     out->impl = impl;
     out->send_bytes = LnkRs485_send_bytes;
     out->recv_bytes = LnkRs485_recv_bytes;
@@ -83,6 +105,7 @@ int Link_uart_rs485_create(AgvCommLinkIface* out,
     out->destroy = LnkRs485_destroy;
 
     if (UartIsr_Register(cfg->huart, LnkRs485_idle_handler, out) != 0) {
+        vSemaphoreDelete(impl->tx_mutex);
         vQueueDelete(impl->rx_data_queue);
         free(impl->rx_buf);
         free(impl);
@@ -91,11 +114,13 @@ int Link_uart_rs485_create(AgvCommLinkIface* out,
 
     if (HAL_UARTEx_ReceiveToIdle_DMA(cfg->huart, impl->rx_buf,
                                      cfg->max_data_len) != HAL_OK) {
+        vSemaphoreDelete(impl->tx_mutex);
         vQueueDelete(impl->rx_data_queue);
         free(impl->rx_buf);
         free(impl);
         return AGV_ERR_COMM_LINK_HAL;
     }
+    set_rx_mode(cfg);
 
     return AGV_OK;
 }
@@ -113,6 +138,11 @@ static int LnkRs485_destroy(AgvCommLinkIface* iface) {
             vQueueDelete(impl->rx_data_queue);
             impl->rx_data_queue = NULL;
         }
+        if (impl->tx_mutex) {
+            vSemaphoreDelete(impl->tx_mutex);
+            impl->tx_mutex = NULL;
+        }
+
         impl->cfg = NULL;
         free(impl);
     }
@@ -135,10 +165,13 @@ static int LnkRs485_send_bytes(AgvCommLinkIface* iface, const uint8_t* data_in,
 
     UART_HandleTypeDef* huart = impl->cfg->huart;
 
+    xSemaphoreTake(impl->tx_mutex, portMAX_DELAY);
+    set_tx_mode(impl->cfg);
     HAL_StatusTypeDef st =
         HAL_UART_Transmit(huart, (uint8_t*)data_in, (uint16_t)data_len,
                           impl->cfg->operation_timeout_ms);
-
+    set_rx_mode(impl->cfg);
+    xSemaphoreGive(impl->tx_mutex);
     if (st != HAL_OK) return AGV_ERR_COMM_LINK_HAL;
 
     HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_13);
@@ -237,6 +270,24 @@ int LnkRs485_on_rx_rcv(AgvCommLinkIface* iface, size_t data_len) {
     portYIELD_FROM_ISR(hpw);
 
     HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_13);
+
+    return AGV_OK;
+}
+
+int set_tx_mode(const AgvCommLnkUartRs485Cfg* cfg) {
+    if (!cfg) return AGV_ERR_INVALID_ARG;
+
+    if (!cfg->auto_DE)
+        HAL_GPIO_WritePin(cfg->DE_port, cfg->DE_pin, GPIO_PIN_SET);
+
+    return AGV_OK;
+}
+
+int set_rx_mode(const AgvCommLnkUartRs485Cfg* cfg) {
+    if (!cfg) return AGV_ERR_INVALID_ARG;
+
+    if (!cfg->auto_DE)
+        HAL_GPIO_WritePin(cfg->DE_port, cfg->DE_pin, GPIO_PIN_RESET);
 
     return AGV_OK;
 }

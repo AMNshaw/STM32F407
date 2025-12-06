@@ -1,6 +1,7 @@
 #ifndef AGV_COMMUNICATION_PACK__COMM_LINK_CONFIG_H_
 #define AGV_COMMUNICATION_PACK__COMM_LINK_CONFIG_H_
 
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
 
@@ -18,7 +19,9 @@ typedef struct {
 
     uint32_t operation_timeout_ms;
 
-    uint32_t char_time_10x_us;
+    bool auto_DE;
+    GPIO_TypeDef* DE_port;
+    uint16_t DE_pin;
 
     size_t queue_len;
 } AgvCommLnkUartRs485Cfg;
@@ -32,14 +35,5 @@ typedef struct {
 
     size_t queue_len;
 } AgvCommLnkUartTtlCfg;
-
-typedef struct {
-    AgvCommLinkType type;
-    union {
-        AgvCommLnkUartRs485Cfg uart_rs485_cfg;
-        /* data */
-    } u;
-
-} AgvCommLinkCfg;
 
 #endif  // AGV_COMMUNICATION_PACK__COMM_LINK_CONFIG_H_

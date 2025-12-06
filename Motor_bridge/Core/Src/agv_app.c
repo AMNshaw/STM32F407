@@ -27,6 +27,7 @@ int Motor_blvr_init(AgvMotorBlvrConfig* blvr_cfg) {
     blvr_cfg->unit_vel_rpm = 1;
 
     blvr_cfg->uart_cfg.huart = &huart3;
+    blvr_cfg->uart_cfg.auto_DE = true;
     blvr_cfg->uart_cfg.baudrate = huart3.Init.BaudRate;
     blvr_cfg->uart_cfg.max_data_len = 256;
     blvr_cfg->uart_cfg.operation_timeout_ms = 1000;
