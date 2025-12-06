@@ -43,6 +43,8 @@ static int modbusFmt_make_frame(AgvCommFormatIface* iface,
                                 const uint8_t* payload_in, size_t payload_len,
                                 uint8_t* frame_out, size_t* frame_len);
 
+static int modbusFmt_reset(AgvCommFormatIface* iface);
+
 static int modbusFmt_destroy(AgvCommFormatIface* iface);
 
 uint16_t modbus_crc16(const uint8_t* data, size_t len);
@@ -75,6 +77,7 @@ int Format_modbus_create(AgvCommFormatIface* out,
     out->feed_bytes = modbusFmt_feed_bytes;
     out->pop_payload = modbusFmt_pop_payload;
     out->make_frame = modbusFmt_make_frame;
+    out->reset = modbusFmt_reset;
     out->destroy = modbusFmt_destroy;
 
     return AGV_OK;
@@ -96,6 +99,7 @@ static int modbusFmt_destroy(AgvCommFormatIface* iface) {
     iface->feed_bytes = NULL;
     iface->pop_payload = NULL;
     iface->make_frame = NULL;
+    iface->reset = NULL;
     iface->destroy = NULL;
 
     return AGV_OK;
@@ -219,6 +223,19 @@ static int modbusFmt_make_frame(AgvCommFormatIface* iface,
     return AGV_OK;
 }
 
+static int modbusFmt_reset(AgvCommFormatIface* iface) {
+    if (!iface) return AGV_ERR_INVALID_ARG;
+    ModbusRtuFmtImpl* impl = (ModbusRtuFmtImpl*)iface->impl;
+    if (!impl) return AGV_ERR_NO_MEMORY;
+
+    impl->state = ST_WAIT_ADDR;
+    impl->has_payload = 0;
+    impl->payload_len = 0;
+    impl->byte_idx = 0;
+
+    return AGV_OK;
+}
+
 int modbusFmt_set_check_item(AgvCommFormatIface* iface, uint8_t addr,
                              uint8_t func, size_t expected_bytes) {
     if (!iface) return AGV_ERR_INVALID_ARG;
@@ -229,10 +246,7 @@ int modbusFmt_set_check_item(AgvCommFormatIface* iface, uint8_t addr,
     impl->expct_address = addr;
     impl->expct_function = func;
     impl->expct_bytes = expected_bytes;
-    impl->state = ST_WAIT_ADDR;
-    impl->has_payload = 0;
-    impl->payload_len = 0;
-    impl->byte_idx = 0;
+    modbusFmt_reset(iface);
 
     return AGV_OK;
 }

@@ -109,8 +109,6 @@ int main(void)
   MX_ADC1_Init();
   MX_CAN1_Init();
   MX_USART6_UART_Init();
-  MX_I2C2_Init();
-  MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
     Agv_garmin_init(&agv_core, &host_ros_cfg, &motor_blvr_cfg,
                     &kine_mecanum_cfg, &ctrl_passthrough_cfg);

@@ -2,5 +2,5 @@
 ../Middlewares/Third_Party/Agv/Kinematics/src/mecanum.c:53:12:Kinematics_mecanum_destroy	24	static
 ../Middlewares/Third_Party/Agv/Kinematics/src/mecanum.c:68:12:mecanum_calculate_wheels_vel	32	static
 ../Middlewares/Third_Party/Agv/Kinematics/src/mecanum.c:79:12:mecanum_calculate_odom	32	static
-../Middlewares/Third_Party/Agv/Kinematics/src/mecanum.c:97:5:forward_kine	24	static
-../Middlewares/Third_Party/Agv/Kinematics/src/mecanum.c:116:5:inverse_kine	32	static
+../Middlewares/Third_Party/Agv/Kinematics/src/mecanum.c:97:5:forward_kine	48	static
+../Middlewares/Third_Party/Agv/Kinematics/src/mecanum.c:118:5:inverse_kine	48	static

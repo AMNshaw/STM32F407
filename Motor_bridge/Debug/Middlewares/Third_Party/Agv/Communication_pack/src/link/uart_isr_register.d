@@ -1,6 +1,6 @@
 Middlewares/Third_Party/Agv/Communication_pack/src/link/uart_isr_register.o: \
  ../Middlewares/Third_Party/Agv/Communication_pack/src/link/uart_isr_register.c \
- C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include/Agv_communication_pack/link/uart_isr_register.h \
+ C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include/Agv_communication_pack/link/uart_isr_register.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
@@ -36,7 +36,7 @@ Middlewares/Third_Party/Agv/Communication_pack/src/link/uart_isr_register.o: \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
-C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include/Agv_communication_pack/link/uart_isr_register.h:
+C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include/Agv_communication_pack/link/uart_isr_register.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 ../Core/Inc/stm32f4xx_hal_conf.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h:

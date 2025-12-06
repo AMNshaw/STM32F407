@@ -6,10 +6,8 @@ Core/Src/freertos.o: ../Core/Src/freertos.c \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
  ../Core/Inc/main.h ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
@@ -45,31 +43,33 @@ Core/Src/freertos.o: ../Core/Src/freertos.c \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/error_codes/error_common.h \
- C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/utils.h \
+ ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h \
+ ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
+ C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/error_codes/error_common.h \
+ C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/utils.h \
  ../Core/Inc/adc.h ../Core/Inc/main.h ../Core/Inc/agv_app.h \
- C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/core.h \
- C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/agv_types.h \
- C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/modules/control_law_base.h \
- C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/modules/host_communication_base.h \
- C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/modules/kinematics_base.h \
- C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/modules/motors_base.h \
+ C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/core.h \
+ C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/agv_types.h \
+ C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/modules/control_law_base.h \
+ C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/modules/host_communication_base.h \
+ C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/modules/kinematics_base.h \
+ C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/modules/motors_base.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
- C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include/Agv_factory/agv_factory.h \
- C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include/Agv_factory/control_law_builder.h \
- C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include/Agv_control/passthrough_config.h \
- C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include/Agv_control/pid_config.h \
- C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include/Agv_factory/host_communication_builder.h \
- C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include/Agv_host_communication/ros_host_config.h \
- C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include/Agv_communication_pack/configs/comm_format_config.h \
- C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include/Agv_communication_pack/configs/comm_link_config.h \
- C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include/Agv_communication_pack/configs/comm_protocol_config.h \
- C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include/Agv_factory/kinematics_builder.h \
- C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include/Agv_kinematics/mecanum_config.h \
- C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include/Agv_factory/motors_builder.h \
- C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include/Agv_motors/blvr_config.h \
+ C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include/Agv_factory/agv_factory.h \
+ C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include/Agv_factory/control_law_builder.h \
+ C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include/Agv_control/passthrough_config.h \
+ C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include/Agv_control/pid_config.h \
+ C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include/Agv_factory/host_communication_builder.h \
+ C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include/Agv_host_communication/ros_host_config.h \
+ C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include/Agv_communication_pack/configs/comm_format_config.h \
+ C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include/Agv_communication_pack/configs/comm_link_config.h \
+ C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include/Agv_communication_pack/configs/comm_protocol_config.h \
+ C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include/Agv_factory/kinematics_builder.h \
+ C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include/Agv_kinematics/mecanum_config.h \
+ C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include/Agv_factory/motors_builder.h \
+ C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include/Agv_motors/blvr_config.h \
  ../Core/Inc/joystick.h ../Core/Inc/usart.h
 ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h:
 ../Core/Inc/FreeRTOSConfig.h:
@@ -78,10 +78,8 @@ Core/Src/freertos.o: ../Core/Src/freertos.c \
 ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h:
 ../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h:
 ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h:
-../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h:
 ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h:
 ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h:
-../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
 ../Core/Inc/main.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 ../Core/Inc/stm32f4xx_hal_conf.h:
@@ -118,32 +116,34 @@ Core/Src/freertos.o: ../Core/Src/freertos.c \
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:
-C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/error_codes/error_common.h:
-C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/utils.h:
+../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h:
+../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
+C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/error_codes/error_common.h:
+C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/utils.h:
 ../Core/Inc/adc.h:
 ../Core/Inc/main.h:
 ../Core/Inc/agv_app.h:
-C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/core.h:
-C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/agv_types.h:
-C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/modules/control_law_base.h:
-C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/modules/host_communication_base.h:
-C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/modules/kinematics_base.h:
-C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/modules/motors_base.h:
+C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/core.h:
+C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/agv_types.h:
+C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/modules/control_law_base.h:
+C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/modules/host_communication_base.h:
+C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/modules/kinematics_base.h:
+C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/modules/motors_base.h:
 ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h:
 ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h:
 ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h:
-C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include/Agv_factory/agv_factory.h:
-C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include/Agv_factory/control_law_builder.h:
-C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include/Agv_control/passthrough_config.h:
-C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include/Agv_control/pid_config.h:
-C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include/Agv_factory/host_communication_builder.h:
-C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include/Agv_host_communication/ros_host_config.h:
-C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include/Agv_communication_pack/configs/comm_format_config.h:
-C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include/Agv_communication_pack/configs/comm_link_config.h:
-C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include/Agv_communication_pack/configs/comm_protocol_config.h:
-C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include/Agv_factory/kinematics_builder.h:
-C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include/Agv_kinematics/mecanum_config.h:
-C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include/Agv_factory/motors_builder.h:
-C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include/Agv_motors/blvr_config.h:
+C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include/Agv_factory/agv_factory.h:
+C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include/Agv_factory/control_law_builder.h:
+C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include/Agv_control/passthrough_config.h:
+C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include/Agv_control/pid_config.h:
+C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include/Agv_factory/host_communication_builder.h:
+C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include/Agv_host_communication/ros_host_config.h:
+C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include/Agv_communication_pack/configs/comm_format_config.h:
+C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include/Agv_communication_pack/configs/comm_link_config.h:
+C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include/Agv_communication_pack/configs/comm_protocol_config.h:
+C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include/Agv_factory/kinematics_builder.h:
+C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include/Agv_kinematics/mecanum_config.h:
+C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include/Agv_factory/motors_builder.h:
+C:/Users/User/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include/Agv_motors/blvr_config.h:
 ../Core/Inc/joystick.h:
 ../Core/Inc/usart.h:

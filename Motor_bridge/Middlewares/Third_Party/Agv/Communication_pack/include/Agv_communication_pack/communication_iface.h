@@ -31,6 +31,7 @@ typedef struct AgvCommFormatIface {
     int (*make_frame)(struct AgvCommFormatIface* iface,
                       const uint8_t* payload_in, size_t payload_len,
                       uint8_t* frame_out, size_t* frame_len);
+    int (*reset)(struct AgvCommFormatIface* iface);
     int (*destroy)(struct AgvCommFormatIface* iface);
     void* impl;
 } AgvCommFormatIface;

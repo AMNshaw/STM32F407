@@ -35,15 +35,19 @@ typedef struct {
     int has_payload;
 } RosFmtImpl;
 
-static int rosFmt_destroy(AgvCommFormatIface* iface);
-
 static int rosFmt_feed_bytes(AgvCommFormatIface* iface, const uint8_t* bytes_in,
                              size_t bytes_len);
+
 static int rosFmt_pop_payload(AgvCommFormatIface* iface, uint8_t* payload_out,
                               size_t* payload_len);
+
 static int rosFmt_make_frame(AgvCommFormatIface* iface,
                              const uint8_t* payload_in, size_t payload_len,
                              uint8_t* frame_out, size_t* frame_len);
+
+static int rosFmt_reset(AgvCommFormatIface* iface);
+
+static int rosFmt_destroy(AgvCommFormatIface* iface);
 
 uint8_t crc8_compute(const uint8_t* data, size_t len);
 
@@ -248,6 +252,19 @@ static int rosFmt_make_frame(AgvCommFormatIface* iface, const uint8_t* payload,
 
     *frame_len = idx;
     return 0;
+}
+
+static int rosFmt_reset(AgvCommFormatIface* iface) {
+    if (!iface) return AGV_ERR_INVALID_ARG;
+    RosFmtImpl* impl = (RosFmtImpl*)iface->impl;
+    if (!impl) return AGV_ERR_NO_MEMORY;
+
+    impl->state = ST_WAIT_H0;
+    impl->has_payload = 0;
+    impl->payload_len = 0;
+    impl->data_idx = 0;
+
+    return AGV_OK;
 }
 
 uint8_t crc8_compute(const uint8_t* data, size_t len) {
