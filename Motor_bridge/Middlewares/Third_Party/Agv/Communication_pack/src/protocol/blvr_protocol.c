@@ -195,18 +195,19 @@ static int BlvrProto_make_payload(AgvCommProtocolIface* iface,
     size_t idx = 0;
     switch (blvr_msg->msg_type) {
         case READ_WRITE: {
-            const uint16_t reg_start_read = BLVR_DATA_REG_ADDRESS_DRIVER_OUT_ST;
+            const uint16_t reg_start_read =
+                BLVR_DATA_REG_ADDRESS_READ_DRIVER_ST;
             const uint16_t totol_read_rgstr_count =
                 cfg->axis_count * (BLVR_DATA_READ_REG_COUNT +
                                    1);  // +1 depends on the document p281.
 
             uint16_t reg_start_write, totol_write_rgstr_count;
             if (blvr_msg->u.write_msg.write_type == SET_DRIVER) {
-                reg_start_write = BLVR_DATA_REG_ADDRESS_CMD_DRIVER;
+                reg_start_write = BLVR_DATA_REG_ADDRESS_WRITE_CMD_DRIVER;
                 totol_write_rgstr_count =
                     cfg->axis_count * 1;  // driver state only have 1 registers
             } else if (blvr_msg->u.write_msg.write_type == SET_MOVE) {
-                reg_start_write = BLVR_DATA_REG_ADDRESS_CMD_VEL;
+                reg_start_write = BLVR_DATA_REG_ADDRESS_WRITE_CMD_VEL;
                 totol_write_rgstr_count =
                     cfg->axis_count * BLVR_DATA_WRITE_REG_COUNT;
             }
