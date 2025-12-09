@@ -74,8 +74,8 @@ all: main-build
 main-build: Motor_bridge.elf secondary-outputs
 
 # Tool invocations
-Motor_bridge.elf Motor_bridge.map: $(OBJS) $(USER_OBJS) C:\Users\User\Desktop\STM32F407\Motor_bridge\STM32F407VGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "Motor_bridge.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\User\Desktop\STM32F407\Motor_bridge\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Motor_bridge.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
+Motor_bridge.elf Motor_bridge.map: $(OBJS) $(USER_OBJS) C:\Users\liushaw\Desktop\STM32F407\Motor_bridge\STM32F407VGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "Motor_bridge.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\liushaw\Desktop\STM32F407\Motor_bridge\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Motor_bridge.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

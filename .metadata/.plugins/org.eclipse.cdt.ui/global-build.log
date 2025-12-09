@@ -1,370 +1,11 @@
-14:54:15 **** Incremental Build of configuration Debug for project Motor_bridge ****
+14:04:48 **** Incremental Build of configuration Debug for project Motor_bridge ****
 make -j18 all 
-arm-none-eabi-gcc "../Middlewares/Third_Party/Agv/Motors/src/blvr.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/Third_Party/Agv/Motors/src/blvr.d" -MT"Middlewares/Third_Party/Agv/Motors/src/blvr.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/Third_Party/Agv/Motors/src/blvr.o"
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'blvr_get_state':
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:352:13: warning: variable 'curr_state' set but not used [-Wunused-but-set-variable]
-  352 |     int32_t curr_state[axis_count];
-      |             ^~~~~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'rad_s_to_regVelUnit':
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:485:21: warning: implicit declaration of function 'lroundf' [-Wimplicit-function-declaration]
-  485 |     return (int32_t)lroundf(rpm_f / unit_rpm);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:15:1: note: include '<math.h>' or provide a declaration of 'lroundf'
-   14 | #include "semphr.h"
-  +++ |+#include <math.h>
-   15 | 
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:485:21: warning: incompatible implicit declaration of built-in function 'lroundf' [-Wbuiltin-declaration-mismatch]
-  485 |     return (int32_t)lroundf(rpm_f / unit_rpm);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:485:21: note: include '<math.h>' or provide a declaration of 'lroundf'
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'rad_to_regAngUnit':
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:495:21: warning: incompatible implicit declaration of built-in function 'lroundf' [-Wbuiltin-declaration-mismatch]
-  495 |     return (int32_t)lroundf(degree / unit_degree);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:495:21: note: include '<math.h>' or provide a declaration of 'lroundf'
-arm-none-eabi-gcc -o "Motor_bridge.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\liushaw\Desktop\STM32F407\Motor_bridge\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Motor_bridge.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: Motor_bridge.elf
- 
-arm-none-eabi-size  Motor_bridge.elf 
-arm-none-eabi-objdump -h -S Motor_bridge.elf  > "Motor_bridge.list"
-   text	   data	    bss	    dec	    hex	filename
-  79172	    472	  72392	 152036	  251e4	Motor_bridge.elf
-Finished building: default.size.stdout
- 
-Finished building: Motor_bridge.list
- 
-14:55:42 **** Incremental Build of configuration Debug for project Motor_bridge ****
-make -j18 all 
-arm-none-eabi-size  Motor_bridge.elf 
-   text	   data	    bss	    dec	    hex	filename
-  79172	    472	  72392	 152036	  251e4	Motor_bridge.elf
-Finished building: default.size.stdout
- 
-15:07:32 **** Incremental Build of configuration Debug for project Motor_bridge ****
-make -j18 all 
-arm-none-eabi-size  Motor_bridge.elf 
-   text	   data	    bss	    dec	    hex	filename
-  79172	    472	  72392	 152036	  251e4	Motor_bridge.elf
-Finished building: default.size.stdout
- 
-15:23:54 **** Incremental Build of configuration Debug for project Motor_bridge ****
-make -j18 all 
-arm-none-eabi-gcc "../Middlewares/Third_Party/Agv/Motors/src/blvr.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/Third_Party/Agv/Motors/src/blvr.d" -MT"Middlewares/Third_Party/Agv/Motors/src/blvr.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/Third_Party/Agv/Motors/src/blvr.o"
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'blvr_get_state':
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:349:13: warning: variable 'curr_state' set but not used [-Wunused-but-set-variable]
-  349 |     int32_t curr_state[axis_count];
-      |             ^~~~~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'rad_s_to_regVelUnit':
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:482:21: warning: implicit declaration of function 'lroundf' [-Wimplicit-function-declaration]
-  482 |     return (int32_t)lroundf(rpm_f / unit_rpm);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:15:1: note: include '<math.h>' or provide a declaration of 'lroundf'
-   14 | #include "semphr.h"
-  +++ |+#include <math.h>
-   15 | 
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:482:21: warning: incompatible implicit declaration of built-in function 'lroundf' [-Wbuiltin-declaration-mismatch]
-  482 |     return (int32_t)lroundf(rpm_f / unit_rpm);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:482:21: note: include '<math.h>' or provide a declaration of 'lroundf'
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'rad_to_regAngUnit':
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:492:21: warning: incompatible implicit declaration of built-in function 'lroundf' [-Wbuiltin-declaration-mismatch]
-  492 |     return (int32_t)lroundf(degree / unit_degree);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:492:21: note: include '<math.h>' or provide a declaration of 'lroundf'
-arm-none-eabi-gcc -o "Motor_bridge.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\liushaw\Desktop\STM32F407\Motor_bridge\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Motor_bridge.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: Motor_bridge.elf
- 
-arm-none-eabi-size  Motor_bridge.elf 
-arm-none-eabi-objdump -h -S Motor_bridge.elf  > "Motor_bridge.list"
-   text	   data	    bss	    dec	    hex	filename
-  79156	    472	  72392	 152020	  251d4	Motor_bridge.elf
-Finished building: default.size.stdout
- 
-Finished building: Motor_bridge.list
- 
-15:25:32 **** Incremental Build of configuration Debug for project Motor_bridge ****
-make -j18 all 
-arm-none-eabi-gcc "../Middlewares/Third_Party/Agv/Motors/src/blvr.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/Third_Party/Agv/Motors/src/blvr.d" -MT"Middlewares/Third_Party/Agv/Motors/src/blvr.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/Third_Party/Agv/Motors/src/blvr.o"
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'blvr_get_state':
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:350:13: warning: variable 'curr_state' set but not used [-Wunused-but-set-variable]
-  350 |     int32_t curr_state[axis_count];
-      |             ^~~~~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'rad_s_to_regVelUnit':
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:483:21: warning: implicit declaration of function 'lroundf' [-Wimplicit-function-declaration]
-  483 |     return (int32_t)lroundf(rpm_f / unit_rpm);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:15:1: note: include '<math.h>' or provide a declaration of 'lroundf'
-   14 | #include "semphr.h"
-  +++ |+#include <math.h>
-   15 | 
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:483:21: warning: incompatible implicit declaration of built-in function 'lroundf' [-Wbuiltin-declaration-mismatch]
-  483 |     return (int32_t)lroundf(rpm_f / unit_rpm);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:483:21: note: include '<math.h>' or provide a declaration of 'lroundf'
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'rad_to_regAngUnit':
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:493:21: warning: incompatible implicit declaration of built-in function 'lroundf' [-Wbuiltin-declaration-mismatch]
-  493 |     return (int32_t)lroundf(degree / unit_degree);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:493:21: note: include '<math.h>' or provide a declaration of 'lroundf'
-arm-none-eabi-gcc -o "Motor_bridge.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\liushaw\Desktop\STM32F407\Motor_bridge\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Motor_bridge.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: Motor_bridge.elf
- 
-arm-none-eabi-size  Motor_bridge.elf 
-arm-none-eabi-objdump -h -S Motor_bridge.elf  > "Motor_bridge.list"
-   text	   data	    bss	    dec	    hex	filename
-  79156	    472	  72392	 152020	  251d4	Motor_bridge.elf
-Finished building: default.size.stdout
- 
-Finished building: Motor_bridge.list
- 
-15:27:18 **** Incremental Build of configuration Debug for project Motor_bridge ****
-make -j18 all 
-arm-none-eabi-gcc "../Middlewares/Third_Party/Agv/Motors/src/blvr.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/Third_Party/Agv/Motors/src/blvr.d" -MT"Middlewares/Third_Party/Agv/Motors/src/blvr.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/Third_Party/Agv/Motors/src/blvr.o"
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'blvr_get_state':
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:349:13: warning: variable 'curr_state' set but not used [-Wunused-but-set-variable]
-  349 |     int32_t curr_state[axis_count];
-      |             ^~~~~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'rad_s_to_regVelUnit':
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:482:21: warning: implicit declaration of function 'lroundf' [-Wimplicit-function-declaration]
-  482 |     return (int32_t)lroundf(rpm_f / unit_rpm);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:15:1: note: include '<math.h>' or provide a declaration of 'lroundf'
-   14 | #include "semphr.h"
-  +++ |+#include <math.h>
-   15 | 
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:482:21: warning: incompatible implicit declaration of built-in function 'lroundf' [-Wbuiltin-declaration-mismatch]
-  482 |     return (int32_t)lroundf(rpm_f / unit_rpm);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:482:21: note: include '<math.h>' or provide a declaration of 'lroundf'
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'rad_to_regAngUnit':
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:492:21: warning: incompatible implicit declaration of built-in function 'lroundf' [-Wbuiltin-declaration-mismatch]
-  492 |     return (int32_t)lroundf(degree / unit_degree);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:492:21: note: include '<math.h>' or provide a declaration of 'lroundf'
-arm-none-eabi-gcc -o "Motor_bridge.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\liushaw\Desktop\STM32F407\Motor_bridge\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Motor_bridge.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: Motor_bridge.elf
- 
-arm-none-eabi-size  Motor_bridge.elf 
-arm-none-eabi-objdump -h -S Motor_bridge.elf  > "Motor_bridge.list"
-   text	   data	    bss	    dec	    hex	filename
-  79156	    472	  72392	 152020	  251d4	Motor_bridge.elf
-Finished building: default.size.stdout
- 
-Finished building: Motor_bridge.list
- 
-15:28:59 **** Incremental Build of configuration Debug for project Motor_bridge ****
-make -j18 all 
-arm-none-eabi-gcc "../Middlewares/Third_Party/Agv/Motors/src/blvr.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/Third_Party/Agv/Motors/src/blvr.d" -MT"Middlewares/Third_Party/Agv/Motors/src/blvr.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/Third_Party/Agv/Motors/src/blvr.o"
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'blvr_get_state':
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:352:13: warning: variable 'curr_state' set but not used [-Wunused-but-set-variable]
-  352 |     int32_t curr_state[axis_count];
-      |             ^~~~~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'rad_s_to_regVelUnit':
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:485:21: warning: implicit declaration of function 'lroundf' [-Wimplicit-function-declaration]
-  485 |     return (int32_t)lroundf(rpm_f / unit_rpm);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:15:1: note: include '<math.h>' or provide a declaration of 'lroundf'
-   14 | #include "semphr.h"
-  +++ |+#include <math.h>
-   15 | 
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:485:21: warning: incompatible implicit declaration of built-in function 'lroundf' [-Wbuiltin-declaration-mismatch]
-  485 |     return (int32_t)lroundf(rpm_f / unit_rpm);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:485:21: note: include '<math.h>' or provide a declaration of 'lroundf'
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'rad_to_regAngUnit':
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:495:21: warning: incompatible implicit declaration of built-in function 'lroundf' [-Wbuiltin-declaration-mismatch]
-  495 |     return (int32_t)lroundf(degree / unit_degree);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:495:21: note: include '<math.h>' or provide a declaration of 'lroundf'
-arm-none-eabi-gcc -o "Motor_bridge.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\liushaw\Desktop\STM32F407\Motor_bridge\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Motor_bridge.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: Motor_bridge.elf
- 
-arm-none-eabi-size  Motor_bridge.elf 
-arm-none-eabi-objdump -h -S Motor_bridge.elf  > "Motor_bridge.list"
-   text	   data	    bss	    dec	    hex	filename
-  79172	    472	  72392	 152036	  251e4	Motor_bridge.elf
-Finished building: default.size.stdout
- 
-Finished building: Motor_bridge.list
- 
-15:33:25 **** Incremental Build of configuration Debug for project Motor_bridge ****
-make -j18 all 
-arm-none-eabi-gcc "../Middlewares/Third_Party/Agv/Motors/src/blvr.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/Third_Party/Agv/Motors/src/blvr.d" -MT"Middlewares/Third_Party/Agv/Motors/src/blvr.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/Third_Party/Agv/Motors/src/blvr.o"
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'rad_s_to_regVelUnit':
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:491:21: warning: implicit declaration of function 'lroundf' [-Wimplicit-function-declaration]
-  491 |     return (int32_t)lroundf(rpm_f / unit_rpm);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:15:1: note: include '<math.h>' or provide a declaration of 'lroundf'
-   14 | #include "semphr.h"
-  +++ |+#include <math.h>
-   15 | 
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:491:21: warning: incompatible implicit declaration of built-in function 'lroundf' [-Wbuiltin-declaration-mismatch]
-  491 |     return (int32_t)lroundf(rpm_f / unit_rpm);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:491:21: note: include '<math.h>' or provide a declaration of 'lroundf'
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'rad_to_regAngUnit':
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:501:21: warning: incompatible implicit declaration of built-in function 'lroundf' [-Wbuiltin-declaration-mismatch]
-  501 |     return (int32_t)lroundf(degree / unit_degree);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:501:21: note: include '<math.h>' or provide a declaration of 'lroundf'
-arm-none-eabi-gcc -o "Motor_bridge.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\liushaw\Desktop\STM32F407\Motor_bridge\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Motor_bridge.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: Motor_bridge.elf
- 
-arm-none-eabi-size  Motor_bridge.elf 
-arm-none-eabi-objdump -h -S Motor_bridge.elf  > "Motor_bridge.list"
-   text	   data	    bss	    dec	    hex	filename
-  79292	    472	  72392	 152156	  2525c	Motor_bridge.elf
-Finished building: default.size.stdout
- 
-Finished building: Motor_bridge.list
- 
-15:36:04 **** Incremental Build of configuration Debug for project Motor_bridge ****
-make -j18 all 
-arm-none-eabi-gcc "../Middlewares/Third_Party/Agv/Motors/src/blvr.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/Third_Party/Agv/Motors/src/blvr.d" -MT"Middlewares/Third_Party/Agv/Motors/src/blvr.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/Third_Party/Agv/Motors/src/blvr.o"
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'rad_s_to_regVelUnit':
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:495:21: warning: implicit declaration of function 'lroundf' [-Wimplicit-function-declaration]
-  495 |     return (int32_t)lroundf(rpm_f / unit_rpm);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:15:1: note: include '<math.h>' or provide a declaration of 'lroundf'
-   14 | #include "semphr.h"
-  +++ |+#include <math.h>
-   15 | 
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:495:21: warning: incompatible implicit declaration of built-in function 'lroundf' [-Wbuiltin-declaration-mismatch]
-  495 |     return (int32_t)lroundf(rpm_f / unit_rpm);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:495:21: note: include '<math.h>' or provide a declaration of 'lroundf'
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'rad_to_regAngUnit':
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:505:21: warning: incompatible implicit declaration of built-in function 'lroundf' [-Wbuiltin-declaration-mismatch]
-  505 |     return (int32_t)lroundf(degree / unit_degree);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:505:21: note: include '<math.h>' or provide a declaration of 'lroundf'
-arm-none-eabi-gcc -o "Motor_bridge.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\liushaw\Desktop\STM32F407\Motor_bridge\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Motor_bridge.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: Motor_bridge.elf
- 
-arm-none-eabi-size  Motor_bridge.elf 
-arm-none-eabi-objdump -h -S Motor_bridge.elf  > "Motor_bridge.list"
-   text	   data	    bss	    dec	    hex	filename
-  79308	    472	  72392	 152172	  2526c	Motor_bridge.elf
-Finished building: default.size.stdout
- 
-Finished building: Motor_bridge.list
- 
-16:04:39 **** Incremental Build of configuration Debug for project Motor_bridge ****
-make -j18 all 
-arm-none-eabi-gcc "../Middlewares/Third_Party/Agv/Motors/src/blvr.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/Third_Party/Agv/Motors/src/blvr.d" -MT"Middlewares/Third_Party/Agv/Motors/src/blvr.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/Third_Party/Agv/Motors/src/blvr.o"
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'rad_s_to_regVelUnit':
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:491:21: warning: implicit declaration of function 'lroundf' [-Wimplicit-function-declaration]
-  491 |     return (int32_t)lroundf(rpm_f / unit_rpm);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:15:1: note: include '<math.h>' or provide a declaration of 'lroundf'
-   14 | #include "semphr.h"
-  +++ |+#include <math.h>
-   15 | 
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:491:21: warning: incompatible implicit declaration of built-in function 'lroundf' [-Wbuiltin-declaration-mismatch]
-  491 |     return (int32_t)lroundf(rpm_f / unit_rpm);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:491:21: note: include '<math.h>' or provide a declaration of 'lroundf'
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'rad_to_regAngUnit':
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:501:21: warning: incompatible implicit declaration of built-in function 'lroundf' [-Wbuiltin-declaration-mismatch]
-  501 |     return (int32_t)lroundf(degree / unit_degree);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:501:21: note: include '<math.h>' or provide a declaration of 'lroundf'
-arm-none-eabi-gcc -o "Motor_bridge.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\liushaw\Desktop\STM32F407\Motor_bridge\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Motor_bridge.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: Motor_bridge.elf
- 
-arm-none-eabi-size  Motor_bridge.elf 
-arm-none-eabi-objdump -h -S Motor_bridge.elf  > "Motor_bridge.list"
-   text	   data	    bss	    dec	    hex	filename
-  79292	    472	  72392	 152156	  2525c	Motor_bridge.elf
-Finished building: default.size.stdout
- 
-Finished building: Motor_bridge.list
- 
-16:06:58 **** Incremental Build of configuration Debug for project Motor_bridge ****
-make -j18 all 
-arm-none-eabi-gcc "../Middlewares/Third_Party/Agv/Motors/src/blvr.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/Third_Party/Agv/Motors/src/blvr.d" -MT"Middlewares/Third_Party/Agv/Motors/src/blvr.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/Third_Party/Agv/Motors/src/blvr.o"
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'rad_s_to_regVelUnit':
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:491:21: warning: implicit declaration of function 'lroundf' [-Wimplicit-function-declaration]
-  491 |     return (int32_t)lroundf(rpm_f / unit_rpm);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:15:1: note: include '<math.h>' or provide a declaration of 'lroundf'
-   14 | #include "semphr.h"
-  +++ |+#include <math.h>
-   15 | 
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:491:21: warning: incompatible implicit declaration of built-in function 'lroundf' [-Wbuiltin-declaration-mismatch]
-  491 |     return (int32_t)lroundf(rpm_f / unit_rpm);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:491:21: note: include '<math.h>' or provide a declaration of 'lroundf'
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'rad_to_regAngUnit':
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:501:21: warning: incompatible implicit declaration of built-in function 'lroundf' [-Wbuiltin-declaration-mismatch]
-  501 |     return (int32_t)lroundf(degree / unit_degree);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:501:21: note: include '<math.h>' or provide a declaration of 'lroundf'
-arm-none-eabi-gcc -o "Motor_bridge.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\liushaw\Desktop\STM32F407\Motor_bridge\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Motor_bridge.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: Motor_bridge.elf
- 
-arm-none-eabi-size  Motor_bridge.elf 
-arm-none-eabi-objdump -h -S Motor_bridge.elf  > "Motor_bridge.list"
-   text	   data	    bss	    dec	    hex	filename
-  79292	    472	  72392	 152156	  2525c	Motor_bridge.elf
-Finished building: default.size.stdout
- 
-Finished building: Motor_bridge.list
- 
-16:08:11 **** Incremental Build of configuration Debug for project Motor_bridge ****
-make -j18 all 
-arm-none-eabi-gcc "../Middlewares/Third_Party/Agv/Motors/src/blvr.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/Third_Party/Agv/Motors/src/blvr.d" -MT"Middlewares/Third_Party/Agv/Motors/src/blvr.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/Third_Party/Agv/Motors/src/blvr.o"
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'rad_s_to_regVelUnit':
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:491:21: warning: implicit declaration of function 'lroundf' [-Wimplicit-function-declaration]
-  491 |     return (int32_t)lroundf(rpm_f / unit_rpm);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:15:1: note: include '<math.h>' or provide a declaration of 'lroundf'
-   14 | #include "semphr.h"
-  +++ |+#include <math.h>
-   15 | 
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:491:21: warning: incompatible implicit declaration of built-in function 'lroundf' [-Wbuiltin-declaration-mismatch]
-  491 |     return (int32_t)lroundf(rpm_f / unit_rpm);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:491:21: note: include '<math.h>' or provide a declaration of 'lroundf'
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'rad_to_regAngUnit':
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:501:21: warning: incompatible implicit declaration of built-in function 'lroundf' [-Wbuiltin-declaration-mismatch]
-  501 |     return (int32_t)lroundf(degree / unit_degree);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:501:21: note: include '<math.h>' or provide a declaration of 'lroundf'
-arm-none-eabi-gcc -o "Motor_bridge.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\liushaw\Desktop\STM32F407\Motor_bridge\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Motor_bridge.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: Motor_bridge.elf
- 
-arm-none-eabi-size  Motor_bridge.elf 
-arm-none-eabi-objdump -h -S Motor_bridge.elf  > "Motor_bridge.list"
-   text	   data	    bss	    dec	    hex	filename
-  79292	    472	  72392	 152156	  2525c	Motor_bridge.elf
-Finished building: default.size.stdout
- 
-Finished building: Motor_bridge.list
- 
-16:19:26 **** Incremental Build of configuration Debug for project Motor_bridge ****
-make -j18 all 
-arm-none-eabi-gcc "../Middlewares/Third_Party/Agv/Motors/src/blvr.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/Third_Party/Agv/Motors/src/blvr.d" -MT"Middlewares/Third_Party/Agv/Motors/src/blvr.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/Third_Party/Agv/Motors/src/blvr.o"
-arm-none-eabi-gcc "../Core/ThreadSafe/newlib_lock_glue.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/ThreadSafe/newlib_lock_glue.d" -MT"Core/ThreadSafe/newlib_lock_glue.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/ThreadSafe/newlib_lock_glue.o"
+arm-none-eabi-gcc "../Middlewares/Third_Party/Agv/Kinematics/src/mecanum.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/Third_Party/Agv/Kinematics/src/mecanum.d" -MT"Middlewares/Third_Party/Agv/Kinematics/src/mecanum.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/Third_Party/Agv/Kinematics/src/mecanum.o"
 arm-none-eabi-gcc "../Core/Src/freertos.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/freertos.d" -MT"Core/Src/freertos.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/freertos.o"
-arm-none-eabi-gcc "../Core/Src/gpio.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/gpio.d" -MT"Core/Src/gpio.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/gpio.o"
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'rad_s_to_regVelUnit':
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:491:21: warning: implicit declaration of function 'lroundf' [-Wimplicit-function-declaration]
-  491 |     return (int32_t)lroundf(rpm_f / unit_rpm);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:15:1: note: include '<math.h>' or provide a declaration of 'lroundf'
-   14 | #include "semphr.h"
-  +++ |+#include <math.h>
-   15 | 
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:491:21: warning: incompatible implicit declaration of built-in function 'lroundf' [-Wbuiltin-declaration-mismatch]
-  491 |     return (int32_t)lroundf(rpm_f / unit_rpm);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:491:21: note: include '<math.h>' or provide a declaration of 'lroundf'
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'rad_to_regAngUnit':
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:501:21: warning: incompatible implicit declaration of built-in function 'lroundf' [-Wbuiltin-declaration-mismatch]
-  501 |     return (int32_t)lroundf(degree / unit_degree);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:501:21: note: include '<math.h>' or provide a declaration of 'lroundf'
+../Middlewares/Third_Party/Agv/Kinematics/src/mecanum.c: In function 'Kinematics_mecanum_create':
+../Middlewares/Third_Party/Agv/Kinematics/src/mecanum.c:49:5: warning: implicit declaration of function 'LOG' [-Wimplicit-function-declaration]
+   49 |     LOG(out->name, "Kinematics module created");
+      |     ^~~
 ../Core/Src/freertos.c: In function 'AgvHeartbeatTask':
 ../Core/Src/freertos.c:191:9: warning: variable 'code' set but not used [-Wunused-but-set-variable]
   191 |     int code = AGV_OK;
@@ -379,235 +20,40 @@ Finished building target: Motor_bridge.elf
 arm-none-eabi-size  Motor_bridge.elf 
 arm-none-eabi-objdump -h -S Motor_bridge.elf  > "Motor_bridge.list"
    text	   data	    bss	    dec	    hex	filename
-  79308	    472	  72392	 152172	  2526c	Motor_bridge.elf
+  79388	    472	  72232	 152092	  2521c	Motor_bridge.elf
 Finished building: default.size.stdout
  
 Finished building: Motor_bridge.list
  
-16:20:28 **** Incremental Build of configuration Debug for project Motor_bridge ****
-make -j18 all 
-arm-none-eabi-gcc "../Middlewares/Third_Party/Agv/Motors/src/blvr.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/Third_Party/Agv/Motors/src/blvr.d" -MT"Middlewares/Third_Party/Agv/Motors/src/blvr.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/Third_Party/Agv/Motors/src/blvr.o"
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'rad_s_to_regVelUnit':
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:491:21: warning: implicit declaration of function 'lroundf' [-Wimplicit-function-declaration]
-  491 |     return (int32_t)lroundf(rpm_f / unit_rpm);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:15:1: note: include '<math.h>' or provide a declaration of 'lroundf'
-   14 | #include "semphr.h"
-  +++ |+#include <math.h>
-   15 | 
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:491:21: warning: incompatible implicit declaration of built-in function 'lroundf' [-Wbuiltin-declaration-mismatch]
-  491 |     return (int32_t)lroundf(rpm_f / unit_rpm);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:491:21: note: include '<math.h>' or provide a declaration of 'lroundf'
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'rad_to_regAngUnit':
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:501:21: warning: incompatible implicit declaration of built-in function 'lroundf' [-Wbuiltin-declaration-mismatch]
-  501 |     return (int32_t)lroundf(degree / unit_degree);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:501:21: note: include '<math.h>' or provide a declaration of 'lroundf'
-arm-none-eabi-gcc -o "Motor_bridge.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\liushaw\Desktop\STM32F407\Motor_bridge\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Motor_bridge.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: Motor_bridge.elf
- 
-arm-none-eabi-size  Motor_bridge.elf 
-arm-none-eabi-objdump -h -S Motor_bridge.elf  > "Motor_bridge.list"
-   text	   data	    bss	    dec	    hex	filename
-  79308	    472	  72392	 152172	  2526c	Motor_bridge.elf
-Finished building: default.size.stdout
- 
-Finished building: Motor_bridge.list
- 
-16:21:38 **** Incremental Build of configuration Debug for project Motor_bridge ****
-make -j18 all 
-arm-none-eabi-gcc "../Core/ThreadSafe/newlib_lock_glue.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/ThreadSafe/newlib_lock_glue.d" -MT"Core/ThreadSafe/newlib_lock_glue.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/ThreadSafe/newlib_lock_glue.o"
-arm-none-eabi-gcc "../Core/Src/gpio.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/gpio.d" -MT"Core/Src/gpio.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/gpio.o"
-arm-none-eabi-gcc -o "Motor_bridge.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\liushaw\Desktop\STM32F407\Motor_bridge\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Motor_bridge.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: Motor_bridge.elf
- 
-arm-none-eabi-size  Motor_bridge.elf 
-arm-none-eabi-objdump -h -S Motor_bridge.elf  > "Motor_bridge.list"
-   text	   data	    bss	    dec	    hex	filename
-  79292	    472	  72392	 152156	  2525c	Motor_bridge.elf
-Finished building: default.size.stdout
- 
-Finished building: Motor_bridge.list
- 
-16:22:15 **** Incremental Build of configuration Debug for project Motor_bridge ****
+14:27:19 **** Build of configuration Debug for project Motor_bridge ****
 make -j18 all 
 arm-none-eabi-size  Motor_bridge.elf 
    text	   data	    bss	    dec	    hex	filename
-  79292	    472	  72392	 152156	  2525c	Motor_bridge.elf
+  79388	    472	  72232	 152092	  2521c	Motor_bridge.elf
 Finished building: default.size.stdout
  
-16:23:21 **** Incremental Build of configuration Debug for project Motor_bridge ****
-make -j18 all 
-arm-none-eabi-gcc "../Core/ThreadSafe/newlib_lock_glue.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/ThreadSafe/newlib_lock_glue.d" -MT"Core/ThreadSafe/newlib_lock_glue.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/ThreadSafe/newlib_lock_glue.o"
-arm-none-eabi-gcc -o "Motor_bridge.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\liushaw\Desktop\STM32F407\Motor_bridge\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Motor_bridge.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: Motor_bridge.elf
- 
-arm-none-eabi-size  Motor_bridge.elf 
-arm-none-eabi-objdump -h -S Motor_bridge.elf  > "Motor_bridge.list"
-   text	   data	    bss	    dec	    hex	filename
-  79292	    472	  72392	 152156	  2525c	Motor_bridge.elf
-Finished building: default.size.stdout
- 
-Finished building: Motor_bridge.list
- 
-16:24:58 **** Incremental Build of configuration Debug for project Motor_bridge ****
-make -j18 all 
-arm-none-eabi-gcc "../Middlewares/Third_Party/Agv/Motors/src/blvr.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/Third_Party/Agv/Motors/src/blvr.d" -MT"Middlewares/Third_Party/Agv/Motors/src/blvr.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/Third_Party/Agv/Motors/src/blvr.o"
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'rad_s_to_regVelUnit':
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:491:21: warning: implicit declaration of function 'lroundf' [-Wimplicit-function-declaration]
-  491 |     return (int32_t)lroundf(rpm_f / unit_rpm);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:15:1: note: include '<math.h>' or provide a declaration of 'lroundf'
-   14 | #include "semphr.h"
-  +++ |+#include <math.h>
-   15 | 
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:491:21: warning: incompatible implicit declaration of built-in function 'lroundf' [-Wbuiltin-declaration-mismatch]
-  491 |     return (int32_t)lroundf(rpm_f / unit_rpm);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:491:21: note: include '<math.h>' or provide a declaration of 'lroundf'
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'rad_to_regAngUnit':
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:501:21: warning: incompatible implicit declaration of built-in function 'lroundf' [-Wbuiltin-declaration-mismatch]
-  501 |     return (int32_t)lroundf(degree / unit_degree);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:501:21: note: include '<math.h>' or provide a declaration of 'lroundf'
-arm-none-eabi-gcc -o "Motor_bridge.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\liushaw\Desktop\STM32F407\Motor_bridge\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Motor_bridge.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: Motor_bridge.elf
- 
-arm-none-eabi-size  Motor_bridge.elf 
-arm-none-eabi-objdump -h -S Motor_bridge.elf  > "Motor_bridge.list"
-   text	   data	    bss	    dec	    hex	filename
-  79292	    472	  72392	 152156	  2525c	Motor_bridge.elf
-Finished building: default.size.stdout
- 
-Finished building: Motor_bridge.list
- 
-16:26:17 **** Incremental Build of configuration Debug for project Motor_bridge ****
+14:28:11 **** Incremental Build of configuration Debug for project Motor_bridge ****
 make -j18 all 
 arm-none-eabi-size  Motor_bridge.elf 
    text	   data	    bss	    dec	    hex	filename
-  79292	    472	  72392	 152156	  2525c	Motor_bridge.elf
+  79388	    472	  72232	 152092	  2521c	Motor_bridge.elf
 Finished building: default.size.stdout
  
-16:30:34 **** Incremental Build of configuration Debug for project Motor_bridge ****
-make -j18 all 
-arm-none-eabi-gcc "../Middlewares/Third_Party/Agv/Motors/src/blvr.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/Third_Party/Agv/Motors/src/blvr.d" -MT"Middlewares/Third_Party/Agv/Motors/src/blvr.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/Third_Party/Agv/Motors/src/blvr.o"
-arm-none-eabi-gcc "../Core/Src/freertos.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/freertos.d" -MT"Core/Src/freertos.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/freertos.o"
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'rad_s_to_regVelUnit':
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:490:21: warning: implicit declaration of function 'lroundf' [-Wimplicit-function-declaration]
-  490 |     return (int32_t)lroundf(rpm_f / unit_rpm);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:15:1: note: include '<math.h>' or provide a declaration of 'lroundf'
-   14 | #include "semphr.h"
-  +++ |+#include <math.h>
-   15 | 
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:490:21: warning: incompatible implicit declaration of built-in function 'lroundf' [-Wbuiltin-declaration-mismatch]
-  490 |     return (int32_t)lroundf(rpm_f / unit_rpm);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:490:21: note: include '<math.h>' or provide a declaration of 'lroundf'
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'rad_to_regAngUnit':
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:500:21: warning: incompatible implicit declaration of built-in function 'lroundf' [-Wbuiltin-declaration-mismatch]
-  500 |     return (int32_t)lroundf(degree / unit_degree);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:500:21: note: include '<math.h>' or provide a declaration of 'lroundf'
-../Core/Src/freertos.c: In function 'AgvHeartbeatTask':
-../Core/Src/freertos.c:191:9: warning: variable 'code' set but not used [-Wunused-but-set-variable]
-  191 |     int code = AGV_OK;
-      |         ^~~~
-../Core/Src/freertos.c: In function 'AgvHostMsgCallbackTask':
-../Core/Src/freertos.c:221:13: warning: unused variable 'code' [-Wunused-variable]
-  221 |         int code = AgvCore_step_on_host_msg(s_agv_core);
-      |             ^~~~
-arm-none-eabi-gcc -o "Motor_bridge.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\liushaw\Desktop\STM32F407\Motor_bridge\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Motor_bridge.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: Motor_bridge.elf
- 
-arm-none-eabi-size  Motor_bridge.elf 
-arm-none-eabi-objdump -h -S Motor_bridge.elf  > "Motor_bridge.list"
-   text	   data	    bss	    dec	    hex	filename
-  79308	    472	  72392	 152172	  2526c	Motor_bridge.elf
-Finished building: default.size.stdout
- 
-Finished building: Motor_bridge.list
- 
-16:32:36 **** Incremental Build of configuration Debug for project Motor_bridge ****
-make -j18 all 
-arm-none-eabi-gcc "../Middlewares/Third_Party/Agv/Motors/src/blvr.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/Third_Party/Agv/Motors/src/blvr.d" -MT"Middlewares/Third_Party/Agv/Motors/src/blvr.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/Third_Party/Agv/Motors/src/blvr.o"
-arm-none-eabi-gcc "../Core/Src/freertos.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/freertos.d" -MT"Core/Src/freertos.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/freertos.o"
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'rad_s_to_regVelUnit':
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:491:21: warning: implicit declaration of function 'lroundf' [-Wimplicit-function-declaration]
-  491 |     return (int32_t)lroundf(rpm_f / unit_rpm);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:15:1: note: include '<math.h>' or provide a declaration of 'lroundf'
-   14 | #include "semphr.h"
-  +++ |+#include <math.h>
-   15 | 
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:491:21: warning: incompatible implicit declaration of built-in function 'lroundf' [-Wbuiltin-declaration-mismatch]
-  491 |     return (int32_t)lroundf(rpm_f / unit_rpm);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:491:21: note: include '<math.h>' or provide a declaration of 'lroundf'
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'rad_to_regAngUnit':
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:501:21: warning: incompatible implicit declaration of built-in function 'lroundf' [-Wbuiltin-declaration-mismatch]
-  501 |     return (int32_t)lroundf(degree / unit_degree);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:501:21: note: include '<math.h>' or provide a declaration of 'lroundf'
-../Core/Src/freertos.c: In function 'AgvHeartbeatTask':
-../Core/Src/freertos.c:191:9: warning: variable 'code' set but not used [-Wunused-but-set-variable]
-  191 |     int code = AGV_OK;
-      |         ^~~~
-../Core/Src/freertos.c: In function 'AgvHostMsgCallbackTask':
-../Core/Src/freertos.c:221:13: warning: unused variable 'code' [-Wunused-variable]
-  221 |         int code = AgvCore_step_on_host_msg(s_agv_core);
-      |             ^~~~
-arm-none-eabi-gcc -o "Motor_bridge.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\liushaw\Desktop\STM32F407\Motor_bridge\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Motor_bridge.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: Motor_bridge.elf
- 
-arm-none-eabi-size  Motor_bridge.elf 
-arm-none-eabi-objdump -h -S Motor_bridge.elf  > "Motor_bridge.list"
-   text	   data	    bss	    dec	    hex	filename
-  79292	    472	  72392	 152156	  2525c	Motor_bridge.elf
-Finished building: default.size.stdout
- 
-Finished building: Motor_bridge.list
- 
-16:34:34 **** Incremental Build of configuration Debug for project Motor_bridge ****
-make -j18 all 
-arm-none-eabi-gcc "../Middlewares/Third_Party/Agv/Motors/src/blvr.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/Third_Party/Agv/Motors/src/blvr.d" -MT"Middlewares/Third_Party/Agv/Motors/src/blvr.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/Third_Party/Agv/Motors/src/blvr.o"
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'rad_s_to_regVelUnit':
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:490:21: warning: implicit declaration of function 'lroundf' [-Wimplicit-function-declaration]
-  490 |     return (int32_t)lroundf(rpm_f / unit_rpm);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:15:1: note: include '<math.h>' or provide a declaration of 'lroundf'
-   14 | #include "semphr.h"
-  +++ |+#include <math.h>
-   15 | 
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:490:21: warning: incompatible implicit declaration of built-in function 'lroundf' [-Wbuiltin-declaration-mismatch]
-  490 |     return (int32_t)lroundf(rpm_f / unit_rpm);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:490:21: note: include '<math.h>' or provide a declaration of 'lroundf'
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'rad_to_regAngUnit':
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:500:21: warning: incompatible implicit declaration of built-in function 'lroundf' [-Wbuiltin-declaration-mismatch]
-  500 |     return (int32_t)lroundf(degree / unit_degree);
-      |                     ^~~~~~~
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:500:21: note: include '<math.h>' or provide a declaration of 'lroundf'
-arm-none-eabi-gcc -o "Motor_bridge.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\liushaw\Desktop\STM32F407\Motor_bridge\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Motor_bridge.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: Motor_bridge.elf
- 
-arm-none-eabi-size  Motor_bridge.elf 
-arm-none-eabi-objdump -h -S Motor_bridge.elf  > "Motor_bridge.list"
-   text	   data	    bss	    dec	    hex	filename
-  79292	    472	  72392	 152156	  2525c	Motor_bridge.elf
-Finished building: default.size.stdout
- 
-Finished building: Motor_bridge.list
- 
-16:37:33 **** Incremental Build of configuration Debug for project Motor_bridge ****
+14:37:47 **** Incremental Build of configuration Debug for project Motor_bridge ****
 make -j18 all 
 arm-none-eabi-size  Motor_bridge.elf 
    text	   data	    bss	    dec	    hex	filename
-  79292	    472	  72392	 152156	  2525c	Motor_bridge.elf
+  79388	    472	  72232	 152092	  2521c	Motor_bridge.elf
 Finished building: default.size.stdout
  
-16:50:02 **** Incremental Build of configuration Debug for project Motor_bridge ****
+14:42:21 **** Incremental Build of configuration Debug for project Motor_bridge ****
+make -j18 all 
+arm-none-eabi-size  Motor_bridge.elf 
+   text	   data	    bss	    dec	    hex	filename
+  79388	    472	  72232	 152092	  2521c	Motor_bridge.elf
+Finished building: default.size.stdout
+ 
+14:43:53 **** Incremental Build of configuration Debug for project Motor_bridge ****
 make -j18 all 
 arm-none-eabi-gcc "../Core/Src/joystick.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/joystick.d" -MT"Core/Src/joystick.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/joystick.o"
 arm-none-eabi-gcc -o "Motor_bridge.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\liushaw\Desktop\STM32F407\Motor_bridge\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Motor_bridge.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
@@ -616,111 +62,245 @@ Finished building target: Motor_bridge.elf
 arm-none-eabi-size  Motor_bridge.elf 
 arm-none-eabi-objdump -h -S Motor_bridge.elf  > "Motor_bridge.list"
    text	   data	    bss	    dec	    hex	filename
-  79324	    472	  72392	 152188	  2527c	Motor_bridge.elf
+  79388	    472	  72232	 152092	  2521c	Motor_bridge.elf
 Finished building: default.size.stdout
  
 Finished building: Motor_bridge.list
  
-17:14:04 **** Incremental Build of configuration Debug for project Motor_bridge ****
+14:46:53 **** Incremental Build of configuration Debug for project Motor_bridge ****
 make -j18 all 
-arm-none-eabi-size  Motor_bridge.elf 
-   text	   data	    bss	    dec	    hex	filename
-  79324	    472	  72392	 152188	  2527c	Motor_bridge.elf
-Finished building: default.size.stdout
- 
-17:19:59 **** Incremental Build of configuration Debug for project Motor_bridge ****
-make -j18 all 
-arm-none-eabi-gcc "../Middlewares/Third_Party/Agv/Core/src/core.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/Third_Party/Agv/Core/src/core.d" -MT"Middlewares/Third_Party/Agv/Core/src/core.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/Third_Party/Agv/Core/src/core.o"
+arm-none-eabi-gcc "../Core/Src/joystick.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/joystick.d" -MT"Core/Src/joystick.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/joystick.o"
 arm-none-eabi-gcc -o "Motor_bridge.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\liushaw\Desktop\STM32F407\Motor_bridge\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Motor_bridge.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
 Finished building target: Motor_bridge.elf
  
 arm-none-eabi-size  Motor_bridge.elf 
 arm-none-eabi-objdump -h -S Motor_bridge.elf  > "Motor_bridge.list"
    text	   data	    bss	    dec	    hex	filename
-  79340	    472	  72392	 152204	  2528c	Motor_bridge.elf
+  79404	    472	  72232	 152108	  2522c	Motor_bridge.elf
 Finished building: default.size.stdout
  
 Finished building: Motor_bridge.list
  
-17:21:38 **** Incremental Build of configuration Debug for project Motor_bridge ****
+14:47:05 **** Incremental Build of configuration Debug for project Motor_bridge ****
 make -j18 all 
-arm-none-eabi-gcc "../Middlewares/Third_Party/Agv/Core/src/core.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/Third_Party/Agv/Core/src/core.d" -MT"Middlewares/Third_Party/Agv/Core/src/core.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/Third_Party/Agv/Core/src/core.o"
+arm-none-eabi-size  Motor_bridge.elf 
+   text	   data	    bss	    dec	    hex	filename
+  79404	    472	  72232	 152108	  2522c	Motor_bridge.elf
+Finished building: default.size.stdout
+ 
+14:47:24 **** Incremental Build of configuration Debug for project Motor_bridge ****
+make -j18 all 
+arm-none-eabi-size  Motor_bridge.elf 
+   text	   data	    bss	    dec	    hex	filename
+  79404	    472	  72232	 152108	  2522c	Motor_bridge.elf
+Finished building: default.size.stdout
+ 
+14:52:09 **** Incremental Build of configuration Debug for project Motor_bridge ****
+make -j18 all 
+arm-none-eabi-gcc "../Middlewares/Third_Party/Agv/Motors/src/blvr.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/Third_Party/Agv/Motors/src/blvr.d" -MT"Middlewares/Third_Party/Agv/Motors/src/blvr.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/Third_Party/Agv/Motors/src/blvr.o"
+../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'rad_s_to_regVelUnit':
+../Middlewares/Third_Party/Agv/Motors/src/blvr.c:497:21: warning: implicit declaration of function 'lroundf' [-Wimplicit-function-declaration]
+  497 |     return (int32_t)lroundf(rpm_f / unit_rpm);
+      |                     ^~~~~~~
+../Middlewares/Third_Party/Agv/Motors/src/blvr.c:15:1: note: include '<math.h>' or provide a declaration of 'lroundf'
+   14 | #include "semphr.h"
+  +++ |+#include <math.h>
+   15 | 
+../Middlewares/Third_Party/Agv/Motors/src/blvr.c:497:21: warning: incompatible implicit declaration of built-in function 'lroundf' [-Wbuiltin-declaration-mismatch]
+  497 |     return (int32_t)lroundf(rpm_f / unit_rpm);
+      |                     ^~~~~~~
+../Middlewares/Third_Party/Agv/Motors/src/blvr.c:497:21: note: include '<math.h>' or provide a declaration of 'lroundf'
+../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'rad_to_regAngUnit':
+../Middlewares/Third_Party/Agv/Motors/src/blvr.c:507:21: warning: incompatible implicit declaration of built-in function 'lroundf' [-Wbuiltin-declaration-mismatch]
+  507 |     return (int32_t)lroundf(degree / unit_degree);
+      |                     ^~~~~~~
+../Middlewares/Third_Party/Agv/Motors/src/blvr.c:507:21: note: include '<math.h>' or provide a declaration of 'lroundf'
 arm-none-eabi-gcc -o "Motor_bridge.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\liushaw\Desktop\STM32F407\Motor_bridge\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Motor_bridge.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
 Finished building target: Motor_bridge.elf
  
 arm-none-eabi-size  Motor_bridge.elf 
 arm-none-eabi-objdump -h -S Motor_bridge.elf  > "Motor_bridge.list"
    text	   data	    bss	    dec	    hex	filename
-  79340	    472	  72392	 152204	  2528c	Motor_bridge.elf
+  79516	    472	  72232	 152220	  2529c	Motor_bridge.elf
 Finished building: default.size.stdout
  
 Finished building: Motor_bridge.list
  
-17:23:24 **** Incremental Build of configuration Debug for project Motor_bridge ****
+14:58:40 **** Incremental Build of configuration Debug for project Motor_bridge ****
 make -j18 all 
-arm-none-eabi-gcc "../Middlewares/Third_Party/Agv/Core/src/core.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/Third_Party/Agv/Core/src/core.d" -MT"Middlewares/Third_Party/Agv/Core/src/core.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/Third_Party/Agv/Core/src/core.o"
+arm-none-eabi-gcc "../Core/Src/freertos.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/freertos.d" -MT"Core/Src/freertos.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/freertos.o"
+arm-none-eabi-gcc "../Core/Src/joystick.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/joystick.d" -MT"Core/Src/joystick.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/joystick.o"
+../Core/Src/freertos.c: In function 'AgvHeartbeatTask':
+../Core/Src/freertos.c:191:9: warning: variable 'code' set but not used [-Wunused-but-set-variable]
+  191 |     int code = AGV_OK;
+      |         ^~~~
+../Core/Src/freertos.c: In function 'AgvHostMsgCallbackTask':
+../Core/Src/freertos.c:221:13: warning: unused variable 'code' [-Wunused-variable]
+  221 |         int code = AgvCore_step_on_host_msg(s_agv_core);
+      |             ^~~~
 arm-none-eabi-gcc -o "Motor_bridge.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\liushaw\Desktop\STM32F407\Motor_bridge\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Motor_bridge.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
 Finished building target: Motor_bridge.elf
  
 arm-none-eabi-size  Motor_bridge.elf 
 arm-none-eabi-objdump -h -S Motor_bridge.elf  > "Motor_bridge.list"
    text	   data	    bss	    dec	    hex	filename
-  79340	    472	  72392	 152204	  2528c	Motor_bridge.elf
+  79516	    472	  72232	 152220	  2529c	Motor_bridge.elf
 Finished building: default.size.stdout
  
 Finished building: Motor_bridge.list
  
-17:24:31 **** Incremental Build of configuration Debug for project Motor_bridge ****
+14:59:53 **** Incremental Build of configuration Debug for project Motor_bridge ****
 make -j18 all 
-arm-none-eabi-gcc "../Middlewares/Third_Party/Agv/Core/src/core.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/Third_Party/Agv/Core/src/core.d" -MT"Middlewares/Third_Party/Agv/Core/src/core.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/Third_Party/Agv/Core/src/core.o"
+arm-none-eabi-size  Motor_bridge.elf 
+   text	   data	    bss	    dec	    hex	filename
+  79516	    472	  72232	 152220	  2529c	Motor_bridge.elf
+Finished building: default.size.stdout
+ 
+15:01:13 **** Incremental Build of configuration Debug for project Motor_bridge ****
+make -j18 all 
+arm-none-eabi-gcc "../Core/Src/joystick.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/joystick.d" -MT"Core/Src/joystick.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/joystick.o"
 arm-none-eabi-gcc -o "Motor_bridge.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\liushaw\Desktop\STM32F407\Motor_bridge\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Motor_bridge.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
 Finished building target: Motor_bridge.elf
  
 arm-none-eabi-size  Motor_bridge.elf 
 arm-none-eabi-objdump -h -S Motor_bridge.elf  > "Motor_bridge.list"
    text	   data	    bss	    dec	    hex	filename
-  79340	    472	  72392	 152204	  2528c	Motor_bridge.elf
+  79516	    472	  72232	 152220	  2529c	Motor_bridge.elf
 Finished building: default.size.stdout
  
 Finished building: Motor_bridge.list
  
-17:25:05 **** Incremental Build of configuration Debug for project Motor_bridge ****
+15:08:14 **** Incremental Build of configuration Debug for project Motor_bridge ****
 make -j18 all 
 arm-none-eabi-size  Motor_bridge.elf 
    text	   data	    bss	    dec	    hex	filename
-  79340	    472	  72392	 152204	  2528c	Motor_bridge.elf
+  79516	    472	  72232	 152220	  2529c	Motor_bridge.elf
 Finished building: default.size.stdout
  
-17:25:45 **** Incremental Build of configuration Debug for project Motor_bridge ****
+15:10:16 **** Incremental Build of configuration Debug for project Motor_bridge ****
 make -j18 all 
-arm-none-eabi-gcc "../Middlewares/Third_Party/Agv/Core/src/core.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/Third_Party/Agv/Core/src/core.d" -MT"Middlewares/Third_Party/Agv/Core/src/core.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/Third_Party/Agv/Core/src/core.o"
+arm-none-eabi-gcc "../Core/Src/freertos.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/freertos.d" -MT"Core/Src/freertos.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/freertos.o"
+arm-none-eabi-gcc "../Core/Src/joystick.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/joystick.d" -MT"Core/Src/joystick.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/joystick.o"
+../Core/Src/freertos.c: In function 'AgvHeartbeatTask':
+../Core/Src/freertos.c:191:9: warning: variable 'code' set but not used [-Wunused-but-set-variable]
+  191 |     int code = AGV_OK;
+      |         ^~~~
+../Core/Src/freertos.c: In function 'AgvHostMsgCallbackTask':
+../Core/Src/freertos.c:221:13: warning: unused variable 'code' [-Wunused-variable]
+  221 |         int code = AgvCore_step_on_host_msg(s_agv_core);
+      |             ^~~~
 arm-none-eabi-gcc -o "Motor_bridge.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\liushaw\Desktop\STM32F407\Motor_bridge\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Motor_bridge.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
 Finished building target: Motor_bridge.elf
  
 arm-none-eabi-size  Motor_bridge.elf 
 arm-none-eabi-objdump -h -S Motor_bridge.elf  > "Motor_bridge.list"
    text	   data	    bss	    dec	    hex	filename
-  79340	    472	  72392	 152204	  2528c	Motor_bridge.elf
+  79516	    472	  72232	 152220	  2529c	Motor_bridge.elf
 Finished building: default.size.stdout
  
 Finished building: Motor_bridge.list
  
-17:30:54 **** Incremental Build of configuration Debug for project Motor_bridge ****
+15:53:49 **** Incremental Build of configuration Debug for project Motor_bridge ****
 make -j18 all 
-arm-none-eabi-gcc "../Middlewares/Third_Party/Agv/Kinematics/src/mecanum.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/Third_Party/Agv/Kinematics/src/mecanum.d" -MT"Middlewares/Third_Party/Agv/Kinematics/src/mecanum.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/Third_Party/Agv/Kinematics/src/mecanum.o"
-arm-none-eabi-gcc "../Middlewares/Third_Party/Agv/Core/src/core.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/Third_Party/Agv/Core/src/core.d" -MT"Middlewares/Third_Party/Agv/Core/src/core.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/Third_Party/Agv/Core/src/core.o"
-../Middlewares/Third_Party/Agv/Kinematics/src/mecanum.c: In function 'Kinematics_mecanum_create':
-../Middlewares/Third_Party/Agv/Kinematics/src/mecanum.c:49:5: warning: implicit declaration of function 'LOG' [-Wimplicit-function-declaration]
-   49 |     LOG(out->name, "Kinematics module created");
-      |     ^~~
+arm-none-eabi-size  Motor_bridge.elf 
+   text	   data	    bss	    dec	    hex	filename
+  79516	    472	  72232	 152220	  2529c	Motor_bridge.elf
+Finished building: default.size.stdout
+ 
+15:56:17 **** Incremental Build of configuration Debug for project Motor_bridge ****
+make -j18 all 
+arm-none-eabi-gcc "../Middlewares/Third_Party/Agv/Motors/src/blvr.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/Third_Party/Agv/Motors/src/blvr.d" -MT"Middlewares/Third_Party/Agv/Motors/src/blvr.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/Third_Party/Agv/Motors/src/blvr.o"
+../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'rad_s_to_regVelUnit':
+../Middlewares/Third_Party/Agv/Motors/src/blvr.c:497:21: warning: implicit declaration of function 'lroundf' [-Wimplicit-function-declaration]
+  497 |     return (int32_t)lroundf(rpm_f / unit_rpm);
+      |                     ^~~~~~~
+../Middlewares/Third_Party/Agv/Motors/src/blvr.c:15:1: note: include '<math.h>' or provide a declaration of 'lroundf'
+   14 | #include "semphr.h"
+  +++ |+#include <math.h>
+   15 | 
+../Middlewares/Third_Party/Agv/Motors/src/blvr.c:497:21: warning: incompatible implicit declaration of built-in function 'lroundf' [-Wbuiltin-declaration-mismatch]
+  497 |     return (int32_t)lroundf(rpm_f / unit_rpm);
+      |                     ^~~~~~~
+../Middlewares/Third_Party/Agv/Motors/src/blvr.c:497:21: note: include '<math.h>' or provide a declaration of 'lroundf'
+../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'rad_to_regAngUnit':
+../Middlewares/Third_Party/Agv/Motors/src/blvr.c:507:21: warning: incompatible implicit declaration of built-in function 'lroundf' [-Wbuiltin-declaration-mismatch]
+  507 |     return (int32_t)lroundf(degree / unit_degree);
+      |                     ^~~~~~~
+../Middlewares/Third_Party/Agv/Motors/src/blvr.c:507:21: note: include '<math.h>' or provide a declaration of 'lroundf'
 arm-none-eabi-gcc -o "Motor_bridge.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\liushaw\Desktop\STM32F407\Motor_bridge\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Motor_bridge.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
 Finished building target: Motor_bridge.elf
  
 arm-none-eabi-size  Motor_bridge.elf 
 arm-none-eabi-objdump -h -S Motor_bridge.elf  > "Motor_bridge.list"
    text	   data	    bss	    dec	    hex	filename
-  79324	    472	  72392	 152188	  2527c	Motor_bridge.elf
+  79524	    472	  72232	 152228	  252a4	Motor_bridge.elf
 Finished building: default.size.stdout
  
 Finished building: Motor_bridge.list
+ 
+15:57:16 **** Incremental Build of configuration Debug for project Motor_bridge ****
+make -j18 all 
+arm-none-eabi-gcc "../Middlewares/Third_Party/Agv/Motors/src/blvr.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/Third_Party/Agv/Motors/src/blvr.d" -MT"Middlewares/Third_Party/Agv/Motors/src/blvr.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/Third_Party/Agv/Motors/src/blvr.o"
+../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'rad_s_to_regVelUnit':
+../Middlewares/Third_Party/Agv/Motors/src/blvr.c:498:21: warning: implicit declaration of function 'lroundf' [-Wimplicit-function-declaration]
+  498 |     return (int32_t)lroundf(rpm_f / unit_rpm);
+      |                     ^~~~~~~
+../Middlewares/Third_Party/Agv/Motors/src/blvr.c:15:1: note: include '<math.h>' or provide a declaration of 'lroundf'
+   14 | #include "semphr.h"
+  +++ |+#include <math.h>
+   15 | 
+../Middlewares/Third_Party/Agv/Motors/src/blvr.c:498:21: warning: incompatible implicit declaration of built-in function 'lroundf' [-Wbuiltin-declaration-mismatch]
+  498 |     return (int32_t)lroundf(rpm_f / unit_rpm);
+      |                     ^~~~~~~
+../Middlewares/Third_Party/Agv/Motors/src/blvr.c:498:21: note: include '<math.h>' or provide a declaration of 'lroundf'
+../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'rad_to_regAngUnit':
+../Middlewares/Third_Party/Agv/Motors/src/blvr.c:508:21: warning: incompatible implicit declaration of built-in function 'lroundf' [-Wbuiltin-declaration-mismatch]
+  508 |     return (int32_t)lroundf(degree / unit_degree);
+      |                     ^~~~~~~
+../Middlewares/Third_Party/Agv/Motors/src/blvr.c:508:21: note: include '<math.h>' or provide a declaration of 'lroundf'
+arm-none-eabi-gcc -o "Motor_bridge.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\liushaw\Desktop\STM32F407\Motor_bridge\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Motor_bridge.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Motor_bridge.elf
+ 
+arm-none-eabi-size  Motor_bridge.elf 
+arm-none-eabi-objdump -h -S Motor_bridge.elf  > "Motor_bridge.list"
+   text	   data	    bss	    dec	    hex	filename
+  79524	    472	  72232	 152228	  252a4	Motor_bridge.elf
+Finished building: default.size.stdout
+ 
+Finished building: Motor_bridge.list
+ 
+15:58:31 **** Incremental Build of configuration Debug for project Motor_bridge ****
+make -j18 all 
+arm-none-eabi-size  Motor_bridge.elf 
+   text	   data	    bss	    dec	    hex	filename
+  79524	    472	  72232	 152228	  252a4	Motor_bridge.elf
+Finished building: default.size.stdout
+ 
+08:14:31 **** Build of configuration Debug for project Motor_bridge ****
+make -j18 all 
+arm-none-eabi-size  Motor_bridge.elf 
+   text	   data	    bss	    dec	    hex	filename
+  79524	    472	  72232	 152228	  252a4	Motor_bridge.elf
+Finished building: default.size.stdout
+ 
+08:14:41 **** Incremental Build of configuration Debug for project Motor_bridge ****
+make -j18 all 
+arm-none-eabi-size  Motor_bridge.elf 
+   text	   data	    bss	    dec	    hex	filename
+  79524	    472	  72232	 152228	  252a4	Motor_bridge.elf
+Finished building: default.size.stdout
+ 
+08:15:10 **** Incremental Build of configuration Debug for project Motor_bridge ****
+make -j18 all 
+arm-none-eabi-size  Motor_bridge.elf 
+   text	   data	    bss	    dec	    hex	filename
+  79524	    472	  72232	 152228	  252a4	Motor_bridge.elf
+Finished building: default.size.stdout
+ 
+08:20:15 **** Incremental Build of configuration Debug for project Motor_bridge ****
+make -j18 all 
+arm-none-eabi-size  Motor_bridge.elf 
+   text	   data	    bss	    dec	    hex	filename
+  79524	    472	  72232	 152228	  252a4	Motor_bridge.elf
+Finished building: default.size.stdout
  

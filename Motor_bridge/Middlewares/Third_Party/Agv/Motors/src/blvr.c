@@ -445,6 +445,11 @@ static int blvr_read_and_write(AgvMotorsBase* base) {
         uint32_t data_timeStamp;
         code = link->read_buf(link, data_rcv, &data_len, &data_timeStamp);
         if (code != AGV_OK) {
+            LOG(base->name, "Error, data:");
+            for (size_t i = 0; i < data_len; ++i) {
+                printf("%02X ", data_rcv[i]);
+            }
+            printf("\n");
             fmt->reset(fmt);
             return code;
         }

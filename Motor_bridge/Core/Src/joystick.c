@@ -36,9 +36,11 @@ void Joystick_Init(ADC_HandleTypeDef* hadc) {
 }
 
 static inline uint8_t read_js_left_raw(void) {
-    return (HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_9) == GPIO_PIN_RESET);  // 按下=1
+    return (HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_9) == GPIO_PIN_RESET);
 }
 static inline uint8_t read_js_right_raw(void) {
+    if (HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_10) == GPIO_PIN_RESET)
+        HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_14);
     return (HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_10) == GPIO_PIN_RESET);
 }
 static inline uint8_t read_js_reset_raw(void) {
@@ -96,8 +98,8 @@ void Joystick_Update(JoystickCmd* out, uint32_t now_ms) {
 
     // 5) 映射到速度
     // 注意: 你可以定義 X=前後、Y=左右 或反過來，這裡假設：
-    out->vx = x_norm * VX_MAX;
-    out->vy = -y_norm * VY_MAX;
+    out->vx = -y_norm * VX_MAX;
+    out->vy = x_norm * VY_MAX;
 
     int yaw_dir = 0;
     if (state.btn_left) yaw_dir -= 1;

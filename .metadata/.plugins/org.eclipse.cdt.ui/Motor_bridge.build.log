@@ -1,22 +1,10 @@
-17:30:54 **** Incremental Build of configuration Debug for project Motor_bridge ****
+08:20:15 **** Incremental Build of configuration Debug for project Motor_bridge ****
 make -j18 all 
-arm-none-eabi-gcc "../Middlewares/Third_Party/Agv/Kinematics/src/mecanum.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/Third_Party/Agv/Kinematics/src/mecanum.d" -MT"Middlewares/Third_Party/Agv/Kinematics/src/mecanum.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/Third_Party/Agv/Kinematics/src/mecanum.o"
-arm-none-eabi-gcc "../Middlewares/Third_Party/Agv/Core/src/core.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/Third_Party/Agv/Core/src/core.d" -MT"Middlewares/Third_Party/Agv/Core/src/core.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/Third_Party/Agv/Core/src/core.o"
-../Middlewares/Third_Party/Agv/Kinematics/src/mecanum.c: In function 'Kinematics_mecanum_create':
-../Middlewares/Third_Party/Agv/Kinematics/src/mecanum.c:49:5: warning: implicit declaration of function 'LOG' [-Wimplicit-function-declaration]
-   49 |     LOG(out->name, "Kinematics module created");
-      |     ^~~
-arm-none-eabi-gcc -o "Motor_bridge.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\liushaw\Desktop\STM32F407\Motor_bridge\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Motor_bridge.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: Motor_bridge.elf
- 
 arm-none-eabi-size  Motor_bridge.elf 
-arm-none-eabi-objdump -h -S Motor_bridge.elf  > "Motor_bridge.list"
    text	   data	    bss	    dec	    hex	filename
-  79324	    472	  72392	 152188	  2527c	Motor_bridge.elf
+  79524	    472	  72232	 152228	  252a4	Motor_bridge.elf
 Finished building: default.size.stdout
  
-Finished building: Motor_bridge.list
- 
 
-17:30:56 Build Finished. 0 errors, 1 warnings. (took 1s.849ms)
+08:20:15 Build Finished. 0 errors, 0 warnings. (took 714ms)
 

@@ -1,6 +1,6 @@
 ../Core/Src/joystick.c:34:6:Joystick_Init	1
 ../Core/Src/joystick.c:38:23:read_js_left_raw	1
-../Core/Src/joystick.c:41:23:read_js_right_raw	1
-../Core/Src/joystick.c:44:23:read_js_reset_raw	1
-../Core/Src/joystick.c:48:13:debounce_button	4
-../Core/Src/joystick.c:65:6:Joystick_Update	15
+../Core/Src/joystick.c:41:23:read_js_right_raw	2
+../Core/Src/joystick.c:46:23:read_js_reset_raw	1
+../Core/Src/joystick.c:50:13:debounce_button	4
+../Core/Src/joystick.c:67:6:Joystick_Update	15
