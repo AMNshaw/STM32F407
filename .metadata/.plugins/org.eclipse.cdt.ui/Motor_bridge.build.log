@@ -1,79 +1,44 @@
-15:52:15 **** Incremental Build of configuration Debug for project Motor_bridge ****
+16:42:35 **** Incremental Build of configuration Debug for project Motor_bridge ****
 make -j18 all 
-arm-none-eabi-gcc "../Middlewares/Third_Party/Agv/Factory/src/agv_factory.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/Third_Party/Agv/Factory/src/agv_factory.d" -MT"Middlewares/Third_Party/Agv/Factory/src/agv_factory.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/Third_Party/Agv/Factory/src/agv_factory.o"
-arm-none-eabi-gcc "../Middlewares/Third_Party/Agv/Control/src/passthrough.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/Third_Party/Agv/Control/src/passthrough.d" -MT"Middlewares/Third_Party/Agv/Control/src/passthrough.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/Third_Party/Agv/Control/src/passthrough.o"
 arm-none-eabi-gcc "../Middlewares/Third_Party/Agv/Control/src/pid.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/Third_Party/Agv/Control/src/pid.d" -MT"Middlewares/Third_Party/Agv/Control/src/pid.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/Third_Party/Agv/Control/src/pid.o"
-arm-none-eabi-gcc "../Core/Src/agv_app.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/agv_app.d" -MT"Core/Src/agv_app.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/agv_app.o"
-arm-none-eabi-gcc "../Core/Src/freertos.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/freertos.d" -MT"Core/Src/freertos.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/freertos.o"
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
-../Middlewares/Third_Party/Agv/Control/src/passthrough.c: In function 'passthrough_set_des_vel':
-../Middlewares/Third_Party/Agv/Control/src/passthrough.c:103:5: warning: implicit declaration of function 'memcpy' [-Wimplicit-function-declaration]
-  103 |     memcpy(&impl->vel_des, cmd_in, sizeof(impl->vel_des));
-      |     ^~~~~~
-../Middlewares/Third_Party/Agv/Control/src/passthrough.c:10:1: note: include '<string.h>' or provide a declaration of 'memcpy'
-    9 | #include "semphr.h"
-  +++ |+#include <string.h>
-   10 | 
-../Middlewares/Third_Party/Agv/Control/src/passthrough.c:103:5: warning: incompatible implicit declaration of built-in function 'memcpy' [-Wbuiltin-declaration-mismatch]
-  103 |     memcpy(&impl->vel_des, cmd_in, sizeof(impl->vel_des));
-      |     ^~~~~~
-../Middlewares/Third_Party/Agv/Control/src/passthrough.c:103:5: note: include '<string.h>' or provide a declaration of 'memcpy'
-../Middlewares/Third_Party/Agv/Control/src/passthrough.c: In function 'passthrough_set_curr_vel':
-../Middlewares/Third_Party/Agv/Control/src/passthrough.c:116:5: warning: incompatible implicit declaration of built-in function 'memcpy' [-Wbuiltin-declaration-mismatch]
-  116 |     memcpy(&impl->vel_curr, curr_vel, sizeof(impl->vel_curr));
-      |     ^~~~~~
-../Middlewares/Third_Party/Agv/Control/src/passthrough.c:116:5: note: include '<string.h>' or provide a declaration of 'memcpy'
-../Middlewares/Third_Party/Agv/Control/src/passthrough.c: In function 'passthrough_get_ctrl_cmd':
-../Middlewares/Third_Party/Agv/Control/src/passthrough.c:129:5: warning: incompatible implicit declaration of built-in function 'memcpy' [-Wbuiltin-declaration-mismatch]
-  129 |     memcpy(&cmd_curr, &impl->vel_des, sizeof(impl->vel_des));
-      |     ^~~~~~
-../Middlewares/Third_Party/Agv/Control/src/passthrough.c:129:5: note: include '<string.h>' or provide a declaration of 'memcpy'
 ../Middlewares/Third_Party/Agv/Control/src/pid.c: In function 'Ctrl_pid_create':
-../Middlewares/Third_Party/Agv/Control/src/pid.c:77:5: warning: implicit declaration of function 'memset' [-Wimplicit-function-declaration]
-   77 |     memset(&impl->vel_des, 0, sizeof(Twist2D));
+../Middlewares/Third_Party/Agv/Control/src/pid.c:78:5: warning: implicit declaration of function 'memset' [-Wimplicit-function-declaration]
+   78 |     memset(&impl->vel_des, 0, sizeof(Twist2D));
       |     ^~~~~~
 ../Middlewares/Third_Party/Agv/Control/src/pid.c:12:1: note: include '<string.h>' or provide a declaration of 'memset'
    11 | #include "semphr.h"
   +++ |+#include <string.h>
    12 | 
-../Middlewares/Third_Party/Agv/Control/src/pid.c:77:5: warning: incompatible implicit declaration of built-in function 'memset' [-Wbuiltin-declaration-mismatch]
-   77 |     memset(&impl->vel_des, 0, sizeof(Twist2D));
+../Middlewares/Third_Party/Agv/Control/src/pid.c:78:5: warning: incompatible implicit declaration of built-in function 'memset' [-Wbuiltin-declaration-mismatch]
+   78 |     memset(&impl->vel_des, 0, sizeof(Twist2D));
       |     ^~~~~~
-../Middlewares/Third_Party/Agv/Control/src/pid.c:77:5: note: include '<string.h>' or provide a declaration of 'memset'
-../Middlewares/Third_Party/Agv/Control/src/pid.c:87:15: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
-   87 |     out->name = name;
+../Middlewares/Third_Party/Agv/Control/src/pid.c:78:5: note: include '<string.h>' or provide a declaration of 'memset'
+../Middlewares/Third_Party/Agv/Control/src/pid.c:88:15: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   88 |     out->name = name;
       |               ^
 ../Middlewares/Third_Party/Agv/Control/src/pid.c: In function 'pid_set_des_vel':
-../Middlewares/Third_Party/Agv/Control/src/pid.c:130:5: warning: implicit declaration of function 'memcpy' [-Wimplicit-function-declaration]
-  130 |     memcpy(&impl->vel_des, cmd_in, sizeof(impl->vel_des));
+../Middlewares/Third_Party/Agv/Control/src/pid.c:131:5: warning: implicit declaration of function 'memcpy' [-Wimplicit-function-declaration]
+  131 |     memcpy(&impl->vel_des, cmd_in, sizeof(impl->vel_des));
       |     ^~~~~~
-../Middlewares/Third_Party/Agv/Control/src/pid.c:130:5: note: include '<string.h>' or provide a declaration of 'memcpy'
-../Middlewares/Third_Party/Agv/Control/src/pid.c:130:5: warning: incompatible implicit declaration of built-in function 'memcpy' [-Wbuiltin-declaration-mismatch]
-../Middlewares/Third_Party/Agv/Control/src/pid.c:130:5: note: include '<string.h>' or provide a declaration of 'memcpy'
+../Middlewares/Third_Party/Agv/Control/src/pid.c:131:5: note: include '<string.h>' or provide a declaration of 'memcpy'
+../Middlewares/Third_Party/Agv/Control/src/pid.c:131:5: warning: incompatible implicit declaration of built-in function 'memcpy' [-Wbuiltin-declaration-mismatch]
+../Middlewares/Third_Party/Agv/Control/src/pid.c:131:5: note: include '<string.h>' or provide a declaration of 'memcpy'
 ../Middlewares/Third_Party/Agv/Control/src/pid.c: In function 'pid_set_curr_vel':
-../Middlewares/Third_Party/Agv/Control/src/pid.c:142:5: warning: incompatible implicit declaration of built-in function 'memcpy' [-Wbuiltin-declaration-mismatch]
-  142 |     memcpy(&impl->vel_curr, curr_vel, sizeof(impl->vel_curr));
+../Middlewares/Third_Party/Agv/Control/src/pid.c:143:5: warning: incompatible implicit declaration of built-in function 'memcpy' [-Wbuiltin-declaration-mismatch]
+  143 |     memcpy(&impl->vel_curr, curr_vel, sizeof(impl->vel_curr));
       |     ^~~~~~
-../Middlewares/Third_Party/Agv/Control/src/pid.c:142:5: note: include '<string.h>' or provide a declaration of 'memcpy'
-../Core/Src/freertos.c: In function 'AgvHeartbeatTask':
-../Core/Src/freertos.c:202:9: warning: variable 'code' set but not used [-Wunused-but-set-variable]
-  202 |     int code = AGV_OK;
-      |         ^~~~
-../Core/Src/freertos.c: In function 'AgvHostMsgCallbackTask':
-../Core/Src/freertos.c:232:13: warning: unused variable 'code' [-Wunused-variable]
-  232 |         int code = AgvCore_step_on_host_msg(s_agv_core);
-      |             ^~~~
+../Middlewares/Third_Party/Agv/Control/src/pid.c:143:5: note: include '<string.h>' or provide a declaration of 'memcpy'
 arm-none-eabi-gcc -o "Motor_bridge.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\liushaw\Desktop\STM32F407\Motor_bridge\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Motor_bridge.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
 Finished building target: Motor_bridge.elf
  
 arm-none-eabi-size  Motor_bridge.elf 
 arm-none-eabi-objdump -h -S Motor_bridge.elf  > "Motor_bridge.list"
    text	   data	    bss	    dec	    hex	filename
-  80324	    472	  88288	 169084	  2947c	Motor_bridge.elf
+  80564	    472	  88288	 169324	  2956c	Motor_bridge.elf
 Finished building: default.size.stdout
  
 Finished building: Motor_bridge.list
  
 
-15:52:18 Build Finished. 0 errors, 12 warnings. (took 2s.257ms)
+16:42:37 Build Finished. 0 errors, 6 warnings. (took 2s.437ms)
 

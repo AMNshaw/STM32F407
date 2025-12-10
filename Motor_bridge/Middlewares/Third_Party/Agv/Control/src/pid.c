@@ -46,7 +46,8 @@ static int pid_get_ctrl_cmd(AgvControlLawBase* base, Twist2D* cmd_out);
 
 // helpers
 
-float pid(float curr, float des, float dt, float kp, float ki, float kd);
+float pid_virtual_acc(float curr, float des, float dt, float max_acc,
+                      PidState* pid_st, const PidConfig* gains);
 
 /**
  * Private definitions
@@ -164,12 +165,12 @@ static int pid_get_ctrl_cmd(AgvControlLawBase* base, Twist2D* cmd_out) {
                1000.0f;
 
     Twist2D cmd;
-    cmd.x =
-        pid(curr.x, des.x, dt, cfg->gain_x.kp, cfg->gain_x.ki, cfg->gain_x.kd);
-    cmd.y =
-        pid(curr.y, des.y, dt, cfg->gain_y.kp, cfg->gain_y.ki, cfg->gain_y.kd);
-    cmd.yaw = pid(curr.yaw, des.yaw, dt, cfg->gain_yaw.kp, cfg->gain_yaw.ki,
-                  cfg->gain_yaw.kd);
+    cmd.x = pid_virtual_acc(curr.x, des.x, dt, cfg->max_acc.x, &impl->pid_st_x,
+                            &cfg->gain_x);
+    cmd.y = pid_virtual_acc(curr.y, des.y, dt, cfg->max_acc.y, &impl->pid_st_y,
+                            &cfg->gain_y);
+    cmd.yaw = pid_virtual_acc(curr.yaw, des.yaw, dt, cfg->max_acc.yaw,
+                              &impl->pid_st_yaw, &cfg->gain_yaw);
 
     static int time = 0;
     time++;
@@ -187,8 +188,27 @@ static int pid_get_ctrl_cmd(AgvControlLawBase* base, Twist2D* cmd_out) {
     return AGV_OK;
 }
 
-float pid(float curr, float des, float dt, float kp, float ki, float kd) {
+float pid_virtual_acc(float curr, float des, float dt, float max_acc,
+                      PidState* pid_st, const PidConfig* gains) {
+    if (dt <= 0) dt = 0.0001f;
+
     float e = des - curr;
-    float cmd = curr + kp * (e * dt);
+    pid_st->e_integral += e * dt;
+    const float I_MAX = 10.0f;
+    if (pid_st->e_integral > I_MAX) pid_st->e_integral = I_MAX;
+    if (pid_st->e_integral < -I_MAX) pid_st->e_integral = -I_MAX;
+
+    float de_dt = (e - pid_st->e_prev) / dt;
+    pid_st->e_prev = e;
+
+    float a =
+        gains->kp * e + gains->ki * pid_st->e_integral + gains->kd * de_dt;
+
+    if (max_acc > 0.0f) {
+        if (a > max_acc) a = max_acc;
+        if (a < -max_acc) a = -max_acc;
+    }
+
+    float cmd = curr + a * dt;
     return cmd;
 }
