@@ -352,15 +352,15 @@ static int blvr_get_state(AgvMotorsBase* base) {
     }
     xSemaphoreGive(impl->mutex_buf_read);
 
-    // static size_t time = 0;
-    // time++;
-    // if (time == 5) {
-    //     for (size_t i = 0; i < axis_count; ++i) {
-    //         LOG(base->name, "alarm: %d", is_alarm(curr_state[i]));
-    //         LOG(base->name, "on_off: %d", is_servo_on(curr_state[i]));
-    //     }
-    //     time = 0;
-    // }
+    static size_t time = 0;
+    time++;
+    if (time == 5) {
+        for (size_t i = 0; i < axis_count; ++i) {
+            LOG(base->name, "alarm: %d", is_alarm(curr_state[i]));
+            LOG(base->name, "on_off: %d", is_servo_on(curr_state[i]));
+        }
+        time = 0;
+    }
     return AGV_OK;
 }
 

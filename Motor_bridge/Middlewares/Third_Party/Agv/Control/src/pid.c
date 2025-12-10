@@ -15,6 +15,11 @@
  */
 
 typedef struct {
+    float e_integral;
+    float e_prev;
+} PidState;
+
+typedef struct {
     const AgvCtrlPidConfig* cfg;
 
     Twist2D vel_des;
@@ -24,6 +29,10 @@ typedef struct {
     SemaphoreHandle_t mutex_vel;
 
     TickType_t tick_last;
+
+    PidState pid_st_x;
+    PidState pid_st_y;
+    PidState pid_st_yaw;
 
 } CtrlPidImpl;
 
@@ -37,8 +46,7 @@ static int pid_get_ctrl_cmd(AgvControlLawBase* base, Twist2D* cmd_out);
 
 // helpers
 
-float pid(float curr, float des, float dt, float kp, float ki, float kd,
-          float passthrough_thres);
+float pid(float curr, float des, float dt, float kp, float ki, float kd);
 
 /**
  * Private definitions
@@ -68,6 +76,13 @@ int Ctrl_pid_create(AgvControlLawBase* out, const AgvCtrlPidConfig* cfg) {
     impl->tick_last = xTaskGetTickCount();
     memset(&impl->vel_des, 0, sizeof(Twist2D));
     memset(&impl->vel_curr, 0, sizeof(Twist2D));
+
+    impl->pid_st_x.e_integral = 0;
+    impl->pid_st_x.e_prev = 0;
+    impl->pid_st_y.e_integral = 0;
+    impl->pid_st_y.e_prev = 0;
+    impl->pid_st_yaw.e_integral = 0;
+    impl->pid_st_yaw.e_prev = 0;
 
     out->name = name;
     out->impl = impl;
@@ -149,12 +164,21 @@ static int pid_get_ctrl_cmd(AgvControlLawBase* base, Twist2D* cmd_out) {
                1000.0f;
 
     Twist2D cmd;
-    cmd.x = pid(curr.x, des.x, dt, cfg->kp_lin, cfg->ki_lin, cfg->kd_lin,
-                cfg->passthrough_thres);
-    cmd.y = pid(curr.y, des.y, dt, cfg->kp_lin, cfg->ki_lin, cfg->kd_lin,
-                cfg->passthrough_thres);
-    cmd.yaw = pid(curr.yaw, des.yaw, dt, cfg->kp_yaw, cfg->ki_yaw, cfg->kd_yaw,
-                  cfg->passthrough_thres);
+    cmd.x =
+        pid(curr.x, des.x, dt, cfg->gain_x.kp, cfg->gain_x.ki, cfg->gain_x.kd);
+    cmd.y =
+        pid(curr.y, des.y, dt, cfg->gain_y.kp, cfg->gain_y.ki, cfg->gain_y.kd);
+    cmd.yaw = pid(curr.yaw, des.yaw, dt, cfg->gain_yaw.kp, cfg->gain_yaw.ki,
+                  cfg->gain_yaw.kd);
+
+    static int time = 0;
+    time++;
+    if (time == 25) {
+        time = 0;
+        LOG(base->name, "curr: %f %f %f", curr.x, curr.y, curr.yaw);
+        LOG(base->name, "des: %f %f %f", des.x, des.y, des.yaw);
+        LOG(base->name, "cmd: %f %f %f", cmd.x, cmd.y, cmd.yaw);
+    }
 
     impl->tick_last = tick_now;
 
@@ -163,9 +187,8 @@ static int pid_get_ctrl_cmd(AgvControlLawBase* base, Twist2D* cmd_out) {
     return AGV_OK;
 }
 
-float pid(float curr, float des, float dt, float kp, float ki, float kd,
-          float passthrough_thres) {
+float pid(float curr, float des, float dt, float kp, float ki, float kd) {
     float e = des - curr;
     float cmd = curr + kp * (e * dt);
-    return (fabsf(e) > passthrough_thres) ? cmd : des;
+    return cmd;
 }
