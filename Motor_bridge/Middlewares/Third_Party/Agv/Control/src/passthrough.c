@@ -74,8 +74,7 @@ int Ctrl_passthrough_create(AgvControlLawBase* out,
 static int Ctrl_passthrough_destroy(AgvControlLawBase* out) {
     if (!out) return AGV_OK;
 
-    CtrlPssthrghImpl* impl =
-        (CtrlPssthrghImpl*)malloc(sizeof(CtrlPssthrghImpl));
+    CtrlPssthrghImpl* impl = (CtrlPssthrghImpl*)out->impl;
     if (impl) {
         if (impl->mutex_cmd) {
             vSemaphoreDelete(impl->mutex_cmd);
@@ -87,6 +86,9 @@ static int Ctrl_passthrough_destroy(AgvControlLawBase* out) {
 
     out->impl = NULL;
     out->set_des_vel = NULL;
+    out->set_curr_vel = NULL;
+    out->get_ctrl_cmd = NULL;
+    out->destroy = NULL;
 
     return AGV_OK;
 }

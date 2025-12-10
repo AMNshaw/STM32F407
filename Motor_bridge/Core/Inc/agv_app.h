@@ -11,7 +11,7 @@ int Agv_garmin_init(AgvCore* agv_core,
                     AgvHostRosCfg* host_ros_cfg, 
                     AgvMotorBlvrConfig* blvr_cfg,
                     AgvKineMecanumConfig* mecanum_cfg, 
-                    AgvCtrlPassthroughConfig* passthrough_cfg);
+                    AgvCtrlPidConfig* pid_cfg);
 // clang-format on
 
 int Host_ros_init(AgvHostRosCfg* host_ros_cfg);
@@ -21,6 +21,7 @@ int Motor_blvr_init(AgvMotorBlvrConfig* blvr_cfg);
 int Kinematic_Mecanum_init(AgvKineMecanumConfig* mecanum_cfg);
 
 int Control_passthrogh_init(AgvCtrlPassthroughConfig* passthrough_cfg);
-int Control_pid_init(AgvPidConfig* pid_cfg);
+
+int Control_pid_init(AgvCtrlPidConfig* pid_cfg);
 
 #endif  // __AGV_APP_H__

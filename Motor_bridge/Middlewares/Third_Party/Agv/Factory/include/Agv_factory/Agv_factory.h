@@ -13,6 +13,12 @@ int Agv_test_create(AgvCore* core,
                       const AgvMotorBlvrConfig* blvr_cfg,
                       const AgvKineMecanumConfig* mecanum_cfg,
                       const AgvCtrlPassthroughConfig* passthrogh_cfg);
+
+int Agv_garmin_create(AgvCore* core, 
+                      const AgvHostRosCfg* host_ros_cfg,
+                      const AgvMotorBlvrConfig* blvr_cfg,
+                      const AgvKineMecanumConfig* mecanum_cfg,
+                      const AgvCtrlPidConfig* passthrogh_cfg);
 // clang-format on
 
 int Agv_destroy(AgvCore* core);

@@ -45,7 +45,7 @@ int Kinematic_Mecanum_init(AgvKineMecanumConfig* mecanum_cfg) {
     mecanum_cfg->wheel_radius = 0.076;
     mecanum_cfg->W = 0.259;
     mecanum_cfg->L = 0.270;
-    int8_t dir[4] = {-1, 1, -1, 1};  // 跟你現在一樣的 pattern
+    int8_t dir[4] = {1, -1, 1, -1};  // 跟你現在一樣的 pattern
     for (size_t i = 0; i < 4; ++i) {
         mecanum_cfg->axis_dir[i] = dir[i];
     }
@@ -56,9 +56,10 @@ int Control_passthrogh_init(AgvCtrlPassthroughConfig* passthrough_cfg) {
     return 0;
 }
 
-int Control_pid_init(AgvPidConfig* pid_cfg) {
-    pid_cfg->kp_lin = 1;
-    pid_cfg->kd_lin = 1;
+int Control_pid_init(AgvCtrlPidConfig* pid_cfg) {
+    pid_cfg->kp_lin = 10;
+    pid_cfg->kp_yaw = 10;
+    pid_cfg->passthrough_thres = 0.01;
     return 0;
 }
 
@@ -67,14 +68,13 @@ int Agv_garmin_init(AgvCore* agv_core,
                     AgvHostRosCfg* host_ros_cfg, 
                     AgvMotorBlvrConfig* blvr_cfg,
                     AgvKineMecanumConfig* mecanum_cfg, 
-                    AgvCtrlPassthroughConfig* passthrough_cfg) {
+                    AgvCtrlPidConfig* pid_cfg) {
     // clang-format on
     Host_ros_init(host_ros_cfg);
     Motor_blvr_init(blvr_cfg);
     Kinematic_Mecanum_init(mecanum_cfg);
-    Control_passthrogh_init(passthrough_cfg);
+    Control_pid_init(pid_cfg);
 
-    Agv_test_create(agv_core, host_ros_cfg, blvr_cfg, mecanum_cfg,
-                    passthrough_cfg);
+    Agv_garmin_create(agv_core, host_ros_cfg, blvr_cfg, mecanum_cfg, pid_cfg);
     return 0;
 }

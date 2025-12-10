@@ -7,10 +7,10 @@
 ../Middlewares/Third_Party/Agv/Motors/src/blvr.c:324:12:blvr_get_curr_ang	32	static
 ../Middlewares/Third_Party/Agv/Motors/src/blvr.c:342:12:blvr_get_state	64	dynamic
 ../Middlewares/Third_Party/Agv/Motors/src/blvr.c:367:12:blvr_read_and_write	400	dynamic
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:496:9:rad_s_to_regVelUnit	24	static
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:501:7:regVelUnit_to_rad_s	24	static
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:506:9:rad_to_regAngUnit	24	static
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:511:7:regAngUnit_to_rad	24	static
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:517:6:is_servo_on	16	static
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:521:6:is_alarm	16	static
-../Middlewares/Third_Party/Agv/Motors/src/blvr.c:525:6:is_moving	16	static
+../Middlewares/Third_Party/Agv/Motors/src/blvr.c:480:9:rad_s_to_regVelUnit	24	static
+../Middlewares/Third_Party/Agv/Motors/src/blvr.c:485:7:regVelUnit_to_rad_s	24	static
+../Middlewares/Third_Party/Agv/Motors/src/blvr.c:490:9:rad_to_regAngUnit	24	static
+../Middlewares/Third_Party/Agv/Motors/src/blvr.c:495:7:regAngUnit_to_rad	24	static
+../Middlewares/Third_Party/Agv/Motors/src/blvr.c:501:6:is_servo_on	16	static
+../Middlewares/Third_Party/Agv/Motors/src/blvr.c:505:6:is_alarm	16	static
+../Middlewares/Third_Party/Agv/Motors/src/blvr.c:509:6:is_moving	16	static

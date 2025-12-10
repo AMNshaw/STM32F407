@@ -352,15 +352,15 @@ static int blvr_get_state(AgvMotorsBase* base) {
     }
     xSemaphoreGive(impl->mutex_buf_read);
 
-    static size_t time = 0;
-    time++;
-    if (time == 5) {
-        for (size_t i = 0; i < axis_count; ++i) {
-            LOG(base->name, "alarm: %d", is_alarm(curr_state[i]));
-            LOG(base->name, "on_off: %d", is_servo_on(curr_state[i]));
-        }
-        time = 0;
-    }
+    // static size_t time = 0;
+    // time++;
+    // if (time == 5) {
+    //     for (size_t i = 0; i < axis_count; ++i) {
+    //         LOG(base->name, "alarm: %d", is_alarm(curr_state[i]));
+    //         LOG(base->name, "on_off: %d", is_servo_on(curr_state[i]));
+    //     }
+    //     time = 0;
+    // }
     return AGV_OK;
 }
 
@@ -376,7 +376,6 @@ static int blvr_read_and_write(AgvMotorsBase* base) {
     if (!link || !fmt || !prtcl) return AGV_ERR_NO_MEMORY;
 
     // Send read_write request
-    // LOG(base->name, "Copying msg");
     BlvrMsg msg_send = {0};
     msg_send.msg_type = READ_WRITE;
 
@@ -394,6 +393,7 @@ static int blvr_read_and_write(AgvMotorsBase* base) {
         }
     } else if (impl->pending_cmd == DRIVER) {
         msg_send.u.write_msg.write_type = SET_DRIVER;
+        LOG(base->name, "driver_cmd");
         for (size_t i = 0; i < impl->cfg->axis_count; i++) {
             msg_send.u.write_msg.msgs[i].driver_cmd =
                 impl->write_buf[i].driver_cmd;
@@ -403,32 +403,20 @@ static int blvr_read_and_write(AgvMotorsBase* base) {
 
     int code = AGV_OK;
 
-    // LOG(base->name, "Making payload");
     size_t blvr_payload_len = impl->cfg->prtcl_blvr_cfg.max_payload_len;
     uint8_t payload_built[blvr_payload_len];
     code = prtcl->make_payload(prtcl, &msg_send, sizeof(msg_send),
                                payload_built, &blvr_payload_len);
-    // LOG(base->name, "Payload len: %d", blvr_payload_len);
     if (code != AGV_OK) return code;
     size_t frame_len = impl->cfg->modbus_cfg.max_frame_len;
     uint8_t frame_made[frame_len];
     code = fmt->make_frame(fmt, payload_built, blvr_payload_len, frame_made,
                            &frame_len);
     if (code != AGV_OK) return code;
-    // LOG(base->name, "Frame len: %d, Frame:", frame_len);
-    // for (size_t i = 0; i < frame_len; i++) {
-    //     printf("%02X ", frame_made[i]);
-    // }
-    // printf("\n");
 
-    // LOG(base->name, "Sending frame");
     code = link->send_bytes(link, frame_made, frame_len);
     if (code != AGV_OK) return code;
 
-    // We have no module, skip this part first
-
-    // Receive read_write response
-    // LOG(base->name, "Receiving bytes");
     size_t expected_bytes_len;
     code =
         BlvrProto_get_response_frame_len(prtcl, &msg_send, &expected_bytes_len);
@@ -445,11 +433,6 @@ static int blvr_read_and_write(AgvMotorsBase* base) {
         uint32_t data_timeStamp;
         code = link->read_buf(link, data_rcv, &data_len, &data_timeStamp);
         if (code != AGV_OK) {
-            LOG(base->name, "Error, data:");
-            for (size_t i = 0; i < data_len; ++i) {
-                printf("%02X ", data_rcv[i]);
-            }
-            printf("\n");
             fmt->reset(fmt);
             return code;
         }
@@ -457,18 +440,14 @@ static int blvr_read_and_write(AgvMotorsBase* base) {
         code = fmt->feed_bytes(fmt, data_rcv, data_len);
     }
     if (code != AGV_OK) return code;
-    // LOG(base->name, "popping payload");
     size_t payload_len = impl->cfg->modbus_cfg.max_frame_len;
     uint8_t payload[payload_len];
     code = fmt->pop_payload(fmt, payload, &payload_len);
     if (code != AGV_OK) return code;
-    // LOG(base->name, "payload len: %d", payload_len);
 
-    // LOG(base->name, "feeding payload");
     code = prtcl->feed_payload(prtcl, payload, payload_len);
     if (code != AGV_OK) return code;
 
-    // LOG(base->name, "popping msg");
     BlvrMsg msg_rcv;
     code = prtcl->pop_msg(prtcl, &msg_rcv, sizeof(msg_rcv));
     if (code != AGV_OK) return code;

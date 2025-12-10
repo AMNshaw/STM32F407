@@ -56,7 +56,7 @@
 AgvCore agv_core;
 AgvHostRosCfg host_ros_cfg;
 AgvMotorBlvrConfig motor_blvr_cfg;
-AgvCtrlPassthroughConfig ctrl_passthrough_cfg;
+AgvCtrlPidConfig ctrl_pid_cfg;
 AgvKineMecanumConfig kine_mecanum_cfg;
 /* USER CODE END PV */
 
@@ -111,7 +111,7 @@ int main(void)
   MX_USART6_UART_Init();
   /* USER CODE BEGIN 2 */
     Agv_garmin_init(&agv_core, &host_ros_cfg, &motor_blvr_cfg,
-                    &kine_mecanum_cfg, &ctrl_passthrough_cfg);
+                    &kine_mecanum_cfg, &ctrl_pid_cfg);
     AGV_attach_core_task(&agv_core);
   /* USER CODE END 2 */
 

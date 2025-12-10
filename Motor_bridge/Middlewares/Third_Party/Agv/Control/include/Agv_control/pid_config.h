@@ -8,6 +8,8 @@ typedef struct {
     float kp_yaw;
     float ki_yaw;
     float kd_yaw;
-} AgvPidConfig;
+
+    float passthrough_thres;
+} AgvCtrlPidConfig;
 
 #endif  // AGV_CONTROL__PID_CONFIG_H_

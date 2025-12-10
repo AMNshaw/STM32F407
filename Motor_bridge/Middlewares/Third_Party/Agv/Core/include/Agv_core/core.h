@@ -27,6 +27,8 @@ int AgvCore_step_host_control(AgvCore* core);
 
 int AgvCore_step_motor_io(AgvCore* core);
 
+int AgvCore_step_body_control(AgvCore* core);
+
 int AgvCore_step_feedback(AgvCore* core);
 
 int AgvCore_set_cmd_vel(AgvCore* core, Twist2D cmd_in);

@@ -42,6 +42,26 @@ int AgvCore_step_host_control(AgvCore* core) {
     return AGV_OK;
 }
 
+int AgvCore_step_body_control(AgvCore* core) {
+    if (!core) return AGV_ERR_INVALID_ARG;
+    int code = 0;
+
+    AgvKinematicsBase* kine = &core->kinematic_base;
+    AgvControlLawBase* ctrl = &core->control_law_base;
+    AgvMotorsBase* motors = &core->motors_base;
+
+    Twist2D cmd;
+    code = ctrl->get_ctrl_cmd(ctrl, &cmd);
+    if (code != AGV_OK) return code;
+
+    WheelsVel wheels_cmd;
+    code = kine->calculate_wheels_vel(kine, &cmd, &wheels_cmd);
+    if (code != AGV_OK) return code;
+
+    code = motors->set_des_wheel_vel(motors, &wheels_cmd);
+    if (code != AGV_OK) return code;
+}
+
 int AgvCore_step_motor_io(AgvCore* core) {
     if (!core) return AGV_ERR_INVALID_ARG;
 
@@ -61,20 +81,6 @@ int AgvCore_step_motor_io(AgvCore* core) {
     if (code != AGV_OK) return code;
     code = kine->calculate_odom(kine, &wheels_ang, &wheels_vel, &odom_out);
     if (code != AGV_OK) return code;
-
-    // static size_t time = 0;
-    // time++;
-    // if (time == 50) {
-    //     for (size_t i = 0; i < 4; i++) {
-    //         LOG("core", "wheelang: %f, wheelvel %f", wheels_ang.data[i],
-    //             wheels_vel.data[i]);
-    //     }
-    //     LOG("core", "Odom: %f %f %f %f %f %f", odom_out.pose.x,
-    //     odom_out.pose.y,
-    //         odom_out.pose.yaw, odom_out.twist.x, odom_out.twist.y,
-    //         odom_out.twist.yaw);
-    //     time = 0;
-    // }
 
     xSemaphoreTake(core->mutex_odom, portMAX_DELAY);
     core->odom = odom_out;
@@ -101,9 +107,7 @@ int AgvCore_step_feedback(AgvCore* core) {
 int AgvCore_set_cmd_vel(AgvCore* core, Twist2D cmd_in) {
     if (!core) return AGV_ERR_INVALID_ARG;
 
-    AgvKinematicsBase* kine = &core->kinematic_base;
     AgvControlLawBase* ctrl = &core->control_law_base;
-    AgvMotorsBase* motors = &core->motors_base;
 
     Twist2D curr_vel;
     xSemaphoreTake(core->mutex_odom, portMAX_DELAY);
@@ -115,30 +119,7 @@ int AgvCore_set_cmd_vel(AgvCore* core, Twist2D cmd_in) {
     if (code != AGV_OK) return code;
     code = ctrl->set_curr_vel(ctrl, &curr_vel);
     if (code != AGV_OK) return code;
-    code = ctrl->get_ctrl_cmd(ctrl, &cmd_in);
-    if (code != AGV_OK) return code;
 
-    WheelsVel wheels_cmd;
-    code = kine->calculate_wheels_vel(kine, &cmd_in, &wheels_cmd);
-    if (code != AGV_OK) return code;
-
-    // wheels_cmd.data[0] = 0.0;
-    // wheels_cmd.data[1] = 0.0;
-    // wheels_cmd.data[2] = 0.5;
-    // wheels_cmd.data[3] = 0.0;
-    static size_t time = 0;
-    time++;
-    if (time == 5) {
-        LOG("core", "cmd_vel: %f %f %f", cmd_in.x, cmd_in.y, cmd_in.yaw);
-        LOG("core", "wheels_cmd:");
-        for (size_t i = 0; i < 4; i++) {
-            LOG("core", "%f ", wheels_cmd.data[i]);
-        }
-        time = 0;
-    }
-
-    code = motors->set_des_wheel_vel(motors, &wheels_cmd);
-    if (code != AGV_OK) return code;
     return AGV_OK;
 }
 

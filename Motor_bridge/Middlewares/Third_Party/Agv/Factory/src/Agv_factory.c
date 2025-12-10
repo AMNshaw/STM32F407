@@ -22,6 +22,24 @@ int Agv_test_create(AgvCore* core, const AgvHostRosCfg* host_ros_cfg,
     return AGV_OK;
 }
 
+int Agv_garmin_create(AgvCore* core, const AgvHostRosCfg* host_ros_cfg,
+                      const AgvMotorBlvrConfig* blvr_cfg,
+                      const AgvKineMecanumConfig* mecanum_cfg,
+                      const AgvCtrlPidConfig* pid_cfg) {
+    Host_communication_ros_create(&core->host_communication_base, host_ros_cfg);
+    Motors_blvr_create(&core->motors_base, blvr_cfg);
+    Kinematics_mecanum_create(&core->kinematic_base, mecanum_cfg);
+    Ctrl_pid_create(&core->control_law_base, pid_cfg);
+
+    core->mutex_odom = xSemaphoreCreateMutex();
+    if (core->mutex_odom == NULL) {
+        Agv_destroy(core);
+        return AGV_ERR_MUTEX_FAIL;
+    }
+
+    return AGV_OK;
+}
+
 int Agv_destroy(AgvCore* core) {
     if (!core) return AGV_OK;
 

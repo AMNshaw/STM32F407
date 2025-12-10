@@ -72,7 +72,7 @@ const osThreadAttr_t agv_sendOdomTask_attributes = {
 osThreadId_t agv_hostMsgCallbackTaskHandle;
 const osThreadAttr_t agv_hostMsgCallbackTask_attributes = {
     .name = "AgvHostMsgCallback",
-    .stack_size = 2048 * 4,
+    .stack_size = 1024 * 4,
     .priority = (osPriority_t)osPriorityNormal,
 };
 
@@ -80,15 +80,23 @@ osThreadId_t joystickTaskHandle;
 const osThreadAttr_t joystickTask_attributes = {
     .name = "joystickTask",
     .stack_size = 2048 * 4,
-    .priority = (osPriority_t)osPriorityHigh,
+    .priority = (osPriority_t)osPriorityNormal,
 };
 
 osThreadId_t agv_motorIoTaskHandle;
 const osThreadAttr_t agv_motorIoTask_attributes = {
     .name = "AgvMotorIo",
     .stack_size = 2048 * 4,
+    .priority = (osPriority_t)osPriorityRealtime7,
+};
+
+osThreadId_t agv_bodyControlTaskHandle;
+const osThreadAttr_t agv_modyControlTask_attributes = {
+    .name = "AgvBodyControl",
+    .stack_size = 2048 * 4,
     .priority = (osPriority_t)osPriorityHigh,
 };
+
 /* USER CODE END Variables */
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
@@ -105,6 +113,7 @@ void AgvSendOdomTask(void* argument);
 void AgvHostMsgCallbackTask(void* argument);
 void joystickTask(void* argument);
 void AgvMotorIoTask(void* argument);
+void AgvBodyControlTask(void* argument);
 /* USER CODE END FunctionPrototypes */
 
 void StartDefaultTask(void* argument);
@@ -154,6 +163,8 @@ void MX_FREERTOS_Init(void) {
         osThreadNew(joystickTask, NULL, &joystickTask_attributes);
     agv_motorIoTaskHandle =
         osThreadNew(AgvMotorIoTask, NULL, &agv_motorIoTask_attributes);
+    agv_bodyControlTaskHandle =
+        osThreadNew(AgvBodyControlTask, NULL, &agv_modyControlTask_attributes);
     /* USER CODE END RTOS_THREADS */
 
     /* USER CODE BEGIN RTOS_EVENTS */
@@ -249,7 +260,16 @@ void AgvMotorIoTask(void* argument) {
     for (;;) {
         int code = AgvCore_step_motor_io(s_agv_core);
         if (code != AGV_OK) printf("Motor Io error code: %d\n", code);
-        vTaskDelay(10);  // 100 Hz
+        vTaskDelay(20);  // 100 Hz
+    }
+}
+
+void AgvBodyControlTask(void* argument) {
+    LOG("Task", "Start body control...");
+    for (;;) {
+        int code = AgvCore_step_body_control(s_agv_core);
+        if (code != AGV_OK) printf("Motor Io error code: %d\n", code);
+        vTaskDelay(10);
     }
 }
 

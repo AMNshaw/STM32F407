@@ -8,6 +8,6 @@
 int Ctrl_passthrough_create(AgvControlLawBase* out,
                             const AgvCtrlPassthroughConfig* cfg);
 
-int Ctrl_pid_create(AgvControlLawBase* out, const AgvPidConfig* cfg);
+int Ctrl_pid_create(AgvControlLawBase* out, const AgvCtrlPidConfig* cfg);
 
 #endif  // AGV_FACTORY__CONTROL_LAW_BUILDER_H_

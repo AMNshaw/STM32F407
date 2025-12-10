@@ -98,12 +98,12 @@ void Joystick_Update(JoystickCmd* out, uint32_t now_ms) {
 
     // 5) 映射到速度
     // 注意: 你可以定義 X=前後、Y=左右 或反過來，這裡假設：
-    out->vx = -y_norm * VX_MAX;
-    out->vy = x_norm * VY_MAX;
+    out->vx = y_norm * VX_MAX;
+    out->vy = -x_norm * VY_MAX;
 
     int yaw_dir = 0;
-    if (state.btn_left) yaw_dir -= 1;
-    if (state.btn_right) yaw_dir += 1;
+    if (state.btn_left) yaw_dir += 1;
+    if (state.btn_right) yaw_dir -= 1;
     out->vyaw = (float)yaw_dir * VYAW_MAX;
 
     out->reset = state.btn_reset;
