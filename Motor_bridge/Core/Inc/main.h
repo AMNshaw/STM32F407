@@ -79,6 +79,10 @@ void Error_Handler(void);
 #define SPI1_MISO_GPIO_Port GPIOA
 #define SPI1_MOSI_Pin GPIO_PIN_7
 #define SPI1_MOSI_GPIO_Port GPIOA
+#define SPI_SS0_Pin GPIO_PIN_4
+#define SPI_SS0_GPIO_Port GPIOC
+#define SPI_SS1_Pin GPIO_PIN_5
+#define SPI_SS1_GPIO_Port GPIOC
 #define ADC_Joystick_x_Pin GPIO_PIN_0
 #define ADC_Joystick_x_GPIO_Port GPIOB
 #define ADC_Joystick_y_Pin GPIO_PIN_1
