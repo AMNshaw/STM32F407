@@ -7,9 +7,9 @@
 #define ADC_HALF_RANGE 2048.0f
 
 #define JOY_DEADZONE 0.15f  // 搖桿死區：|norm| < 0.15 視為 0
-#define VX_MAX 0.3f         // m/s
-#define VY_MAX 0.2f         // m/s
-#define VYAW_MAX 0.2f       // rad/s
+#define VX_MAX 1.0f         // m/s
+#define VY_MAX 1.0f         // m/s
+#define VYAW_MAX 0.8f       // rad/s
 
 #define BTN_DEBOUNCE_CNT 4   // 4 次 * 5ms = 20ms 去抖
 #define IDLE_TIMEOUT_MS 500  // 超過 0.5 秒沒有活動 -> 視為無指令

@@ -57,21 +57,21 @@ int Control_passthrogh_init(AgvCtrlPassthroughConfig* passthrough_cfg) {
 }
 
 int Control_pid_init(AgvCtrlPidConfig* pid_cfg) {
-    pid_cfg->gain_x.kp = 20;
-    pid_cfg->gain_x.ki = 0.3;
-    pid_cfg->gain_x.kd = 0.05;
+    pid_cfg->gain_x.kp = 45;
+    pid_cfg->gain_x.ki = 0;
+    pid_cfg->gain_x.kd = 2.5;
 
-    pid_cfg->gain_y.kp = 20;
-    pid_cfg->gain_y.ki = 0.3;
-    pid_cfg->gain_y.kd = 0.05;
+    pid_cfg->gain_y.kp = 45;
+    pid_cfg->gain_y.ki = 0;
+    pid_cfg->gain_y.kd = 2.5;
 
-    pid_cfg->gain_yaw.kp = 20;
-    pid_cfg->gain_yaw.ki = 0.3;
-    pid_cfg->gain_yaw.kd = 0.05;
+    pid_cfg->gain_yaw.kp = 45;
+    pid_cfg->gain_yaw.ki = 0;
+    pid_cfg->gain_yaw.kd = 2.5;
 
-    pid_cfg->max_acc.x = 0.5;
-    pid_cfg->max_acc.y = 0.5;
-    pid_cfg->max_acc.yaw = 0.5;
+    pid_cfg->max_acc.x = 10;
+    pid_cfg->max_acc.y = 10;
+    pid_cfg->max_acc.yaw = 10;
 
     return 0;
 }

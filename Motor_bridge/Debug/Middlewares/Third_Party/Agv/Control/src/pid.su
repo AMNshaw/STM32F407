@@ -2,5 +2,5 @@
 ../Middlewares/Third_Party/Agv/Control/src/pid.c:99:12:Ctrl_pid_destroy	24	static
 ../Middlewares/Third_Party/Agv/Control/src/pid.c:125:12:pid_set_des_vel	24	static
 ../Middlewares/Third_Party/Agv/Control/src/pid.c:137:12:pid_set_curr_vel	24	static
-../Middlewares/Third_Party/Agv/Control/src/pid.c:149:12:pid_get_ctrl_cmd	112	static
+../Middlewares/Third_Party/Agv/Control/src/pid.c:149:12:pid_get_ctrl_cmd	80	static
 ../Middlewares/Third_Party/Agv/Control/src/pid.c:191:7:pid_virtual_acc	56	static

@@ -245,6 +245,8 @@ void joystickTask(void* argument) {
         if (cmd.reset) {
             HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12);
             AgvCore_reset_motor(s_agv_core);
+            vTaskDelay(100);
+            continue;
         }
         agv_cmd.x = cmd.vx;
         agv_cmd.y = cmd.vy;

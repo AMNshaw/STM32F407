@@ -239,7 +239,6 @@ static int blvr_reset(AgvMotorsBase* base) {
     }
     xSemaphoreGive(impl->mutex_buf_read);
     xSemaphoreTake(impl->mutex_buf_write, portMAX_DELAY);
-
     for (size_t i = 0; i < impl->cfg->axis_count; ++i) {
         if (is_alarm(curr_st[i])) {
             impl->pending_cmd = DRIVER;
@@ -247,10 +246,6 @@ static int blvr_reset(AgvMotorsBase* base) {
         }
     }
     xSemaphoreGive(impl->mutex_buf_write);
-
-    HAL_GPIO_WritePin(GPIOD, GPIO_PIN_10, GPIO_PIN_RESET);
-    vTaskDelay(pdMS_TO_TICKS(100));
-    HAL_GPIO_WritePin(GPIOD, GPIO_PIN_10, GPIO_PIN_SET);
 
     return AGV_OK;
 }
@@ -356,8 +351,8 @@ static int blvr_get_state(AgvMotorsBase* base) {
     time++;
     if (time == 5) {
         for (size_t i = 0; i < axis_count; ++i) {
-            LOG(base->name, "alarm: %d", is_alarm(curr_state[i]));
-            LOG(base->name, "on_off: %d", is_servo_on(curr_state[i]));
+            if (is_alarm(curr_state[i])) LOG(base->name, "Alarm!");
+            if (!is_servo_on(curr_state[i])) LOG(base->name, "Servo off!");
         }
         time = 0;
     }
@@ -379,8 +374,11 @@ static int blvr_read_and_write(AgvMotorsBase* base) {
     BlvrMsg msg_send = {0};
     msg_send.msg_type = READ_WRITE;
 
+    PendingCmd curr_cmd = impl->pending_cmd;
+    if (curr_cmd == DRIVER) LOG(base->name, "driver_cmd");
+
     xSemaphoreTake(impl->mutex_buf_write, portMAX_DELAY);
-    if (impl->pending_cmd == MOVE) {
+    if (curr_cmd == MOVE) {
         msg_send.u.write_msg.write_type = SET_MOVE;
         for (size_t i = 0; i < impl->cfg->axis_count; i++) {
             msg_send.u.write_msg.msgs[i].des_vel = impl->write_buf[i].des_vel;
@@ -391,9 +389,8 @@ static int blvr_read_and_write(AgvMotorsBase* base) {
             msg_send.u.write_msg.msgs[i].trigger =
                 BLVR_OPERATION_TRIGGER_NORMAL_START;
         }
-    } else if (impl->pending_cmd == DRIVER) {
+    } else if (curr_cmd == DRIVER) {
         msg_send.u.write_msg.write_type = SET_DRIVER;
-        LOG(base->name, "driver_cmd");
         for (size_t i = 0; i < impl->cfg->axis_count; i++) {
             msg_send.u.write_msg.msgs[i].driver_cmd =
                 impl->write_buf[i].driver_cmd;
@@ -461,7 +458,7 @@ static int blvr_read_and_write(AgvMotorsBase* base) {
     xSemaphoreGive(impl->mutex_buf_read);
 
     xSemaphoreTake(impl->mutex_buf_write, portMAX_DELAY);
-    if (impl->pending_cmd == DRIVER) {
+    if (curr_cmd == DRIVER) {
         for (size_t i = 0; i < impl->cfg->axis_count; ++i) {
             impl->write_buf[i].driver_cmd = 0;
         }

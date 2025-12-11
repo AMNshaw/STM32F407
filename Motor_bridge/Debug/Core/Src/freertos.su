@@ -5,5 +5,5 @@
 ../Core/Src/freertos.c:211:6:AgvSendOdomTask	48	static
 ../Core/Src/freertos.c:229:6:AgvHostMsgCallbackTask	24	static
 ../Core/Src/freertos.c:236:6:joystickTask	48	static
-../Core/Src/freertos.c:258:6:AgvMotorIoTask	24	static
-../Core/Src/freertos.c:267:6:AgvBodyControlTask	24	static
+../Core/Src/freertos.c:260:6:AgvMotorIoTask	24	static
+../Core/Src/freertos.c:269:6:AgvBodyControlTask	24	static
