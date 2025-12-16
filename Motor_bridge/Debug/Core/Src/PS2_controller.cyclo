@@ -1,0 +1,13 @@
+../Core/Src/PS2_controller.c:52:20:ps2_start_comm	1
+../Core/Src/PS2_controller.c:56:20:ps2_stop_comm	1
+../Core/Src/PS2_controller.c:61:6:is_button_pressed	1
+../Core/Src/PS2_controller.c:63:21:clampf	3
+../Core/Src/PS2_controller.c:67:7:joystick_norm	1
+../Core/Src/PS2_controller.c:73:6:PS2_init	1
+../Core/Src/PS2_controller.c:104:6:PS2_update	3
+../Core/Src/PS2_controller.c:142:13:ps2_xfer	4
+../Core/Src/PS2_controller.c:158:6:ps2_poll	3
+../Core/Src/PS2_controller.c:183:6:update_speed	20
+../Core/Src/PS2_controller.c:219:6:ps2_vibration	3
+../Core/Src/PS2_controller.c:237:21:apply_deadzone	4
+../Core/Src/PS2_controller.c:246:21:apply_expo_k	3
