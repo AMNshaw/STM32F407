@@ -240,6 +240,7 @@ void joystickTask(void* argument) {
     cfg.cs_port = GPIOB;
     cfg.cs_pin = GPIO_PIN_11;
     Ps2Cmd cmd;
+    cmd.reset = 0;
     cmd.vx = 0;
     cmd.vy = 0;
     cmd.vyaw = 0;

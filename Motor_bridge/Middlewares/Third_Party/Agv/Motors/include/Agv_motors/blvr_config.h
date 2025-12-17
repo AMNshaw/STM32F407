@@ -17,6 +17,9 @@ typedef struct {
 
     size_t axis_count;
 
+    float motor_acc;
+    float motor_dec;
+
     float unit_step_degree;
     float unit_vel_rpm;
 

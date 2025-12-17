@@ -124,8 +124,8 @@ int Motors_blvr_create(AgvMotorsBase* out, const AgvMotorBlvrConfig* cfg) {
         read_buf->rl_pos = 0;
         read_buf->rl_rpm = 0;
 
-        write_buf->des_acc = 60;
-        write_buf->des_dec = 60;
+        write_buf->des_acc = cfg->motor_acc;
+        write_buf->des_dec = cfg->motor_dec;
         write_buf->des_vel = 0;
         write_buf->spd_ctrl = 0;
         write_buf->trigger = 0;

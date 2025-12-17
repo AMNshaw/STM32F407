@@ -5,5 +5,5 @@
 ../Core/Src/freertos.c:211:6:AgvSendOdomTask	2
 ../Core/Src/freertos.c:229:6:AgvHostMsgCallbackTask	1
 ../Core/Src/freertos.c:236:6:joystickTask	3
-../Core/Src/freertos.c:270:6:AgvMotorIoTask	2
-../Core/Src/freertos.c:279:6:AgvBodyControlTask	2
+../Core/Src/freertos.c:271:6:AgvMotorIoTask	2
+../Core/Src/freertos.c:280:6:AgvBodyControlTask	2

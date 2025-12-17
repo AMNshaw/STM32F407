@@ -5,9 +5,8 @@
 ../Core/Src/PS2_controller.c:67:7:joystick_norm	24	static
 ../Core/Src/PS2_controller.c:73:6:PS2_init	64	static
 ../Core/Src/PS2_controller.c:104:6:PS2_update	32	static
-../Core/Src/PS2_controller.c:142:13:ps2_xfer	48	static,ignoring_inline_asm
-../Core/Src/PS2_controller.c:158:6:ps2_poll	40	static
-../Core/Src/PS2_controller.c:183:6:update_speed	24	static
-../Core/Src/PS2_controller.c:219:6:ps2_vibration	40	static
-../Core/Src/PS2_controller.c:237:21:apply_deadzone	16	static
-../Core/Src/PS2_controller.c:246:21:apply_expo_k	24	static
+../Core/Src/PS2_controller.c:147:13:ps2_xfer	48	static,ignoring_inline_asm
+../Core/Src/PS2_controller.c:163:6:ps2_poll	40	static
+../Core/Src/PS2_controller.c:188:6:update_speed	24	static
+../Core/Src/PS2_controller.c:227:6:ps2_vibration	40	static
+../Core/Src/PS2_controller.c:245:21:apply_deadzone	16	static

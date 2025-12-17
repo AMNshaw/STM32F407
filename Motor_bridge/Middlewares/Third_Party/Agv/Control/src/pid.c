@@ -172,15 +172,6 @@ static int pid_get_ctrl_cmd(AgvControlLawBase* base, Twist2D* cmd_out) {
     cmd.yaw = pid_virtual_acc(curr.yaw, des.yaw, dt, cfg->max_acc.yaw,
                               &impl->pid_st_yaw, &cfg->gain_yaw);
 
-    // static int time = 0;
-    // time++;
-    // if (time == 25) {
-    //     time = 0;
-    //     LOG(base->name, "curr: %f %f %f", curr.x, curr.y, curr.yaw);
-    //     LOG(base->name, "des: %f %f %f", des.x, des.y, des.yaw);
-    //     LOG(base->name, "cmd: %f %f %f", cmd.x, cmd.y, cmd.yaw);
-    // }
-
     impl->tick_last = tick_now;
 
     *cmd_out = cmd;

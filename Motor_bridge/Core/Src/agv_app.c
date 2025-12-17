@@ -25,6 +25,8 @@ int Motor_blvr_init(AgvMotorBlvrConfig* blvr_cfg) {
     blvr_cfg->gearRatio_motor_to_wheel = 30;
     blvr_cfg->unit_step_degree = 0.01;
     blvr_cfg->unit_vel_rpm = 1;
+    blvr_cfg->motor_acc = 60;
+    blvr_cfg->motor_dec = 60;
 
     blvr_cfg->uart_cfg.huart = &huart3;
     blvr_cfg->uart_cfg.auto_DE = true;
@@ -57,21 +59,21 @@ int Control_passthrogh_init(AgvCtrlPassthroughConfig* passthrough_cfg) {
 }
 
 int Control_pid_init(AgvCtrlPidConfig* pid_cfg) {
-    pid_cfg->gain_x.kp = 55;
+    pid_cfg->gain_x.kp = 45;
     pid_cfg->gain_x.ki = 0;
-    pid_cfg->gain_x.kd = 2.5;
+    pid_cfg->gain_x.kd = 2.0;
 
-    pid_cfg->gain_y.kp = 55;
+    pid_cfg->gain_y.kp = 45;
     pid_cfg->gain_y.ki = 0;
-    pid_cfg->gain_y.kd = 2.5;
+    pid_cfg->gain_y.kd = 2.0;
 
-    pid_cfg->gain_yaw.kp = 60;
+    pid_cfg->gain_yaw.kp = 75;
     pid_cfg->gain_yaw.ki = 0;
-    pid_cfg->gain_yaw.kd = 2.0;
+    pid_cfg->gain_yaw.kd = 0;
 
-    pid_cfg->max_acc.x = 10;
-    pid_cfg->max_acc.y = 10;
-    pid_cfg->max_acc.yaw = 10;
+    pid_cfg->max_acc.x = 20;
+    pid_cfg->max_acc.y = 20;
+    pid_cfg->max_acc.yaw = 20;
 
     return 0;
 }

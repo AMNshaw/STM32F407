@@ -72,7 +72,7 @@ float joystick_norm(uint8_t val) {
 // Public definitions
 void PS2_init(const Ps2CommCfg* cfg) {
     ps2.comm_cfg = cfg;
-    ps2.buttons = 0;
+    ps2.buttons = 0xFFFF;
     ps2.lx = JOYSTICK_REF;
     ps2.ly = JOYSTICK_REF;
     ps2.rx = JOYSTICK_REF;
@@ -102,7 +102,12 @@ void PS2_init(const Ps2CommCfg* cfg) {
 }
 
 void PS2_update(Ps2Cmd* cmd) {
-    if (!ps2_poll() || is_button_pressed(PSB_TRIANGLE)) {
+    if (!ps2_poll()) {
+        cmd->vx = 0;
+        cmd->vy = 0;
+        cmd->vyaw = 0;
+    }
+    if (is_button_pressed(PSB_START)) {
         cmd->reset = 1;
         cmd->vx = 0;
         cmd->vy = 0;
@@ -124,9 +129,9 @@ void PS2_update(Ps2Cmd* cmd) {
     rx = apply_deadzone(rx, 0.08f);
 
     // expo
-    lx = apply_expo_k(lx, 0.5);
-    ly = apply_expo_k(ly, 0.5);
-    rx = apply_expo_k(rx, 0.5);
+    // lx = apply_expo_k(lx, 0.5);
+    // ly = apply_expo_k(ly, 0.5);
+    // rx = apply_expo_k(rx, 0.5);
 
     // low-pass
     // vx_f = lpf(vx_f, ly * VX_MAX, 0.2f);
@@ -185,7 +190,7 @@ void update_speed(void) {
     bool update = false;
     if (is_button_pressed(PSB_L1) && !is_button_pressed(PSB_L2)) {
         bool can_update = now - ps2.button_last_t.L1 > (TickType_t)300;
-        if (ps2.vx_curr < VX_MAX && ps2.vy_curr < VY_MAX && can_update) {
+        if (can_update) {
             ps2.vx_curr += 0.1;
             ps2.vy_curr += 0.1;
             update = true;
@@ -193,7 +198,7 @@ void update_speed(void) {
     }
     if (is_button_pressed(PSB_L2) && !is_button_pressed(PSB_L1)) {
         bool can_update = now - ps2.button_last_t.L2 > (TickType_t)300;
-        if (ps2.vx_curr > VX_MIN && ps2.vy_curr > VY_MIN && can_update) {
+        if (can_update) {
             ps2.vx_curr -= 0.1;
             ps2.vy_curr -= 0.1;
             update = true;
@@ -201,24 +206,27 @@ void update_speed(void) {
     }
     if (is_button_pressed(PSB_R1) && !is_button_pressed(PSB_R2)) {
         bool can_update = now - ps2.button_last_t.R1 > (TickType_t)300;
-        if (ps2.vyaw_curr < VYAW_MAX && can_update) {
+        if (can_update) {
             ps2.vyaw_curr += 0.1;
             update = true;
         }
     }
     if (is_button_pressed(PSB_R2) && !is_button_pressed(PSB_R1)) {
         bool can_update = now - ps2.button_last_t.R2 > (TickType_t)300;
-        if (ps2.vyaw_curr > VYAW_MIN && can_update) {
+        if (can_update) {
             ps2.vyaw_curr -= 0.1;
             update = true;
         }
     }
+    ps2.vx_curr = clampf(ps2.vx_curr, VX_MIN, VX_MAX);
+    ps2.vy_curr = clampf(ps2.vy_curr, VY_MIN, VY_MAX);
+    ps2.vyaw_curr = clampf(ps2.vyaw_curr, VYAW_MIN, VYAW_MAX);
     if (update) ps2_vibration();
 }
 
 bool ps2_vibration(void) {
     uint8_t rx[9];
-    const uint8_t vib_cmd[] = {0x01, 0x42, 0x01, 0x40, 0x00,
+    const uint8_t vib_cmd[] = {0x01, 0x42, 0x01, 0x40, 0x40,
                                0x00, 0x00, 0x00, 0x00};
     ps2_xfer(vib_cmd, rx, sizeof(vib_cmd));
 

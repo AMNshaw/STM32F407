@@ -26,9 +26,9 @@
 #define VY_MAX 1.0f  // m/s
 #define VYAW_MAX 1.0f
 
-#define VX_MIN 0.0f  // m/s
-#define VY_MIN 0.0f  // m/s
-#define VYAW_MIN 0.0f
+#define VX_MIN 0.1f  // m/s
+#define VY_MIN 0.1f  // m/s
+#define VYAW_MIN 0.1f
 
 typedef struct {
     float vx;
