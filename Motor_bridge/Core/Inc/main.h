@@ -69,6 +69,8 @@ void Error_Handler(void);
 #define USART2_TX_GPIO_Port GPIOA
 #define USART2_RX_Pin GPIO_PIN_3
 #define USART2_RX_GPIO_Port GPIOA
+#define BOOT1_Pin GPIO_PIN_2
+#define BOOT1_GPIO_Port GPIOB
 #define SPI2_SS0_Pin GPIO_PIN_11
 #define SPI2_SS0_GPIO_Port GPIOB
 #define SPI2_SS1_Pin GPIO_PIN_12

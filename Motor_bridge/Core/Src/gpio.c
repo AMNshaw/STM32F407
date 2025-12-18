@@ -58,6 +58,12 @@ void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOD, GPIO_Output_Pin|LD4_Pin|LD3_Pin|LD5_Pin
                           |LD6_Pin, GPIO_PIN_RESET);
 
+  /*Configure GPIO pin : BOOT1_Pin */
+  GPIO_InitStruct.Pin = BOOT1_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  HAL_GPIO_Init(BOOT1_GPIO_Port, &GPIO_InitStruct);
+
   /*Configure GPIO pins : SPI2_SS0_Pin SPI2_SS1_Pin */
   GPIO_InitStruct.Pin = SPI2_SS0_Pin|SPI2_SS1_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
