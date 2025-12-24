@@ -238,7 +238,7 @@ void joystickTask(void* argument) {
     Ps2CommCfg cfg;
     cfg.hspi = &hspi2;
     cfg.cs_port = GPIOB;
-    cfg.cs_pin = GPIO_PIN_11;
+    cfg.cs_pin = GPIO_PIN_12;
     Ps2Cmd cmd;
     cmd.reset = 0;
     cmd.vx = 0;

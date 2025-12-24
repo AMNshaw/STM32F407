@@ -7,8 +7,6 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-#define PS2_CS_GPIO_Port GPIOC
-#define PS2_CS_Pin GPIO_PIN_4
 #define JOYSTICK_REF 128
 
 typedef struct {
