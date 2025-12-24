@@ -13,13 +13,14 @@ typedef struct {
 typedef XYYaw Pose2D;
 typedef XYYaw Twist2D;
 
-typedef struct {
-    float data[4];
-} Wheels4F;
+typedef union {
+    float w2[2];
+    float w4[4];
+} Wheels;
 
-typedef Wheels4F WheelsStep;
-typedef Wheels4F WheelsAng;
-typedef Wheels4F WheelsVel;
+typedef Wheels WheelsStep;
+typedef Wheels WheelsAng;
+typedef Wheels WheelsVel;
 
 typedef struct {
     Pose2D pose;

@@ -28,16 +28,6 @@ int AgvCore_step_host_control(AgvCore* core) {
     if (code != AGV_OK) return code;
     code = ctrl->set_des_vel(ctrl, &cmd);
     if (code != AGV_OK) return code;
-    code = ctrl->set_curr_vel(ctrl, &curr_vel);
-    if (code != AGV_OK) return code;
-    code = ctrl->get_ctrl_cmd(ctrl, &cmd);
-    if (code != AGV_OK) return code;
-
-    WheelsVel wheels_cmd;
-    code = kine->calculate_wheels_vel(kine, &cmd, &wheels_cmd);
-    if (code != AGV_OK) return code;
-    code = motors->set_des_wheel_vel(motors, &wheels_cmd);
-    if (code != AGV_OK) return code;
 
     return AGV_OK;
 }

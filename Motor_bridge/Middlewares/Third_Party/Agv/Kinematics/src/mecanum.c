@@ -24,11 +24,11 @@ static int mecanum_calculate_odom(AgvKinematicsBase* base,
                                   const WheelsVel* wheels_vel_in,
                                   Odometry* odom_out);
 
-int forward_kine(const AgvKineMecanumConfig* cfg, const Wheels4F* wheels_in,
+int forward_kine(const AgvKineMecanumConfig* cfg, const Wheels* wheels_in,
                  XYYaw* body_out);
 
 int inverse_kine(const AgvKineMecanumConfig* cfg, const Twist2D* body_in,
-                 Wheels4F* wheels_out);
+                 Wheels* wheels_out);
 /**
  * private definitions
  */
@@ -94,13 +94,13 @@ static int mecanum_calculate_odom(AgvKinematicsBase* base,
     return code;
 }
 
-int forward_kine(const AgvKineMecanumConfig* cfg, const Wheels4F* wheels_in,
+int forward_kine(const AgvKineMecanumConfig* cfg, const Wheels* wheels_in,
                  XYYaw* body_out) {
     if (!cfg || !wheels_in || !body_out) return AGV_ERR_INVALID_ARG;
 
     float omega[4];
     for (size_t i = 0; i < 4; ++i) {
-        omega[i] = wheels_in->data[i] * cfg->axis_dir[i];
+        omega[i] = wheels_in->w4[i] * cfg->axis_dir[i];
     }
 
     body_out->x =
@@ -116,7 +116,7 @@ int forward_kine(const AgvKineMecanumConfig* cfg, const Wheels4F* wheels_in,
 }
 
 int inverse_kine(const AgvKineMecanumConfig* cfg, const Twist2D* body_in,
-                 Wheels4F* wheels_out) {
+                 Wheels* wheels_out) {
     if (!cfg || !body_in || !wheels_out) return AGV_ERR_INVALID_ARG;
 
     float tmp = cfg->L + cfg->W;
@@ -132,7 +132,7 @@ int inverse_kine(const AgvKineMecanumConfig* cfg, const Twist2D* body_in,
         (body_in->x - body_in->y + tmp * body_in->yaw) / cfg->wheel_radius;
 
     for (size_t i = 0; i < 4; ++i) {
-        wheels_out->data[i] = cfg->axis_dir[i] * omega[i];
+        wheels_out->w4[i] = cfg->axis_dir[i] * omega[i];
     }
 
     return AGV_OK;

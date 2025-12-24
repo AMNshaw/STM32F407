@@ -290,7 +290,7 @@ static int blvr_set_des_vel(AgvMotorsBase* base, const WheelsVel* vel_in) {
         impl->pending_cmd = MOVE;
     }
     for (size_t i = 0; i < impl->cfg->axis_count; ++i) {
-        float omega_motor = vel_in->data[i] * gear_ratio;
+        float omega_motor = vel_in->w4[i] * gear_ratio;
         impl->write_buf[i].des_vel = rad_s_to_regVelUnit(omega_motor, unit_rpm);
     }
     xSemaphoreGive(impl->mutex_buf_write);
@@ -309,7 +309,7 @@ static int blvr_get_curr_vel(AgvMotorsBase* base, WheelsVel* vel_out) {
     for (size_t i = 0; i < impl->cfg->axis_count; ++i) {
         float omega_motor =
             regVelUnit_to_rad_s(impl->read_buf[i].rl_rpm, unit_rpm);
-        vel_out->data[i] = omega_motor / gear_ratio;
+        vel_out->w4[i] = omega_motor / gear_ratio;
     }
     xSemaphoreGive(impl->mutex_buf_read);
 
@@ -325,7 +325,7 @@ static int blvr_get_curr_ang(AgvMotorsBase* base, WheelsAng* ang_out) {
 
     xSemaphoreTake(impl->mutex_buf_read, portMAX_DELAY);
     for (size_t i = 0; i < impl->cfg->axis_count; ++i) {
-        ang_out->data[i] =
+        ang_out->w4[i] =
             regAngUnit_to_rad(impl->read_buf[i].rl_pos, unit_degree) /
             gear_ratio;
     }
