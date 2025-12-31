@@ -29,7 +29,9 @@ int Motor_blvr_init(AgvMotorBlvrConfig* blvr_cfg) {
     blvr_cfg->motor_dec = 60;
 
     blvr_cfg->uart_cfg.huart = &huart3;
-    blvr_cfg->uart_cfg.auto_DE = true;
+    blvr_cfg->uart_cfg.auto_DE = false;
+    blvr_cfg->uart_cfg.DE_port = GPIOD;
+    blvr_cfg->uart_cfg.DE_pin = GPIO_PIN_10;
     blvr_cfg->uart_cfg.baudrate = huart3.Init.BaudRate;
     blvr_cfg->uart_cfg.max_data_len = 256;
     blvr_cfg->uart_cfg.operation_timeout_ms = 1000;

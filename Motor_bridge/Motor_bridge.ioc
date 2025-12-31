@@ -1,6 +1,6 @@
 #MicroXplorer Configuration settings - do not modify
-CAD.formats=
-CAD.pinconfig=
+CAD.formats=[]
+CAD.pinconfig=Dual
 CAD.provider=
 CAN1.CalculateBaudRate=875000
 CAN1.CalculateTimeBit=1142
@@ -183,8 +183,9 @@ PD0.Signal=CAN1_RX
 PD1.Locked=true
 PD1.Mode=CAN_Activate
 PD1.Signal=CAN1_TX
-PD10.GPIOParameters=PinState,GPIO_Label
+PD10.GPIOParameters=PinState,GPIO_PuPd,GPIO_Label
 PD10.GPIO_Label=GPIO_Output (RS485 DE)
+PD10.GPIO_PuPd=GPIO_NOPULL
 PD10.Locked=true
 PD10.PinState=GPIO_PIN_RESET
 PD10.Signal=GPIO_Output
