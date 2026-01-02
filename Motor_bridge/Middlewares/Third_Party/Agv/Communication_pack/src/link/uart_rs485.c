@@ -170,11 +170,10 @@ static int LnkRs485_send_bytes(AgvCommLinkIface* iface, const uint8_t* data_in,
     HAL_StatusTypeDef st =
         HAL_UART_Transmit(huart, (uint8_t*)data_in, (uint16_t)data_len,
                           impl->cfg->operation_timeout_ms);
-    // set_rx_mode(impl->cfg);
+    set_rx_mode(impl->cfg);
     xSemaphoreGive(impl->tx_mutex);
     if (st != HAL_OK) return AGV_ERR_COMM_LINK_HAL;
 
-    HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_13);
     return AGV_OK;
 }
 
@@ -268,8 +267,6 @@ int LnkRs485_on_rx_rcv(AgvCommLinkIface* iface, size_t data_len) {
         return AGV_ERR_COMM_LINK_BUFFER_OVERFLOW;
     }
     portYIELD_FROM_ISR(hpw);
-
-    HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_13);
 
     return AGV_OK;
 }

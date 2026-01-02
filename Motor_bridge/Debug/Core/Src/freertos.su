@@ -1,5 +1,5 @@
-../Core/Src/freertos.c:127:6:MX_FREERTOS_Init	8	static
-../Core/Src/freertos.c:181:6:StartDefaultTask	16	static
+../Core/Src/freertos.c:128:6:MX_FREERTOS_Init	8	static
+../Core/Src/freertos.c:182:6:StartDefaultTask	16	static
 ../Core/Src/freertos.c:194:5:AGV_attach_core_task	16	static
 ../Core/Src/freertos.c:200:6:AgvHeartbeatTask	24	static
 ../Core/Src/freertos.c:211:6:AgvSendOdomTask	48	static
