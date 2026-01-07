@@ -6,6 +6,7 @@
 #include "Agv_communication_pack/configs/comm_format_config.h"
 #include "Agv_communication_pack/configs/comm_link_config.h"
 #include "Agv_communication_pack/configs/comm_protocol_config.h"
+#include "stm32f407xx.h"
 
 typedef struct {
     // link
@@ -16,6 +17,9 @@ typedef struct {
     AgvCommPrtclBlvrCfg prtcl_blvr_cfg;
 
     size_t axis_count;
+
+    GPIO_TypeDef* io_hwto_reset_port;
+    uint16_t io_hwto_reset_pin;
 
     float motor_acc;
     float motor_dec;

@@ -28,6 +28,9 @@ int Motor_blvr_init(AgvMotorBlvrConfig* blvr_cfg) {
     blvr_cfg->motor_acc = 60;
     blvr_cfg->motor_dec = 60;
 
+    blvr_cfg->io_hwto_reset_port = GPIOE;
+    blvr_cfg->io_hwto_reset_pin = GPIO_PIN_8;
+
     blvr_cfg->uart_cfg.huart = &huart3;
     blvr_cfg->uart_cfg.auto_DE = false;
     blvr_cfg->uart_cfg.DE_port = GPIOD;

@@ -61,6 +61,7 @@ Core/Src/agv_app.o: ../Core/Src/agv_app.c ../Core/Inc/agv_app.h \
  C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include/Agv_kinematics/mecanum_config.h \
  C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include/Agv_factory/motors_builder.h \
  C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include/Agv_motors/blvr_config.h \
+ ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h \
  C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/error_codes/error_common.h \
  ../Core/Inc/usart.h ../Core/Inc/main.h
 ../Core/Inc/agv_app.h:
@@ -126,6 +127,7 @@ C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Fact
 C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include/Agv_kinematics/mecanum_config.h:
 C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include/Agv_factory/motors_builder.h:
 C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include/Agv_motors/blvr_config.h:
+../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h:
 C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include/Agv_core/error_codes/error_common.h:
 ../Core/Inc/usart.h:
 ../Core/Inc/main.h:

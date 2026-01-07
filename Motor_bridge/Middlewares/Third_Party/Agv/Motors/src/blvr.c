@@ -230,7 +230,8 @@ static int blvr_reset(AgvMotorsBase* base) {
     if (!base) return AGV_ERR_INVALID_ARG;
     MotorsBlvrImpl* impl = (MotorsBlvrImpl*)base->impl;
     if (!impl || !impl->cfg) return AGV_ERR_NO_MEMORY;
-    size_t axis_count = impl->cfg->axis_count;
+    const AgvMotorBlvrConfig* cfg = impl->cfg;
+    size_t axis_count = cfg->axis_count;
 
     int32_t curr_st[axis_count];
     xSemaphoreTake(impl->mutex_buf_read, portMAX_DELAY);
@@ -239,13 +240,19 @@ static int blvr_reset(AgvMotorsBase* base) {
     }
     xSemaphoreGive(impl->mutex_buf_read);
     xSemaphoreTake(impl->mutex_buf_write, portMAX_DELAY);
-    for (size_t i = 0; i < impl->cfg->axis_count; ++i) {
+    for (size_t i = 0; i < cfg->axis_count; ++i) {
         if (is_alarm(curr_st[i])) {
             impl->pending_cmd = DRIVER;
             impl->write_buf[i].driver_cmd = BLVR_DRIVER_RESET_ALARM;
         }
     }
     xSemaphoreGive(impl->mutex_buf_write);
+    HAL_GPIO_WritePin(cfg->io_hwto_reset_port, cfg->io_hwto_reset_pin,
+                      GPIO_PIN_SET);
+    vTaskDelay(200);
+    HAL_GPIO_WritePin(cfg->io_hwto_reset_port, cfg->io_hwto_reset_pin,
+                      GPIO_PIN_RESET);
+    vTaskDelay(200);
 
     return AGV_OK;
 }
