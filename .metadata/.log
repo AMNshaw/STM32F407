@@ -5306,3 +5306,150 @@ org.eclipse.core.runtime.CoreException: ST-Link设备进行初始化时出错。
 
 !ENTRY com.st.stm32cube.ide.mcu.debug.swv 1 1 2026-01-07 17:32:44.072
 !MESSAGE SWV configuration; base: 36000000; minDiv: 18; maxDiv: 65535; maxSWO: 2000000; limit: 2000000 => SWO: 2000000; CPU: 168000000; div: 84
+!SESSION 2026-01-09 08:57:52.744 -----------------------------------------------
+eclipse.buildId=Version 1.19.0
+java.version=21.0.3
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=zh_TW
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2026-01-09 08:57:59.726
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2026-01-09 08:57:59.728
+!MESSAGE Log4j2 initialized with config file C:\Users\liushaw\Desktop\STM32F407\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2026-01-09 08:58:08.341
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.core.jobs 2 2 2026-01-09 08:58:17.522
+!MESSAGE Job found still running after platform shutdown.  Jobs should be canceled by the plugin that scheduled them during shutdown: org.eclipse.ui.internal.Workbench$39 RUNNING
+	 at java.base/java.io.RandomAccessFile.readBytes0(Native Method)
+	 at java.base/java.io.RandomAccessFile.readBytes(RandomAccessFile.java:400)
+	 at java.base/java.io.RandomAccessFile.read(RandomAccessFile.java:434)
+	 at java.base/java.util.zip.ZipFile$Source.readAt(ZipFile.java:1541)
+	 at java.base/java.util.zip.ZipFile$ZipFileInputStream.read(ZipFile.java:956)
+	 at java.base/java.util.zip.ZipFile$ZipFileInflaterInputStream.fill(ZipFile.java:463)
+	 at java.base/java.util.zip.InflaterInputStream.read(InflaterInputStream.java:175)
+	 at java.base/java.io.FilterInputStream.read(FilterInputStream.java:119)
+	 at org.eclipse.osgi.storage.bundlefile.CloseableBundleFile$BundleEntryInputStream.read(CloseableBundleFile.java:548)
+	 at org.eclipse.osgi.storage.StorageUtil.getBytes(StorageUtil.java:187)
+	 at org.eclipse.osgi.storage.bundlefile.BundleEntry.getBytes(BundleEntry.java:102)
+	 at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findClassImpl(ClasspathManager.java:678)
+	 at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findLocalClassImpl(ClasspathManager.java:657)
+	 at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findLocalClassImpl(ClasspathManager.java:637)
+	 at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findLocalClass(ClasspathManager.java:616)
+	 at org.eclipse.osgi.internal.loader.ModuleClassLoader.findLocalClass(ModuleClassLoader.java:348)
+	 at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:414)
+	 at org.eclipse.osgi.internal.loader.BundleLoader.findClass0(BundleLoader.java:520)
+	 at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:434)
+	 at org.eclipse.osgi.internal.loader.ModuleClassLoader.loadClass(ModuleClassLoader.java:174)
+	 at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:526)
+	 at com.teamdev.jxbrowser.navigation.internal.NavigationImpl.loadUrlAndWait(NavigationImpl.java:104)
+	 at com.teamdev.jxbrowser.navigation.internal.NavigationImpl.loadUrlAndWait(NavigationImpl.java:91)
+	 at com.teamdev.jxbrowser.navigation.internal.NavigationImpl.loadUrlAndWait(NavigationImpl.java:83)
+	 at com.teamdev.jxbrowser.browser.internal.BrowserImpl.initializeMainFrame(BrowserImpl.java:412)
+	 at com.teamdev.jxbrowser.profile.internal.ProfileImpl.newBrowser(ProfileImpl.java:150)
+	 at com.st.microxplorer.plugins.userauth.WebApp.<init>(WebApp.java:174)
+	 at com.st.microxplorer.plugins.userauth.WebApp.getInstance(WebApp.java:779)
+	 at com.st.microxplorer.plugins.userauth.UserAuth.getBrowserView(UserAuth.java:489)
+	 at com.st.microxplorer.plugins.userauth.UserAuth.checkInfile(UserAuth.java:251)
+	 at com.st.microxplorer.plugins.userauth.UserAuth.activatePlugin(UserAuth.java:169)
+	 at com.st.stm32cube.common.mx.userauth.UserAuthAdapter.<init>(UserAuthAdapter.java:29)
+	 at com.st.stm32cube.common.mx.userauth.UserAuthProvider.getUserAuthAdapter(UserAuthProvider.java:16)
+	 at com.st.stm32cube.common.ecosystemintegration.ui.core.MCUEcoSystemIntegrationUiHelper.getUserAuth(MCUEcoSystemIntegrationUiHelper.java:100)
+	 at com.st.stm32cube.ide.mcu.userauth.UserAuthStartup.earlyStartup(UserAuthStartup.java:32)
+	 at org.eclipse.ui.internal.EarlyStartupRunnable.runEarlyStartup(EarlyStartupRunnable.java:79)
+	 at org.eclipse.ui.internal.EarlyStartupRunnable.run(EarlyStartupRunnable.java:55)
+	 at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:47)
+	 at org.eclipse.ui.internal.Workbench$39.run(Workbench.java:2733)
+	 at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+!SESSION 2026-01-13 11:49:39.550 -----------------------------------------------
+eclipse.buildId=Version 1.19.0
+java.version=21.0.3
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=zh_TW
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2026-01-13 11:49:46.012
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2026-01-13 11:49:46.013
+!MESSAGE Log4j2 initialized with config file C:\Users\liushaw\Desktop\STM32F407\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2026-01-13 11:49:54.479
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.core.jobs 2 2 2026-01-13 11:49:58.092
+!MESSAGE Job found still running after platform shutdown.  Jobs should be canceled by the plugin that scheduled them during shutdown: org.eclipse.ui.internal.Workbench$39 RUNNING
+	 at com.st.ipmodeconfigmanager.engine.ConditionMgr.computeDependencies(ConditionMgr.java:318)
+	 at com.st.microxplorer.plugins.thirdparty.engine.PackLoader.complete(PackLoader.java:219)
+	 at com.st.microxplorer.plugins.thirdparty.engine.PackLoader.createAndPushIntegratedPack(PackLoader.java:269)
+	 at com.st.microxplorer.plugins.thirdparty.ThirdPartyApiDb.createIntegratedSwPack(ThirdPartyApiDb.java:161)
+	 at com.st.microxplorer.plugins.thirdparty.ThirdPartyApiDb.addIntegratedSoftwarePack(ThirdPartyApiDb.java:146)
+	 at com.st.microxplorer.plugins.thirdparty.ThirdPartyApiDb.loadIntegratedPacks(ThirdPartyApiDb.java:131)
+	 at com.st.microxplorer.plugins.thirdparty.ThirdPartyApiDb.loadDb(ThirdPartyApiDb.java:125)
+	 at com.st.microxplorer.plugins.thirdparty.ThirdPartyApiDb.<init>(ThirdPartyApiDb.java:92)
+	 at com.st.microxplorer.plugins.thirdparty.engine.Engine.create(Engine.java:950)
+	 at com.st.microxplorer.plugins.thirdparty.engine.Engine.create(Engine.java:945)
+	 at com.st.microxplorer.plugins.thirdparty.ThirdParty.<init>(ThirdParty.java:159)
+	 at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+	 at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:502)
+	 at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:486)
+	 at com.st.microxplorer.plugin.PluginManage.loadPluginJar(PluginManage.java:352)
+	 at com.st.microxplorer.plugin.PluginManage.PluginSearch(PluginManage.java:224)
+	 at com.st.microxplorer.plugin.PluginManage.PluginDiscovery(PluginManage.java:67)
+	 at com.st.microxplorer.maingui.MainPanel.initialization(MainPanel.java:332)
+	 at com.st.microxplorer.maingui.AppletMainFrameCubeIde.init(AppletMainFrameCubeIde.java:242)
+	 at com.st.stm32cube.common.mx.core.CubeMxInstance.<init>(CubeMxInstance.java:117)
+	 at com.st.stm32cube.common.mx.core.CubeMxInstance.getInstance(CubeMxInstance.java:91)
+	 at com.st.stm32cube.common.mx.userauth.UserAuthAdapter.<init>(UserAuthAdapter.java:25)
+	 at com.st.stm32cube.common.mx.userauth.UserAuthProvider.getUserAuthAdapter(UserAuthProvider.java:16)
+	 at com.st.stm32cube.common.ecosystemintegration.ui.core.MCUEcoSystemIntegrationUiHelper.getUserAuth(MCUEcoSystemIntegrationUiHelper.java:100)
+	 at com.st.stm32cube.ide.mcu.userauth.UserAuthStartup.earlyStartup(UserAuthStartup.java:32)
+	 at org.eclipse.ui.internal.EarlyStartupRunnable.runEarlyStartup(EarlyStartupRunnable.java:79)
+	 at org.eclipse.ui.internal.EarlyStartupRunnable.run(EarlyStartupRunnable.java:55)
+	 at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:47)
+	 at org.eclipse.ui.internal.Workbench$39.run(Workbench.java:2733)
+	 at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+!SESSION 2026-01-15 13:43:58.271 -----------------------------------------------
+eclipse.buildId=Version 1.19.0
+java.version=21.0.3
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=zh_TW
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2026-01-15 13:44:04.295
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2026-01-15 13:44:04.297
+!MESSAGE Log4j2 initialized with config file C:\Users\liushaw\Desktop\STM32F407\.metadata\.log4j2.xml
+
+!ENTRY org.eclipse.ui.workbench 4 2 2026-01-15 13:44:11.576
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.ui.workbench".
+!STACK 0
+java.lang.NullPointerException: Cannot invoke "com.st.stm32cube.ide.mcu.analytics.MCUAnalyticsPlugin.getBundle()" because the return value of "com.st.stm32cube.ide.mcu.analytics.MCUAnalyticsPlugin.getDefault()" is null
+	at com.st.stm32cube.ide.mcu.analytics.core.MCUAnalyticsStartup.earlyStartup(MCUAnalyticsStartup.java:60)
+	at org.eclipse.ui.internal.EarlyStartupRunnable.runEarlyStartup(EarlyStartupRunnable.java:79)
+	at org.eclipse.ui.internal.EarlyStartupRunnable.run(EarlyStartupRunnable.java:55)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:47)
+	at org.eclipse.ui.internal.Workbench$39.run(Workbench.java:2733)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+!SESSION 2026-01-16 15:26:11.264 -----------------------------------------------
+eclipse.buildId=Version 1.19.0
+java.version=21.0.3
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=zh_TW
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2026-01-16 15:26:18.790
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2026-01-16 15:26:18.792
+!MESSAGE Log4j2 initialized with config file C:\Users\liushaw\Desktop\STM32F407\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2026-01-16 15:26:27.433
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY com.st.stm32cube.ide.mcu.debug.swv 1 1 2026-01-16 15:27:10.860
+!MESSAGE SWV configuration; base: 36000000; minDiv: 18; maxDiv: 65535; maxSWO: 2000000; limit: 2000000 => SWO: 2000000; CPU: 168000000; div: 84

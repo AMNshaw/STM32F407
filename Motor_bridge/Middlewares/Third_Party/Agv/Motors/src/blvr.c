@@ -246,6 +246,11 @@ static int blvr_reset(AgvMotorsBase* base) {
             impl->write_buf[i].driver_cmd = BLVR_DRIVER_RESET_ALARM;
         }
     }
+    if (impl->pending_cmd == DRIVER) {
+        for (size_t i = 0; i < cfg->axis_count; ++i) {
+            impl->write_buf[i].des_vel = 0;
+        }
+    }
     xSemaphoreGive(impl->mutex_buf_write);
     HAL_GPIO_WritePin(cfg->io_hwto_reset_port, cfg->io_hwto_reset_pin,
                       GPIO_PIN_SET);
@@ -295,10 +300,11 @@ static int blvr_set_des_vel(AgvMotorsBase* base, const WheelsVel* vel_in) {
     xSemaphoreTake(impl->mutex_buf_write, portMAX_DELAY);
     if (impl->pending_cmd != DRIVER) {
         impl->pending_cmd = MOVE;
-    }
-    for (size_t i = 0; i < impl->cfg->axis_count; ++i) {
-        float omega_motor = vel_in->w4[i] * gear_ratio;
-        impl->write_buf[i].des_vel = rad_s_to_regVelUnit(omega_motor, unit_rpm);
+        for (size_t i = 0; i < impl->cfg->axis_count; ++i) {
+            float omega_motor = vel_in->w4[i] * gear_ratio;
+            impl->write_buf[i].des_vel =
+                rad_s_to_regVelUnit(omega_motor, unit_rpm);
+        }
     }
     xSemaphoreGive(impl->mutex_buf_write);
 

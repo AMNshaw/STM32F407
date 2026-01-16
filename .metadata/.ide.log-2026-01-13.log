@@ -1,0 +1,68 @@
+2026-01-13 11:49:46,297 [INFO] Activator:176 - 
+
+
+2026-01-13 11:49:46,303 [INFO] Activator:177 - !SESSION log4j initialized
+2026-01-13 11:49:52,891 [INFO] LogOutputStream:77 - [STDOUT_REDIRECT] 
+2026-01-13 11:49:55,947 [INFO] ApplicationProperties:184 - Using Application install path: C:\ST\STM32CubeIDE_1.19.0\STM32CubeIDE\plugins\com.st.stm32cube.common.mx_6.15.0.202507011659
+2026-01-13 11:49:55,969 [INFO] DbMcusXml:78 - Set database path to: C:\ST\STM32CubeIDE_1.19.0\STM32CubeIDE\plugins\com.st.stm32cube.common.mx_6.15.0.202507011659\\db\/mcu/
+2026-01-13 11:49:55,970 [INFO] ApiDb:274 - Set plugin database path to: C:\ST\STM32CubeIDE_1.19.0\STM32CubeIDE\plugins\com.st.stm32cube.common.mx_6.15.0.202507011659\\db\/plugins/boardmanager/
+2026-01-13 11:49:55,970 [WARN] ApiDb:259 - Overriding images path with different value:  => C:\ST\STM32CubeIDE_1.19.0\STM32CubeIDE\plugins\com.st.stm32cube.common.mx_6.15.0.202507011659\\db\/plugins/mcufinder/images/
+2026-01-13 11:49:55,978 [INFO] ApiDb:250 - Set database path to: C:\Users\liushaw\.stmcufinder\plugins\mcufinder//mcu/
+2026-01-13 11:49:55,980 [INFO] DbMcusAds:125 - Set database path to: C:\Users\liushaw\.stmcufinder\plugins\mcufinder//mcu/
+2026-01-13 11:49:55,983 [INFO] CrossReferenceDbSqlite:203 - Set database path to: C:\Users\liushaw\.stmcufinder\plugins\mcufinder//mcu/cs/
+2026-01-13 11:49:56,120 [INFO] RulesReader:64 - Compatibility file has been processed (317 Rules)
+2026-01-13 11:49:56,223 [INFO] DbMcusXml:78 - Set database path to: C:\ST\STM32CubeIDE_1.19.0\STM32CubeIDE\plugins\com.st.stm32cube.common.mx_6.15.0.202507011659\\db\/mcu/
+2026-01-13 11:49:56,223 [INFO] ApiDb:274 - Set plugin database path to: C:\ST\STM32CubeIDE_1.19.0\STM32CubeIDE\plugins\com.st.stm32cube.common.mx_6.15.0.202507011659\\db\/plugins/boardmanager/
+2026-01-13 11:49:56,224 [INFO] ApiDb:261 - Set plugin images path to: C:\ST\STM32CubeIDE_1.19.0\STM32CubeIDE\plugins\com.st.stm32cube.common.mx_6.15.0.202507011659\\db\/plugins/mcufinder/images/
+2026-01-13 11:49:56,224 [WARN] DbFile:41 - Overriding database path with different value: C:\Users\liushaw\.stmcufinder\plugins\mcufinder/ => C:\Users\liushaw\.stmcufinder\plugins\mcufinder
+2026-01-13 11:49:56,224 [INFO] ApiDb:250 - Set database path to: C:\Users\liushaw\.stmcufinder\plugins\mcufinder//mcu/
+2026-01-13 11:49:56,224 [WARN] DbFile:41 - Overriding database path with different value: C:\Users\liushaw\.stmcufinder\plugins\mcufinder/ => C:\Users\liushaw\.stmcufinder\plugins\mcufinder
+2026-01-13 11:49:56,224 [INFO] DbMcusAds:125 - Set database path to: C:\Users\liushaw\.stmcufinder\plugins\mcufinder//mcu/
+2026-01-13 11:49:56,224 [WARN] DbFile:41 - Overriding database path with different value: C:\Users\liushaw\.stmcufinder\plugins\mcufinder/ => C:\Users\liushaw\.stmcufinder\plugins\mcufinder
+2026-01-13 11:49:56,224 [WARN] DbFile:41 - Overriding database path with different value: C:\Users\liushaw\.stmcufinder\plugins\mcufinder/ => C:\Users\liushaw\.stmcufinder\plugins\mcufinder
+2026-01-13 11:49:56,224 [INFO] CrossReferenceDbSqlite:203 - Set database path to: C:\Users\liushaw\.stmcufinder\plugins\mcufinder//mcu/cs/
+2026-01-13 11:49:56,300 [INFO] MainPanel:274 - HeapMemory: 268435456
+2026-01-13 11:49:56,408 [INFO] DbMcusXml:78 - Set database path to: C:\ST\STM32CubeIDE_1.19.0\STM32CubeIDE\plugins\com.st.stm32cube.common.mx_6.15.0.202507011659\\db\/mcu/
+2026-01-13 11:49:56,408 [INFO] ApiDb:274 - Set plugin database path to: C:\ST\STM32CubeIDE_1.19.0\STM32CubeIDE\plugins\com.st.stm32cube.common.mx_6.15.0.202507011659\\db\/plugins/boardmanager/
+2026-01-13 11:49:56,409 [INFO] ApiDb:261 - Set plugin images path to: C:\ST\STM32CubeIDE_1.19.0\STM32CubeIDE\plugins\com.st.stm32cube.common.mx_6.15.0.202507011659\\db\/plugins/mcufinder/images/
+2026-01-13 11:49:56,409 [WARN] DbFile:41 - Overriding database path with different value: C:\Users\liushaw\.stmcufinder\plugins\mcufinder/ => C:\Users\liushaw\.stmcufinder\plugins\mcufinder
+2026-01-13 11:49:56,409 [INFO] ApiDb:250 - Set database path to: C:\Users\liushaw\.stmcufinder\plugins\mcufinder//mcu/
+2026-01-13 11:49:56,409 [WARN] DbFile:41 - Overriding database path with different value: C:\Users\liushaw\.stmcufinder\plugins\mcufinder/ => C:\Users\liushaw\.stmcufinder\plugins\mcufinder
+2026-01-13 11:49:56,409 [INFO] DbMcusAds:125 - Set database path to: C:\Users\liushaw\.stmcufinder\plugins\mcufinder//mcu/
+2026-01-13 11:49:56,409 [WARN] DbFile:41 - Overriding database path with different value: C:\Users\liushaw\.stmcufinder\plugins\mcufinder/ => C:\Users\liushaw\.stmcufinder\plugins\mcufinder
+2026-01-13 11:49:56,409 [WARN] DbFile:41 - Overriding database path with different value: C:\Users\liushaw\.stmcufinder\plugins\mcufinder/ => C:\Users\liushaw\.stmcufinder\plugins\mcufinder
+2026-01-13 11:49:56,409 [INFO] CrossReferenceDbSqlite:203 - Set database path to: C:\Users\liushaw\.stmcufinder\plugins\mcufinder//mcu/cs/
+2026-01-13 11:49:56,427 [INFO] ApplicationProperties:184 - Using Application install path: C:\ST\STM32CubeIDE_1.19.0\STM32CubeIDE\plugins\com.st.stm32cube.common.mx_6.15.0.202507011659
+2026-01-13 11:49:56,429 [INFO] PluginManage:196 - Search for loadable plugins [exclusion list=, ]
+2026-01-13 11:49:56,430 [INFO] PluginManage:310 - Check plugin analytics
+2026-01-13 11:49:56,711 [INFO] AnalyticsPlugin:253 - Accepted Software Licenses: STM32CubeMX.6.15.0
+2026-01-13 11:49:56,711 [INFO] AnalyticsPlugin:255 - Accepted CMSIS Pack Licenses: 
+2026-01-13 11:49:56,711 [INFO] AnalyticsPlugin:257 - Accepted Firmware Licenses: FW.F4.1.28.0
+2026-01-13 11:49:56,718 [INFO] PluginManage:359 - Loaded plugin analytics (category:tool,tabindex:-1)
+2026-01-13 11:49:56,719 [INFO] PluginManage:310 - Check plugin cadmodel
+2026-01-13 11:49:56,729 [INFO] CADModel:105 - Init CAD model plugin
+2026-01-13 11:49:56,730 [INFO] PluginManage:359 - Loaded plugin cadmodel (category:power,tabindex:5)
+2026-01-13 11:49:56,730 [INFO] PluginManage:310 - Check plugin clock
+2026-01-13 11:49:56,751 [INFO] PluginManage:359 - Loaded plugin clock (category:base,tabindex:2)
+2026-01-13 11:49:56,752 [INFO] PluginManage:310 - Check plugin ddr
+2026-01-13 11:49:56,758 [INFO] PluginManage:359 - Loaded plugin ddr (category:tool,tabindex:6)
+2026-01-13 11:49:56,759 [INFO] PluginManage:310 - Check plugin filemanager
+2026-01-13 11:49:57,053 [INFO] PluginManage:359 - Loaded plugin filemanager (category:base,tabindex:10)
+2026-01-13 11:49:57,053 [INFO] PluginManage:310 - Check plugin ipmanager
+2026-01-13 11:49:57,071 [INFO] PluginManage:359 - Loaded plugin ipmanager (category:base,tabindex:5)
+2026-01-13 11:49:57,072 [INFO] PluginManage:310 - Check plugin lpbam
+2026-01-13 11:49:57,093 [INFO] PluginManage:359 - Loaded plugin lpbam (category:base,tabindex:0)
+2026-01-13 11:49:57,093 [INFO] PluginManage:310 - Check plugin memorymap
+2026-01-13 11:49:57,139 [INFO] PluginManage:359 - Loaded plugin memorymap (category:base,tabindex:4)
+2026-01-13 11:49:57,139 [INFO] PluginManage:310 - Check plugin pinoutandconfiguration
+2026-01-13 11:49:57,157 [INFO] PluginManage:359 - Loaded plugin pinoutandconfiguration (category:base,tabindex:1)
+2026-01-13 11:49:57,158 [INFO] PluginManage:310 - Check plugin pinoutconfig
+2026-01-13 11:49:57,396 [WARN] SupportedApi:132 - Cannot load RTOS API schema: s4s-elt-must-match.1: The content of 'definitions' must match (annotation?, (simpleType | complexType)?, (unique | key | keyref)*)). A problem was found starting at: attribute.
+2026-01-13 11:49:57,863 [INFO] PluginManage:359 - Loaded plugin pinoutconfig (category:base,tabindex:0)
+2026-01-13 11:49:57,864 [INFO] PluginManage:310 - Check plugin power
+2026-01-13 11:49:57,876 [INFO] PluginManage:359 - Loaded plugin power (category:power,tabindex:4)
+2026-01-13 11:49:57,876 [INFO] PluginManage:310 - Check plugin projectmanager
+2026-01-13 11:49:57,900 [INFO] PluginManage:359 - Loaded plugin projectmanager (category:projectmanager,tabindex:4)
+2026-01-13 11:49:57,901 [INFO] PluginManage:310 - Check plugin rif
+2026-01-13 11:49:57,916 [INFO] PluginManage:359 - Loaded plugin rif (category:base,tabindex:3)
+2026-01-13 11:49:57,917 [INFO] PluginManage:310 - Check plugin thirdparty
