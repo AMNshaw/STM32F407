@@ -36,3 +36,121 @@ arm-none-eabi-size  Motor_bridge.elf
   80516	    472	  72144	 153132	  2562c	Motor_bridge.elf
 Finished building: default.size.stdout
  
+08:57:27 **** Build of configuration Debug for project Motor_bridge ****
+make -j18 all 
+arm-none-eabi-gcc "../Middlewares/Third_Party/Agv/Core/src/core.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/Third_Party/Agv/Core/src/core.d" -MT"Middlewares/Third_Party/Agv/Core/src/core.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/Third_Party/Agv/Core/src/core.o"
+arm-none-eabi-gcc "../Core/Src/freertos.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/freertos.d" -MT"Core/Src/freertos.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/freertos.o"
+../Middlewares/Third_Party/Agv/Core/src/core.c: In function 'AgvCore_step_host_control':
+../Middlewares/Third_Party/Agv/Core/src/core.c:20:13: warning: variable 'curr_vel' set but not used [-Wunused-but-set-variable]
+   20 |     Twist2D curr_vel;
+      |             ^~~~~~~~
+../Middlewares/Third_Party/Agv/Core/src/core.c:18:20: warning: unused variable 'motors' [-Wunused-variable]
+   18 |     AgvMotorsBase* motors = &core->motors_base;
+      |                    ^~~~~~
+../Middlewares/Third_Party/Agv/Core/src/core.c:16:24: warning: unused variable 'kine' [-Wunused-variable]
+   16 |     AgvKinematicsBase* kine = &core->kinematic_base;
+      |                        ^~~~
+../Middlewares/Third_Party/Agv/Core/src/core.c: In function 'AgvCore_step_body_control':
+../Middlewares/Third_Party/Agv/Core/src/core.c:53:1: warning: control reaches end of non-void function [-Wreturn-type]
+   53 | }
+      | ^
+../Core/Src/freertos.c: In function 'AgvHeartbeatTask':
+../Core/Src/freertos.c:202:9: warning: variable 'code' set but not used [-Wunused-but-set-variable]
+  202 |     int code = AGV_OK;
+      |         ^~~~
+../Core/Src/freertos.c: In function 'AgvHostMsgCallbackTask':
+../Core/Src/freertos.c:232:13: warning: unused variable 'code' [-Wunused-variable]
+  232 |         int code = AgvCore_step_on_host_msg(s_agv_core);
+      |             ^~~~
+arm-none-eabi-gcc -o "Motor_bridge.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\liushaw\Desktop\STM32F407\Motor_bridge\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Motor_bridge.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Motor_bridge.elf
+ 
+arm-none-eabi-size  Motor_bridge.elf 
+arm-none-eabi-objdump -h -S Motor_bridge.elf  > "Motor_bridge.list"
+   text	   data	    bss	    dec	    hex	filename
+  80564	    472	  72144	 153180	  2565c	Motor_bridge.elf
+Finished building: default.size.stdout
+ 
+Finished building: Motor_bridge.list
+ 
+08:57:42 **** Incremental Build of configuration Debug for project Motor_bridge ****
+make -j18 all 
+arm-none-eabi-size  Motor_bridge.elf 
+   text	   data	    bss	    dec	    hex	filename
+  80564	    472	  72144	 153180	  2565c	Motor_bridge.elf
+Finished building: default.size.stdout
+ 
+08:58:01 **** Incremental Build of configuration Debug for project Motor_bridge ****
+make -j18 all 
+arm-none-eabi-size  Motor_bridge.elf 
+   text	   data	    bss	    dec	    hex	filename
+  80564	    472	  72144	 153180	  2565c	Motor_bridge.elf
+Finished building: default.size.stdout
+ 
+09:01:28 **** Incremental Build of configuration Debug for project Motor_bridge ****
+make -j18 all 
+arm-none-eabi-gcc "../Core/Src/freertos.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/freertos.d" -MT"Core/Src/freertos.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/freertos.o"
+../Core/Src/freertos.c: In function 'AgvHeartbeatTask':
+../Core/Src/freertos.c:202:9: warning: variable 'code' set but not used [-Wunused-but-set-variable]
+  202 |     int code = AGV_OK;
+      |         ^~~~
+../Core/Src/freertos.c: In function 'AgvHostMsgCallbackTask':
+../Core/Src/freertos.c:232:13: warning: unused variable 'code' [-Wunused-variable]
+  232 |         int code = AgvCore_step_on_host_msg(s_agv_core);
+      |             ^~~~
+arm-none-eabi-gcc -o "Motor_bridge.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\liushaw\Desktop\STM32F407\Motor_bridge\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Motor_bridge.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Motor_bridge.elf
+ 
+arm-none-eabi-size  Motor_bridge.elf 
+arm-none-eabi-objdump -h -S Motor_bridge.elf  > "Motor_bridge.list"
+   text	   data	    bss	    dec	    hex	filename
+  80564	    472	  72144	 153180	  2565c	Motor_bridge.elf
+Finished building: default.size.stdout
+ 
+Finished building: Motor_bridge.list
+ 
+09:14:58 **** Incremental Build of configuration Debug for project Motor_bridge ****
+make -j18 all 
+arm-none-eabi-gcc "../Middlewares/Third_Party/Agv/Motors/src/blvr.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -DSTM32_THREAD_SAFE_STRATEGY=5 -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Core/ThreadSafe -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Core/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Factory/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Communication_pack/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Host_communication/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Motors/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Control/include" -I"C:/Users/liushaw/Desktop/STM32F407/Motor_bridge/Middlewares/Third_Party/Agv/Kinematics/include" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/Third_Party/Agv/Motors/src/blvr.d" -MT"Middlewares/Third_Party/Agv/Motors/src/blvr.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/Third_Party/Agv/Motors/src/blvr.o"
+../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'rad_s_to_regVelUnit':
+../Middlewares/Third_Party/Agv/Motors/src/blvr.c:482:21: warning: implicit declaration of function 'lroundf' [-Wimplicit-function-declaration]
+  482 |     return (int32_t)lroundf(rpm_f / unit_rpm);
+      |                     ^~~~~~~
+../Middlewares/Third_Party/Agv/Motors/src/blvr.c:15:1: note: include '<math.h>' or provide a declaration of 'lroundf'
+   14 | #include "semphr.h"
+  +++ |+#include <math.h>
+   15 | 
+../Middlewares/Third_Party/Agv/Motors/src/blvr.c:482:21: warning: incompatible implicit declaration of built-in function 'lroundf' [-Wbuiltin-declaration-mismatch]
+  482 |     return (int32_t)lroundf(rpm_f / unit_rpm);
+      |                     ^~~~~~~
+../Middlewares/Third_Party/Agv/Motors/src/blvr.c:482:21: note: include '<math.h>' or provide a declaration of 'lroundf'
+../Middlewares/Third_Party/Agv/Motors/src/blvr.c: In function 'rad_to_regAngUnit':
+../Middlewares/Third_Party/Agv/Motors/src/blvr.c:492:21: warning: incompatible implicit declaration of built-in function 'lroundf' [-Wbuiltin-declaration-mismatch]
+  492 |     return (int32_t)lroundf(degree / unit_degree);
+      |                     ^~~~~~~
+../Middlewares/Third_Party/Agv/Motors/src/blvr.c:492:21: note: include '<math.h>' or provide a declaration of 'lroundf'
+arm-none-eabi-gcc -o "Motor_bridge.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\liushaw\Desktop\STM32F407\Motor_bridge\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Motor_bridge.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Motor_bridge.elf
+ 
+arm-none-eabi-size  Motor_bridge.elf 
+arm-none-eabi-objdump -h -S Motor_bridge.elf  > "Motor_bridge.list"
+   text	   data	    bss	    dec	    hex	filename
+  80516	    472	  72144	 153132	  2562c	Motor_bridge.elf
+Finished building: default.size.stdout
+ 
+Finished building: Motor_bridge.list
+ 
+09:15:27 **** Incremental Build of configuration Debug for project Motor_bridge ****
+make -j18 all 
+arm-none-eabi-size  Motor_bridge.elf 
+   text	   data	    bss	    dec	    hex	filename
+  80516	    472	  72144	 153132	  2562c	Motor_bridge.elf
+Finished building: default.size.stdout
+ 
+09:16:05 **** Incremental Build of configuration Debug for project Motor_bridge ****
+make -j18 all 
+arm-none-eabi-size  Motor_bridge.elf 
+   text	   data	    bss	    dec	    hex	filename
+  80516	    472	  72144	 153132	  2562c	Motor_bridge.elf
+Finished building: default.size.stdout
+ 

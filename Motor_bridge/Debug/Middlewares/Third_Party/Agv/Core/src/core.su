@@ -4,6 +4,6 @@
 ../Middlewares/Third_Party/Agv/Core/src/core.c:55:5:AgvCore_step_motor_io	96	static
 ../Middlewares/Third_Party/Agv/Core/src/core.c:82:5:AgvCore_step_feedback	56	static
 ../Middlewares/Third_Party/Agv/Core/src/core.c:97:5:AgvCore_set_cmd_vel	48	static
-../Middlewares/Third_Party/Agv/Core/src/core.c:116:5:AgvCore_reset_motor	24	static
-../Middlewares/Third_Party/Agv/Core/src/core.c:128:5:AgvCore_enable_motor	24	static
-../Middlewares/Third_Party/Agv/Core/src/core.c:140:5:AgvCore_get_modules_state	24	static
+../Middlewares/Third_Party/Agv/Core/src/core.c:116:5:AgvCore_reset_motor	40	static
+../Middlewares/Third_Party/Agv/Core/src/core.c:135:5:AgvCore_enable_motor	24	static
+../Middlewares/Third_Party/Agv/Core/src/core.c:147:5:AgvCore_get_modules_state	24	static

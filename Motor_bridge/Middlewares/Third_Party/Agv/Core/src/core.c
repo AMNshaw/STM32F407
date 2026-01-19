@@ -119,6 +119,13 @@ int AgvCore_reset_motor(AgvCore* core) {
     AgvMotorsBase* motors = &core->motors_base;
 
     int code = 0;
+
+    Twist2D reset_vel;
+    reset_vel.x = 0.0;
+    reset_vel.y = 0.0;
+    reset_vel.yaw = 0.0;
+    code = AgvCore_set_cmd_vel(core, reset_vel);
+    if (code != AGV_OK) return code;
     code = motors->reset(motors);
     if (code != AGV_OK) return code;
 
