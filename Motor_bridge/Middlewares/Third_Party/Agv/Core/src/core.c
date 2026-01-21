@@ -40,6 +40,13 @@ int AgvCore_step_body_control(AgvCore* core) {
     AgvControlLawBase* ctrl = &core->control_law_base;
     AgvMotorsBase* motors = &core->motors_base;
 
+    Twist2D curr_vel;
+    xSemaphoreTake(core->mutex_odom, portMAX_DELAY);
+    curr_vel = core->odom.twist;
+    xSemaphoreGive(core->mutex_odom);
+    code = ctrl->set_curr_vel(ctrl, &curr_vel);
+    if (code != AGV_OK) return code;
+
     Twist2D cmd;
     code = ctrl->get_ctrl_cmd(ctrl, &cmd);
     if (code != AGV_OK) return code;
@@ -99,15 +106,8 @@ int AgvCore_set_cmd_vel(AgvCore* core, Twist2D cmd_in) {
 
     AgvControlLawBase* ctrl = &core->control_law_base;
 
-    Twist2D curr_vel;
-    xSemaphoreTake(core->mutex_odom, portMAX_DELAY);
-    curr_vel = core->odom.twist;
-    xSemaphoreGive(core->mutex_odom);
-
     int code = 0;
     code = ctrl->set_des_vel(ctrl, &cmd_in);
-    if (code != AGV_OK) return code;
-    code = ctrl->set_curr_vel(ctrl, &curr_vel);
     if (code != AGV_OK) return code;
 
     return AGV_OK;
